@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -20,7 +21,7 @@ function Login() {
   };
 
   const submitHandler = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
     console.log(email);
     console.log(password);
@@ -29,7 +30,7 @@ function Login() {
   return (
     <>
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
-        <div className="m-auto w-[560px] h-[350px] bg-white flex flex-col justify-center align-middle rounded-lg">
+        <div className="m-auto w-[560px] h-[350px] bg-white flex flex-col justify-center align-middle rounded-xl">
           <div>
             <div className="flex flex-col items-center">
               <h1 className="font-bold text-2xl font-sans mb-6">Login</h1>
@@ -78,12 +79,13 @@ function Login() {
               </div>
             </div>
             <div className="flex flex-col">
-              <button
+              <Link
+                to="/otp"
                 onClick={submitHandler}
                 className="mx-8 mt-8 p-1 bg-login-bg bg-cover text-white py-1 px-3 rounded-md"
               >
                 Sign In
-              </button>
+              </Link>
             </div>
           </div>
         </div>
