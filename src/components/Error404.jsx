@@ -1,9 +1,13 @@
 import React from "react";
 import Error404Img from "../assets/404.png";
+import { useNavigate } from "react-router-dom";
 
 const Error404 = () => {
+  const navigate = useNavigate;
+
   function handleSubmit() {
-    console.log("back to dashboard clicked");
+    console.log("back clicked");
+    navigate(-1);
   }
 
   return (
@@ -22,7 +26,7 @@ const Error404 = () => {
             onClick={handleSubmit}
             className="w-9/12 bg-[#4880FF] text-xl text-white rounded-lg"
           >
-            Back to Dashboard
+            Back
           </button>
         </div>
       </div>

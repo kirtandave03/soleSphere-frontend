@@ -1,16 +1,21 @@
-// main.jsx
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import Login from "./components/Login.jsx";
-import Otp from "./components/Otp.jsx";
+import { Provider } from "react-redux";
+import store from "./redux/store.js";
+import Login from "./views/Login.jsx";
+import Otp from "./views/Otp.jsx";
 import Error404 from "./components/Error404.jsx";
+import Dashboard from "./views/Dashboard.jsx";
+import AddProducts from "./views/AddProducts.jsx";
+import Membership from "./views/Membership.jsx";
+import CategoryAndBrand from "./views/CategoryAndBrand.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
+    path: "/",
     element: <Login />,
   },
   {
@@ -21,12 +26,32 @@ const router = createBrowserRouter([
     path: "/error",
     element: <Error404 />,
   },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
+  {
+    path: "/add-product",
+    element: <AddProducts />,
+  },
+  {
+    path: "/membership",
+    element: <Membership />,
+  },
+  {
+    path: "/category-and-brand",
+    element: <CategoryAndBrand />,
+  },
 ]);
-ReactDOM.render(
+
+const root = createRoot(document.getElementById("root"));
+
+root.render(
   <React.StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+    <Provider store={store}>
+      <RouterProvider router={router}>
+        <App />
+      </RouterProvider>
+    </Provider>
+  </React.StrictMode>
 );

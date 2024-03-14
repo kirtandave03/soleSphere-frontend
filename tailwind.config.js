@@ -5,10 +5,12 @@ export default {
     extend: {
       backgroundImage: {
         "login-bg": "url(/src/assets/bg.png)",
+        "main-bg": "url(/src/assets/mainBG.png)",
       },
       colors: {
         "input-bg": "#f1f4f9",
         "input-border": "#d8d8d8",
+        "main-bg": "#f5f6fa",
       },
     },
   },
