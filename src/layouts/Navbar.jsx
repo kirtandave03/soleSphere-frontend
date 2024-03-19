@@ -110,6 +110,16 @@ const Navbar = () => {
             </button>
             <button
               className={`p-4 rounded-r-xl ${
+                selectedButton === "add-variant"
+                  ? "bg-blue-500 text-white"
+                  : "hover:bg-gray-200"
+              }`}
+              onClick={() => handleSelect("add-variant")}
+            >
+              Add Variant
+            </button>
+            <button
+              className={`p-4 rounded-r-xl ${
                 selectedButton === "category-and-brand"
                   ? "bg-blue-500 text-white"
                   : "hover:bg-gray-200"
