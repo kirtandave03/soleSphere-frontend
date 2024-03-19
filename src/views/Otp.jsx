@@ -33,9 +33,11 @@ const Otp = () => {
         requestOptions
       );
 
+      console.log(response);
+
       if (response.status === 201) {
-        navigate("/dashboard");
-        console.log("it worked");
+        const data = await response.json();
+        navigate("/");
       } else {
         setIncorrectOTP(true);
       }
@@ -66,9 +68,11 @@ const Otp = () => {
           <div className=" relative w-full flex flex-col justify-center items-center gap-4">
             <input
               className={`w-1/3 mx-8 mt-2 p-1 bg-input-bg ${
-                incorrectOTP ? "border-red-600" : "border-input-border"
+                incorrectOTP
+                  ? "border-red-600"
+                  : "border-input-border placeholder: pr-14"
               } border-2 rounded-md text-center`}
-              type={showPassword ? "text" : "password"} // Change type dynamically
+              type={showPassword ? "text" : "password"}
               name="otp"
               id="otp"
               placeholder="Enter otp here"
@@ -77,12 +81,12 @@ const Otp = () => {
             />
             {showPassword ? (
               <FaRegEyeSlash
-                className="absolute right-[12.3rem] top-7 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-[12.3rem] top-[1.65rem] transform -translate-y-1/2 cursor-pointer"
                 onClick={toggleShowPassword}
               />
             ) : (
               <FaRegEye
-                className="absolute right-[12.3rem] top-7 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-[12.3rem] top-[1.65rem] transform -translate-y-1/2 cursor-pointer"
                 onClick={toggleShowPassword}
               />
             )}

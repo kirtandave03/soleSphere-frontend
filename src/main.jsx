@@ -9,13 +9,15 @@ import Login from "./views/Login.jsx";
 import Otp from "./views/Otp.jsx";
 import Error404 from "./components/Error404.jsx";
 import Dashboard from "./views/Dashboard.jsx";
+import Products from "./views/Products.jsx";
 import AddProducts from "./views/AddProducts.jsx";
 import Membership from "./views/Membership.jsx";
 import CategoryAndBrand from "./views/CategoryAndBrand.jsx";
+import EditProduct from "./views/EditProduct.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <Login />,
   },
   {
@@ -27,8 +29,12 @@ const router = createBrowserRouter([
     element: <Error404 />,
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: <Dashboard />,
+  },
+  {
+    path: "/products",
+    element: <Products />,
   },
   {
     path: "/add-product",
@@ -41,6 +47,10 @@ const router = createBrowserRouter([
   {
     path: "/category-and-brand",
     element: <CategoryAndBrand />,
+  },
+  {
+    path: `/edit-product/:productId`,
+    element: <EditProduct />,
   },
 ]);
 

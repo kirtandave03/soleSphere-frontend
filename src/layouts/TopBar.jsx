@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Menu } from "@headlessui/react";
 import { MdManageAccounts, MdLogout } from "react-icons/md";
 import { FaKey } from "react-icons/fa6";
@@ -6,7 +7,9 @@ import { IoIosArrowDropdown } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 
 const TopBar = () => {
+  const email = useSelector((state) => state.email);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const adminName = email.split("@")[0];
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -41,7 +44,7 @@ const TopBar = () => {
             className="w-8 h-8 rounded-full"
           />
           <div className="flex flex-col text-center">
-            <span className="text-black font-semibold">Admin Name</span>
+            <span className="text-black font-semibold">{adminName}</span>
             <span className="text-slate-400 text-sm">Admin</span>
           </div>
         </div>
