@@ -88,7 +88,7 @@ const Navbar = () => {
             >
               Order List
             </button>
-            <button
+            {/* <button
               className={`p-4 rounded-r-xl ${
                 selectedButton === "membership"
                   ? "bg-blue-500 text-white"
@@ -97,7 +97,7 @@ const Navbar = () => {
               onClick={() => handleSelect("membership")}
             >
               Membership
-            </button>
+            </button> */}
             <button
               className={`p-4 rounded-r-xl ${
                 selectedButton === "add-product"
