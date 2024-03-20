@@ -1,187 +1,605 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../layouts/Navbar";
-import TopBar from "../layouts/TopBar";
+import Topbar from "../layouts/TopBar";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
-function AddProducts() {
+const AddProducts = () => {
+  const [category, setCategory] = useState([]);
+  const [brand, setBrand] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [isDisabled, setisDisabled] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const brands = await axios.get(
+          "https://solesphere-backend.onrender.com/api/v1/brands/"
+        );
+        // console.log(brands.data.data.brands);
+        setBrand(brands.data.data.brands);
+      } catch (error) {
+        alert("Error while fetching brands");
+      }
+    })();
+
+    (async () => {
+      try {
+        const categories = await axios.get(
+          "https://solesphere-backend.onrender.com/api/v1/categories"
+        );
+        // console.log(categories.data.data.categories);
+        setCategory(categories.data.data.categories);
+        // console.log(category)
+      } catch (error) {
+        alert("Error while fetching categories");
+      }
+    })();
+  }, []);
+
+  const handleImages = (e) => {
+    setSelectedFiles(e.target.files);
+  };
+
+  const handleUploadImages = async (e) => {
+    clearErrors();
+
+    if (!selectedFiles || !selectedFiles.length) {
+      setError("required", { message: "Please Select at least one file" });
+      return;
+    }
+    if (selectedFiles.length > 5) {
+      setError("maxLen", { message: "You can upload maximum 5 files" });
+      return;
+    }
+
+    setIsUploading(true);
+
+    const formData = new FormData();
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      formData.append("images", selectedFiles[i]);
+    }
+
+    try {
+      const response = await axios.post(
+        "https://solesphere-backend.onrender.com/api/v1/file-upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setImageUrls(response.data.data);
+        setIsUploaded(true);
+        alert("Images uploaded Successfully");
+        setisDisabled(false);
+      }
+
+      setIsUploading(false);
+      // console.log(response)
+    } catch (error) {
+      if (error.response.status === 500) {
+        alert("Sorry,We are unable to upload image right now!");
+      }
+      console.error("Error uploading images:", error);
+    }
+  };
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setError,
+    clearErrors,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  const [inputFields, setInputFields] = useState([{ id: 0 }]);
+
+  const addInputFields = () => {
+    const newFields = [];
+    for (let i = inputFields.length; i <= inputFields.length; i++) {
+      newFields.push({ id: i });
+    }
+    setInputFields([...inputFields, ...newFields]);
+  };
+
+  function convertHexToFlutterFormat(hexColor) {
+    hexColor = hexColor.replace("#", "");
+
+    const r = parseInt(hexColor.substr(0, 2), 16);
+    const g = parseInt(hexColor.substr(2, 2), 16);
+    const b = parseInt(hexColor.substr(4, 2), 16);
+
+    const flutterColor = `0xFF${("0" + r.toString(16)).slice(-2)}${(
+      "0" + g.toString(16)
+    ).slice(-2)}${("0" + b.toString(16)).slice(-2)}`;
+
+    return flutterColor;
+  }
+
+  const onSubmit = async (data) => {
+    const hexColor = convertHexToFlutterFormat(data.color);
+    const productData = {
+      productName: data.productName,
+      shortDescription: data.shortDesc,
+      category: data.category,
+      brand: data.brand,
+      sizeType: data.sizeType,
+      closureType: data.closureType,
+      material: data.material,
+      longDescription: data.longDescription,
+      gender: data.gender,
+      variants: [
+        {
+          color: hexColor,
+          image_urls: imageUrls,
+          sizes: inputFields.map((field, index) => ({
+            size: data.variants[index].size,
+            actual_price: data.variants[index].actual_price,
+            discounted_price: data.variants[index].discounted_price,
+            stock: data.variants[index].stock,
+          })),
+        },
+      ],
+    };
+
+    const apiUrl = "https://solesphere-backend.onrender.com/api/v1/products/";
+    const headers = {
+      "Content-Type": "application/json",
+      "auth-token":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxODJmMGE0ODRlNjcwYzY4ODcwNTciLCJlbWFpbCI6ImtpcnRhbmRhdmVAYm9zY3RlY2hsYWJzLmNvbSIsImlhdCI6MTcwOTI3NzkzNn0.apiL-taCwpQs_6KFYYbgMx-ATLNd3RMQQG8YjlHzC68",
+    };
+    try {
+      var response = await axios.post(apiUrl, productData, { headers });
+      if (response.status === 200) {
+        alert("Product Added Successfully");
+      }
+    } catch (error) {
+      if (error.response.status === 500) {
+        alert("Product Already Exists");
+      } else if (error.response.status === 404) {
+        alert("Category or Brand not found");
+      } else {
+        alert("Something went wrong");
+      }
+    }
+    // console.log(productData);
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-main-bg bg-cover">
-      <TopBar />
-      <div className="flex flex-grow">
+    <div>
+      <Topbar />
+      <div className="flex gap-4">
         <Navbar />
-        <div className="flex-grow">
-          <div className="p-4">
-            <h1 className="font-bold mx-2 mb-2 text-lg">Add Products</h1>
-            <div className="flex">
-              <div className="ml-8 w-1/2 flex flex-col gap-4">
-                <input
-                  className="bg-input-bg border-input-bg"
-                  type="text"
-                  placeholder="Product Name"
-                />
-                <textarea
-                  className="bg-input-bg border-input-bg"
-                  name="shortDescription"
-                  placeholder="Short Description"
-                  rows={3}
-                  id=""
-                ></textarea>
-                <input
-                  className="bg-input-bg border-input-bg"
-                  type="text"
-                  placeholder="Categories"
-                />
-                <input
-                  className="bg-input-bg border-input-bg"
-                  type="text"
-                  placeholder="Brand"
-                />
-                <div className="flex gap-2">
-                  <label className="font-semibold" htmlFor="size">
-                    Size
-                  </label>
-                  <input
-                    className="bg-input-bg border-input-bg"
-                    type="number"
-                    placeholder="10"
-                  />
-                  <select
-                    className="bg-input-bg border-input-bg"
-                    id="sizeType"
-                    name="sizeType"
-                  >
-                    <option value="UK">UK</option>
-                    <option value="US">US</option>
-                    <option value="EU">EU</option>
-                  </select>
-                </div>
-                <input
-                  className="bg-input-bg border-input-bg"
-                  type="text"
-                  placeholder="Colours"
-                />
-                <div className="flex gap-2">
-                  <label className="font-semibold" htmlFor="pictures">
-                    Upload Pictures
-                  </label>
-                  <input
-                    className="bg-input-bg border-input-bg"
-                    type="file"
-                    id="pictures"
-                    name="pictures"
-                    accept="image/*"
-                    multiple
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <label className="font-semibold" htmlFor="actualPrice">
-                    Actual Price
-                  </label>
-                  <input
-                    className="bg-input-bg border-input-bg"
-                    type="text"
-                    id="actualPrice"
-                    name="actualPrice"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <label className="font-semibold" htmlFor="discountedPrice">
-                    Discounted Price
-                  </label>
-                  <input
-                    className="bg-input-bg border-input-bg"
-                    type="text"
-                    id="discountedPrice"
-                    name="discountedPrice"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <label className="font-semibold" htmlFor="stock">
-                    Stock
-                  </label>
-                  <input
-                    className="bg-input-bg border-input-bg"
-                    type="number"
-                    name="stock"
-                    id="stock"
-                  />
-                </div>
-              </div>
-              <div className="ml-8 w-1/2 flex flex-col gap-4">
-                <label className="font-semibold" htmlFor="discount">
-                  Discount
-                </label>
-                <div className="bg-input-bg p-2">
-                  <div className="flex gap-2">
-                    <label htmlFor="amount">Amount</label>
-                    <input
-                      className="bg-[#dedede] border-input-bg"
-                      type="number"
-                      name="amount"
-                      id="amount"
-                      max={100}
-                      min={0}
-                    />
+        <form action="" onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex">
+            <div className="left my-5 ">
+              <h1 className="font-bold text-xl">Add New Product</h1>
+              <div className="flex flex-col m-2">
+                <div>
+                  <h3 className="font-semibold">Description</h3>
+                  <div className="shadow-lg p-5 rounded-md">
+                    <div className="flex flex-col">
+                      <label htmlFor="productName" className="font-light ">
+                        Product Name
+                      </label>
+
+                      <input
+                        type="text"
+                        id="productName"
+                        className="border border-black rounded-md"
+                        {...register("productName", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      />
+                      {errors.productName && (
+                        <div className="text-red-600 text-sm">
+                          {errors.productName.message}
+                        </div>
+                      )}
+
+                      <label className="font-light" htmlFor="shortDesc">
+                        Short Description
+                      </label>
+                      <textarea
+                        rows="4"
+                        cols="40"
+                        className="border p-2 border-black rounded-md"
+                        id="shortDesc"
+                        {...register("shortDesc", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      />
+                      {errors.shortDesc && (
+                        <div className="text-red-600 text-sm">
+                          {errors.shortDesc.message}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <label htmlFor="startDate">Start Date</label>
-                    <input
-                      className="bg-input-bg border-input-bg"
-                      type="date"
-                      name="startDate"
-                      id="startDate"
-                    />
+
+                  <div className="category flex flex-col m-2">
+                    <h3 className="font-semibold">Category</h3>
+                    <div className="shadow-lg p-5 rounded-md flex flex-col">
+                      <label htmlFor="category" className="font-light ">
+                        Category
+                      </label>
+                      <select
+                        id="category"
+                        className="border border-black rounded-md"
+                        {...register("category", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      >
+                        {category.map((item) => {
+                          return (
+                            <option key={item._id} value={item._id}>
+                              {item.category}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      {errors.category && (
+                        <div className="text-red-600 text-sm">
+                          {errors.category.message}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <label htmlFor="endDate">End Date</label>
-                    <input
-                      className="bg-input-bg border-input-bg"
-                      type="date"
-                      name="endDate"
-                      id="endDate"
-                    />
+
+                  <div className="brand flex flex-col m-2">
+                    <h3 className="font-semibold">Brand</h3>
+                    <div className="shadow-lg p-5 rounded-md flex flex-col">
+                      <label htmlFor="brand" className="font-light">
+                        Brand
+                      </label>
+                      <select
+                        id="brand"
+                        className="border border-black rounded-md"
+                        {...register("brand", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      >
+                        {brand.map((item) => {
+                          return (
+                            <option key={item._id} value={item._id}>
+                              {item.brand}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      {errors.brand && (
+                        <div className="text-red-600 text-sm">
+                          {errors.brand.message}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <textarea
-                  className="bg-input-bg border-input-bg"
-                  name="longDescription"
-                  placeholder="Long Description"
-                  id=""
-                  cols={6}
-                  rows={8}
-                ></textarea>
-                <input
-                  className="bg-input-bg border-input-bg"
-                  type="text"
-                  placeholder="Material"
-                />
-                <div className="flex gap-2">
-                  <label className="font-semibold" htmlFor="closureType">
-                    Closure Type
-                  </label>
-                  <select
-                    className="bg-input-bg border-input-bg"
-                    name="closureType"
-                    id="closureType"
-                  >
-                    <option value="Lace Up">Lace Up</option>
-                    <option value="Velcro Straps">Velcro Straps</option>
-                  </select>
+
+                  <div className="sizeType flex flex-col m-2">
+                    <h3 className="font-semibold">Size Type</h3>
+                    <div className="shadow-lg p-5 rounded-md flex flex-col">
+                      <label htmlFor="sizeType" className="font-light ">
+                        Size Type
+                      </label>
+                      <select
+                        id="sizeType"
+                        className="border border-black rounded-md"
+                        {...register("sizeType", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      >
+                        <option value="UK">UK</option>
+                        <option value="US">US</option>
+                        <option value="EU">EU</option>
+                      </select>
+                      {errors.sizeType && (
+                        <div className="text-red-600 text-sm">
+                          {errors.sizeType.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="closureType shadow-lg flex flex-col m-2">
+                    <h3 className="font-semibold">Closure Type</h3>
+                    <div className="shadow-lg p-5 rounded-md flex flex-col">
+                      <label htmlFor="closureType" className="font-light ">
+                        Closure Type
+                      </label>
+                      <select
+                        id="closureType"
+                        className="border border-black rounded-md"
+                        {...register("closureType", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      >
+                        <option value="zipper">Zipper</option>
+                        <option value="button">Button</option>
+                        <option value="hook and loop">Hook and Loop</option>
+                        <option value="lace-up">Lace-up</option>
+                        <option value="buckle">Buckle</option>
+                        <option value="velcro">Velcro</option>
+                      </select>
+                      {errors.closureType && (
+                        <div className="text-red-600 text-sm">
+                          {errors.closureType.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex justify-center mt-4">
-              <button
-                type="submit"
-                className="bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white font-bold py-2 px-4 rounded"
-              >
-                Add Product
-              </button>
+
+            <div className="right my-5">
+              <div className="flex flex-col m-2">
+                <div className=" shadow-lg flex flex-col m-2">
+                  <h3 className="font-semibold">Material & Long Description</h3>
+
+                  <div className="material shadow-lg p-5 rounded-md flex flex-col">
+                    <label htmlFor="material" className="font-light ">
+                      Material
+                    </label>
+                    <select
+                      id="material"
+                      className="border border-black rounded-md"
+                      {...register("material", {
+                        required: {
+                          value: true,
+                          message: "This field is required ",
+                        },
+                      })}
+                    >
+                      <option value="leather">Leather</option>
+                      <option value="suede">Suede</option>
+                      <option value="canvas">Canvas</option>
+                      <option value="mesh">Mesh</option>
+                      <option value="rubber">Rubber</option>
+                      <option value="synthetic">Synthetic</option>
+                      <option value="textile">Textile</option>
+                      <option value="knit">Knit</option>
+                      <option value="velvet">Velvet</option>
+                      <option value="denim">Denim</option>
+                      <option value="cork">Cork</option>
+                      <option value="faux leather">Faux Leather</option>
+                    </select>
+                    {errors.material && (
+                      <div className="text-red-600 text-sm">
+                        {errors.material.message}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="longDescription shadow-lg p-5 rounded-md flex flex-col">
+                    <label htmlFor="longDescription" className="font-light ">
+                      Long Description
+                    </label>
+                    <textarea
+                      className="rounded-md border p-2 border-black"
+                      id="longDescription"
+                      rows="6"
+                      cols="60"
+                      {...register("longDescription", {
+                        required: {
+                          value: true,
+                          message: "This field is required ",
+                        },
+                      })}
+                    />
+
+                    {errors.longDescription && (
+                      <div className="text-red-600 text-sm">
+                        {errors.longDescription.message}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="gender flex flex-col m-2">
+                    <h3 className="font-semibold">Gender</h3>
+                    <div className="shadow-lg p-5 rounded-md flex flex-col">
+                      <label htmlFor="gender" className="font-light ">
+                        Gender
+                      </label>
+                      <select
+                        id="gender"
+                        className="border border-black rounded-md"
+                        {...register("gender", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="female">Unisex</option>
+                      </select>
+                      {errors.gender && (
+                        <div className="text-red-600 text-sm">
+                          {errors.gender.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="color flex flex-col m-2">
+                    <h3 className="font-semibold">Color</h3>
+                    <div className="shadow-lg p-5 rounded-md flex flex-col">
+                      <label htmlFor="color" className="font-light ">
+                        Color
+                      </label>
+                      <input
+                        type="color"
+                        id="color"
+                        className="border border-black rounded-md w-full"
+                        {...register("color", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                      />
+
+                      {errors.color && (
+                        <div className="text-red-600 text-sm">
+                          {errors.color.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="images flex flex-col m-2">
+                    <h3 className="font-semibold">Product Images</h3>
+
+                    <div className="shadow-lg p-3 rounded-md flex flex-col">
+                      <label htmlFor="images" className="font-light ">
+                        Images - You can enter only 5 images
+                      </label>
+                      <input
+                        type="file"
+                        id="images"
+                        multiple
+                        accept="image/*"
+                        className="border border-black rounded-md w-full"
+                        {...register("images", {})}
+                        onChange={(e) => handleImages(e)}
+                      />
+                      {errors.required && (
+                        <div className="text-red-600 text-sm">
+                          {errors.required.message}{" "}
+                        </div>
+                      )}
+                      {errors.maxLen && (
+                        <div className="text-red-600 text-sm">
+                          {errors.maxLen.message}{" "}
+                        </div>
+                      )}
+
+                      <button
+                        disabled={isUploaded || isUploading}
+                        type="button"
+                        className="disabled:opacity-50 bg-blue-500 my-2 p-1 px-2 rounded-md text-white"
+                        onClick={(e) => handleUploadImages(e)}
+                      >
+                        Upload Images
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+
+          <div className="variants ">
+            <p className="font-bold text-xl my-2">
+              Add Variant
+              <span className="my-2 font-extralight text-sm">
+                - Add Size, Actual Price, Discounted Price, Stock
+              </span>
+            </p>
+          </div>
+
+          <div className="flex flex-wrap">
+            {inputFields.map((field, index) => (
+              <div key={field.id} className="flex flex-row mx-2">
+                <input
+                  {...register(`variants[${index}].size`, {
+                    required: {
+                      value: true,
+                      message: "This field is required",
+                    },
+                  })} // Adding required validation rule
+                  type="text"
+                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                  placeholder="Size"
+                />
+                <input
+                  {...register(`variants[${index}].actual_price`, {
+                    required: {
+                      value: true,
+                      message: "This field is required",
+                    },
+                  })} // Adding required validation rule
+                  type="text"
+                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                  placeholder="Actual Price"
+                />
+                <input
+                  {...register(`variants[${index}].discounted_price`, {
+                    required: {
+                      value: true,
+                      message: "This field is required",
+                    },
+                  })} // Adding required validation rule
+                  type="text"
+                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                  placeholder="Discounted Price"
+                />
+                <input
+                  {...register(`variants[${index}].stock`, {
+                    required: {
+                      value: true,
+                      message: "This field is required",
+                    },
+                  })} // Adding required validation rule
+                  type="text"
+                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                  placeholder="Stock"
+                />
+                {errors[field.fieldName] && (
+                  <div className="text-red-500 block mt-1">
+                    {errors[field.fieldName].message}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            className="button float-right bg-blue-500 p-1 px-2 rounded-md text-white"
+            type="button"
+            onClick={addInputFields}
+          >
+            Add More Sizes
+          </button>
+
+          <input
+            disabled={isDisabled || isSubmitting}
+            type="submit"
+            value="Add Product"
+            className="cursor-pointer disabled:opacity-50 m-2 rounded-lg button bg-blue-500 p-2 text-white w-full"
+          />
+        </form>
       </div>
     </div>
   );
-}
+};
 
 export default AddProducts;

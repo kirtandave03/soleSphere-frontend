@@ -24,25 +24,13 @@ const TopBar = () => {
       </div>
       <div className="flex items-center space-x-4">
         <div className="relative">
-          <input
-            type="text"
-            className="ml-6 px-3 py-1 rounded-3xl bg-input-bg text-white placeholder-gray-400 focus:outline-none focus:ring focus:border-blue-300 p-3 pl-10"
-            placeholder="Search"
-          />
-          <CiSearch
-            className="absolute ml-9 -top-1 left-0 m-3 text-gray-400"
-            style={{ pointerEvents: "none" }}
-          />
+          
         </div>
       </div>
 
       <div className="flex gap-6">
         <div className="flex items-center space-x-4">
-          <img
-            src="/path_to_admin_profile_pic.jpg"
-            alt="Admin Profile"
-            className="w-8 h-8 rounded-full"
-          />
+       
           <div className="flex flex-col text-center">
             <span className="text-black font-semibold">{adminName}</span>
             <span className="text-slate-400 text-sm">Admin</span>

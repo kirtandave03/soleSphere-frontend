@@ -13,6 +13,7 @@ import Products from "./views/Products.jsx";
 import AddProducts from "./views/AddProducts.jsx";
 import Membership from "./views/Membership.jsx";
 import CategoryAndBrand from "./views/CategoryAndBrand.jsx";
+import AddVariants from "./views/AddVariants.jsx";
 import EditProduct from "./views/EditProduct.jsx";
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/add-product",
     element: <AddProducts />,
+  },
+  {
+    path: "/add-variant",
+    element: <AddVariants />,
   },
   {
     path: "/membership",
