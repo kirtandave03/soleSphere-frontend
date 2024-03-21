@@ -4,24 +4,21 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
-import axios from "axios";
+import { useForm } from "react-hook-form";
 
 function Login() {
-  const email = useSelector((state) => state.email);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm();
   const dispatch = useDispatch();
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [fieldsIncorrect, setFieldsIncorrect] = useState(false);
+  const [fieldsIncorrect, setFieldsIncorrrect] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
-  const handleEmailChange = (event) => {
-    dispatch(setEmail(event.target.value));
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -53,32 +50,40 @@ function Login() {
     }
   };
 
-  const submitHandler = async () => {
-    const headers = { "Content-Type": "application/json" };
+  const onSubmit = async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    };
 
     try {
       const response = await axios.post(
         "https://solesphere-backend.onrender.com/api/v1/auth/login",
-        { email, password },
+        data,
         { headers }
       );
-      console.log("INside fun");
-      console.log("below");
+
+      console.log(response.status);
 
       if (response.status === 201) {
+        dispatch(setEmail(data.email));
         navigate("/otp");
-      } else if (response.status === 400) {
-        setErrorMessage("Email and password both are required");
-        setFieldsIncorrect(true);
-      } else if (response.status === 404) {
-        setErrorMessage("Admin not found");
-        setFieldsIncorrect(true);
-      } else if (response.status === 401) {
-        setErrorMessage("Invalid Credentials");
-        setFieldsIncorrect(true);
-      } else {
-        setErrorMessage("Something Went Wrong");
-        setFieldsIncorrect(true);
+      }
+      if (response.status === 400) {
+        setError("noMailNoPass", {
+          message: "Email and password both are required!",
+        });
+      }
+      if (response.status === 404) {
+        setError("noAdmin", {
+          message: "Admin not found!",
+        });
+      }
+      if (response.status === 401) {
+        setError("invalid", {
+          message: "Invalid Credentials!",
+        });
       }
     } catch (error) {
       console.error(error);
@@ -86,25 +91,11 @@ function Login() {
     }
   };
 
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.key === "Enter") {
-        submitHandler();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [submitHandler]);
-
   return (
     <>
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
         <div className="m-auto w-[560px] h-[350px] bg-white flex flex-col justify-center align-middle rounded-xl">
-          <div>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col items-center">
               <h1 className="font-bold text-2xl font-sans mb-6">Login</h1>
             </div>
@@ -113,16 +104,23 @@ function Login() {
                 Email address:
               </label>
               <input
+                type="email"
+                id="email"
                 className={`mx-8 mt-2 p-1 bg-input-bg ${
                   fieldsIncorrect ? "border-red-600" : "border-input-border"
                 } border-2 rounded-md`}
-                type="email"
-                name="email"
-                placeholder="albus.dumbledore@gmail.com"
-                id="email"
-                onChange={handleEmailChange}
-                value={email}
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "This field is required ",
+                  },
+                })}
               />
+              {errors.email && (
+                <div className="mx-8 text-red-600 text-sm">
+                  {errors.email.message}
+                </div>
+              )}
             </div>
             <div className="flex flex-col">
               <div className="flex justify-between items-center mx-8 mt-4">
@@ -133,14 +131,17 @@ function Login() {
               </div>
               <div className="relative flex flex-col">
                 <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
                   className={`mx-8 mt-2 p-1 bg-input-bg ${
                     fieldsIncorrect ? "border-red-600" : "border-input-border"
                   } border-2 rounded-md pr-8`}
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  id="password"
-                  onChange={handlePasswordChange}
-                  value={password}
+                  {...register("password", {
+                    required: {
+                      value: true,
+                      message: "This field is required ",
+                    },
+                  })}
                 />
                 {showPassword ? (
                   <FaRegEyeSlash
@@ -154,19 +155,42 @@ function Login() {
                   />
                 )}
               </div>
-              {fieldsIncorrect && (
-                <div className="mx-8 text-sm text-red-600">{errorMessage}</div>
+
+              {errors.password && (
+                <div className="mx-8 text-red-600 text-sm">
+                  {errors.password.message}
+                </div>
+              )}
+              {errors.noMailNoPass && (
+                <div className="mx-8 text-red-600 text-sm">
+                  {errors.noMailNoPass.message}
+                </div>
+              )}
+              {errors.invalid && (
+                <div className="mx-8 text-red-600 text-sm">
+                  {errors.invalid.message}
+                </div>
+              )}
+              {errors.noAdmin && (
+                <div className="mx-8 text-red-600 text-sm">
+                  {errors.noAdmin.message}
+                </div>
+              )}
+              {errors.noIdea && (
+                <div className="mx-8 text-red-600 text-sm">
+                  {errors.noIdea.message}
+                </div>
               )}
             </div>
             <div className="flex flex-col text-center">
-              <button
-                onClick={submitHandler}
+              <input
+                disabled={isSubmitting}
+                type="submit"
+                value="Sign In"
                 className="mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"
-              >
-                Sign In
-              </button>
+              />
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </>

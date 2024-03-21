@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BsList, BsX } from "react-icons/bs";
 import { useNavigate, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const Navbar = () => {
 
   return (
     <div className="flex">
-      <div className="flex flex-col bg-white text-black">
+      <div className="flex flex-col bg-white text-black ">
         {bigScreen ? (
           ""
         ) : (
@@ -60,11 +61,11 @@ const Navbar = () => {
           <div className="flex flex-col">
             <button
               className={`p-4 rounded-r-xl ${
-                selectedButton === "dashboard"
+                selectedButton === ""
                   ? "bg-blue-500 text-white"
                   : "hover:bg-gray-200"
               }`}
-              onClick={() => handleSelect("dashboard")}
+              onClick={() => handleSelect("")}
             >
               Dashboard
             </button>

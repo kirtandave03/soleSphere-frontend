@@ -127,8 +127,8 @@ function Dashboard() {
         <Navbar />
         <div className="flex-grow flex flex-col">
           <h1 className="font-bold mx-2 mb-2 text-lg">Dashboard</h1>
-          <div className="ml-8 flex justify-between text-lg">
-            <div className="dashboard-stat">
+          <div className="flex flex-col justify-center items-center">
+            <div className="w-11/12 flex justify-between gap-8 text-lg">
               <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
                 <div>
                   <p className="font-semibold">Total Users</p>
@@ -138,8 +138,6 @@ function Dashboard() {
                   <HiMiniUsers className="w-6 h-6 text-[#8280ff] rounded-lg" />
                 </div>
               </div>
-            </div>
-            <div className="dashboard-stat">
               <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
                 <div>
                   <p className="font-semibold">Total Orders</p>
@@ -149,8 +147,6 @@ function Dashboard() {
                   <IoCube className="w-6 h-6 text-[#fec53d] rounded-lg" />
                 </div>
               </div>
-            </div>
-            <div className="dashboard-stat">
               <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
                 <div>
                   <p className="font-semibold">Total Sales</p>
@@ -160,8 +156,6 @@ function Dashboard() {
                   <FaChartLine className="w-6 h-6 text-[#4ad991] rounded-lg" />
                 </div>
               </div>
-            </div>
-            <div className="dashboard-stat">
               <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
                 <div>
                   <p className="font-semibold">
@@ -175,6 +169,18 @@ function Dashboard() {
                 </div>
               </div>
             </div>
+            {/* <div class="rounded-t-none rounded-b-sm p-2">
+              <div class="relative overflow-hidden w-11/12">
+                <canvas
+                  className="inline-block align-baseline w-11/12 overflow-clip"
+                  id="barChart"
+                  style="height: 400px; width: 813px;"
+                  height="800"
+                  width="1626"
+                ></canvas>
+              </div>
+            </div> */}
+            <div>Most Sold Products Table</div>
           </div>
           <div className="ml-8 bg-white rounded-md flex shadow">
             <BarChart

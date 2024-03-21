@@ -3,7 +3,7 @@ import Error404Img from "../assets/404.png";
 import { useNavigate } from "react-router-dom";
 
 const Error404 = () => {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   function handleSubmit() {
     console.log("back clicked");
