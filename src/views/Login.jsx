@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 function Login() {
   const {
@@ -12,7 +13,7 @@ function Login() {
     handleSubmit,
     setError,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -24,16 +25,13 @@ function Login() {
   };
 
   const onSubmit = async (data) => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    };
+    const headers = { "Content-Type": "application/json" };
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/v1/auth/login",
-        requestOptions
+      const response = await axios.post(
+        "https://solesphere-backend.onrender.com/api/v1/auth/login",
+        data,
+        { headers }
       );
 
       console.log(response.status);
@@ -156,6 +154,7 @@ function Login() {
             </div>
             <div className="flex flex-col text-center">
               <input
+                disabled={isSubmitting}
                 type="submit"
                 value="Sign In"
                 className="mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"

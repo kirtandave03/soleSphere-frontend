@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BsList, BsX } from "react-icons/bs";
 import { useNavigate, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const Navbar = () => {
 
   return (
     <div className="flex">
-      <div className="flex flex-col bg-white text-black">
+      <div className="flex flex-col bg-white text-black ">
         {bigScreen ? (
           ""
         ) : (

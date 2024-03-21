@@ -10,7 +10,7 @@ function AddCategoriesAndBrands() {
     handleSubmit,
     setError,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
   const accessToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxODJmMGE0ODRlNjcwYzY4ODcwNTciLCJlbWFpbCI6ImtpcnRhbmRhdmVAYm9zY3RlY2hsYWJzLmNvbSIsImlhdCI6MTcwOTI3NzkzNn0.apiL-taCwpQs_6KFYYbgMx-ATLNd3RMQQG8YjlHzC68";
@@ -338,6 +338,7 @@ function AddCategoriesAndBrands() {
                           })}
                         />
                         <input
+                          disabled={isSubmitting}
                           type="submit"
                           value="Add Category"
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
@@ -391,6 +392,7 @@ function AddCategoriesAndBrands() {
                           })}
                         />
                         <input
+                          disabled={isSubmitting}
                           type="submit"
                           value="Update Category"
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
@@ -430,6 +432,7 @@ function AddCategoriesAndBrands() {
                           </select>
                         )}
                         <input
+                          disabled={isSubmitting}
                           type="submit"
                           value="Delete Category"
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"

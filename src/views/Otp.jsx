@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Otp = () => {
   const email = useSelector((state) => state.email);
@@ -19,24 +20,20 @@ const Otp = () => {
   };
 
   const submitHandler = async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp: OTP }),
-    };
+    const headers = { "Content-Type": "application/json" };
 
     try {
       console.log(OTP);
       console.log(email);
-      const response = await fetch(
-        "http://localhost:3000/api/v1/auth/verify-otp",
-        requestOptions
+
+      const response = await axios.post(
+        "https://solesphere-backend.onrender.com/api/v1/auth/verify-otp",
+        { email, otp: OTP },
+        { headers }
       );
 
-      console.log(response);
-
       if (response.status === 201) {
-        const data = await response.json();
+        localStorage.setItem("auth-token", response.data.data.accessToken);
         navigate("/");
       } else {
         setIncorrectOTP(true);

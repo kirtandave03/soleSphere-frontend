@@ -178,6 +178,7 @@ function EditProductPage() {
                     Short Description
                   </label>
                   <textarea
+                    rows={5}
                     className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
                     {...register("shortDescription", {
                       defaultValue: productData.shortDescription,
@@ -190,6 +191,7 @@ function EditProductPage() {
                   Long Description
                 </label>
                 <textarea
+                  rows={5}
                   className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
                   {...register("longDescription", {
                     defaultValue: productData.longDescription,

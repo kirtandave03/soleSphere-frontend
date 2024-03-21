@@ -1,6 +1,6 @@
+import Navbar from "../layouts/Navbar";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../layouts/Navbar";
 import TopBar from "../layouts/TopBar";
 import {
   Table,
@@ -14,11 +14,9 @@ import {
   TablePagination,
   TextField,
   InputAdornment,
-  Button,
 } from "@mui/material";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import SearchIcon from "@mui/icons-material/Search";
+import { FaRegEdit } from "react-icons/fa";
+import { RiDeleteBinLine } from "react-icons/ri";
 import axios from "axios";
 
 function Products() {
@@ -31,6 +29,7 @@ function Products() {
       );
       const responseData = response.data;
 
+      console.log(response);
       setRows(responseData.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -222,13 +221,13 @@ function Products() {
                               aria-label="edit"
                               onClick={() => onEdit(row._id)}
                             >
-                              <ModeEditOutlineOutlinedIcon />
+                              <FaRegEdit />
                             </IconButton>
                             <IconButton
                               aria-label="delete"
                               onClick={() => onDelete(row.productName)}
                             >
-                              <DeleteOutlineOutlinedIcon />
+                              <RiDeleteBinLine />
                             </IconButton>
                           </TableCell>
                         </TableRow>
