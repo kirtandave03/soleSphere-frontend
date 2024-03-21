@@ -3,7 +3,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 // import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Login from "./views/Login.jsx";
-import Otp from "./views/Otp.jsx";
+import VerifyOTP from "./views/VerifyOTP.jsx";
 import Error404 from "./components/Error404.jsx";
 import Dashboard from "./views/Dashboard.jsx";
 import AddProducts from "./views/AddProducts.jsx";
@@ -11,8 +11,10 @@ import CategoryAndBrand from "./views/CategoryAndBrand.jsx";
 import AddVariants from "./views/AddVariants.jsx";
 import Products from "./views/Products.jsx";
 import EditProductPage from "./views/EditProduct.jsx";
+import ForgetPassword from "./views/ForgetPassword.jsx";
 import { BrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import UpdatePassword from "./views/UpdatePassword.jsx";
 
 const App = () => {
   return (
@@ -21,8 +23,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<ProtectedRoute Component={Dashboard} />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/otp" element={<Otp />} />
+          <Route path="/otp" element={<VerifyOTP />} />
           <Route path="/*" element={<Error404 />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
           <Route
             path="/add-product"
             element={<ProtectedRoute Component={AddProducts} />}

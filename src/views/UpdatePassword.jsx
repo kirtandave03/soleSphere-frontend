@@ -41,7 +41,7 @@ const UpdatePassword = () => {
       console.log(response.status);
 
       if (response.status === 200) {
-        navigate("/");
+        navigate("/login");
       }
       if (response.status === 400) {
         setError("notSame", {

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 function Login() {
   const {
@@ -12,16 +13,22 @@ function Login() {
     handleSubmit,
     setError,
     watch,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [fieldsIncorrect, setFieldsIncorrrect] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [inputval, setInputval] = useState("");
   const navigate = useNavigate();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleChange = (e) => {
+    setInputval(e.target.value);
+    console.log(inputval);
   };
 
   const handleForgetPassword = async () => {
@@ -30,13 +37,14 @@ function Login() {
     try {
       const response = await axios.post(
         "https://solesphere-backend.onrender.com/api/v1/auth/forgot-password",
-        { email },
+        { email: inputval },
         { headers }
       );
 
       console.log(response.status);
 
       if (response.status === 200) {
+        dispatch(setEmail(inputval));
         navigate("/forget-password");
       }
       if (response.status === 400) {
@@ -50,7 +58,8 @@ function Login() {
     }
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
+    const { email, password } = data;
     const headers = { "Content-Type": "application/json" };
 
     try {
@@ -63,27 +72,28 @@ function Login() {
       console.log(response.status);
 
       if (response.status === 201) {
-        dispatch(setEmail(data.email));
+        dispatch(setEmail(email));
         navigate("/otp");
       }
-      if (response.status === 400) {
-        setError("noMailNoPass", {
-          message: "Email and password both are required!",
-        });
-      }
-      if (response.status === 404) {
-        setError("noAdmin", {
-          message: "Admin not found!",
-        });
-      }
-      if (response.status === 401) {
+    } catch (error) {
+      if (error.response.status === 401) {
         setError("invalid", {
           message: "Invalid Credentials!",
         });
+        setFieldsIncorrrect(true);
+      } else if (error.response.status === 404) {
+        setError("noAdmin", {
+          message: "Admin not found!",
+        });
+        setFieldsIncorrrect(true);
+      } else if (error.response.status === 400) {
+        setError("noMailNoPass", {
+          message: "Email and password both are required!",
+        });
+        setFieldsIncorrrect(true);
+      } else {
+        navigate("/error");
       }
-    } catch (error) {
-      console.error(error);
-      navigate("/error");
     }
   };
 
@@ -105,6 +115,9 @@ function Login() {
                 className={`mx-8 mt-2 p-1 bg-input-bg ${
                   fieldsIncorrect ? "border-red-600" : "border-input-border"
                 } border-2 rounded-md`}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
                 {...register("email", {
                   required: {
                     value: true,
@@ -183,7 +196,7 @@ function Login() {
                 disabled={isSubmitting}
                 type="submit"
                 value="Sign In"
-                className="mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"
+                className="disabled:opacity-50 mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"
               />
             </div>
           </form>

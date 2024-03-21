@@ -27,7 +27,8 @@ const ProtectedRoute = (props) => {
           navigate("/login");
           return;
         } else {
-          navigate("/error");
+          // navigate("/error");
+          console.log("Error : ", error);
         }
       }
     })();

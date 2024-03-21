@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 const ForgetPassword = () => {
   const email = useSelector((state) => state.email);
+  // console.log(email);
   return (
     <div>
       <Otp

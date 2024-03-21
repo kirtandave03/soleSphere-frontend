@@ -31,6 +31,9 @@ const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
       );
 
       if (response.status === status) {
+        status === 201 &&
+          localStorage.setItem("auth-token", response.data.data.accessToken);
+        console.log(response.data.data.accessToken);
         navigate(`${navigation}`);
         console.log("it worked");
       } else {
