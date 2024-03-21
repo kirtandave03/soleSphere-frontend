@@ -1,17 +1,17 @@
 import React from "react";
-import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
+import axios from "axios";
 
 function Login() {
   const email = useSelector((state) => state.email);
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [fieldsIncorrect, setFieldsIncorrrect] = useState(false);
+  const [fieldsIncorrect, setFieldsIncorrect] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -27,17 +27,40 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  const submitHandler = async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    };
+  const handleForgetPassword = async () => {
+    const headers = { "Content-Type": "application/json" };
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/v1/auth/login",
-        requestOptions
+      const response = await axios.post(
+        "https://solesphere-backend.onrender.com/api/v1/auth/forgot-password",
+        { email },
+        { headers }
+      );
+
+      console.log(response.status);
+
+      if (response.status === 200) {
+        navigate("/forget-password");
+      }
+      if (response.status === 400) {
+        alert("Email is required field");
+      }
+      if (response.status === 404) {
+        alert("Admin not found");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const submitHandler = async () => {
+    const headers = { "Content-Type": "application/json" };
+
+    try {
+      const response = await axios.post(
+        "https://solesphere-backend.onrender.com/api/v1/auth/login",
+        { email, password },
+        { headers }
       );
       console.log("INside fun");
       console.log("below");
@@ -46,16 +69,16 @@ function Login() {
         navigate("/otp");
       } else if (response.status === 400) {
         setErrorMessage("Email and password both are required");
-        setFieldsIncorrrect(true);
+        setFieldsIncorrect(true);
       } else if (response.status === 404) {
         setErrorMessage("Admin not found");
-        setFieldsIncorrrect(true);
+        setFieldsIncorrect(true);
       } else if (response.status === 401) {
         setErrorMessage("Invalid Credentials");
-        setFieldsIncorrrect(true);
+        setFieldsIncorrect(true);
       } else {
         setErrorMessage("Something Went Wrong");
-        setFieldsIncorrrect(true);
+        setFieldsIncorrect(true);
       }
     } catch (error) {
       console.error(error);
@@ -105,7 +128,7 @@ function Login() {
               <div className="flex justify-between items-center mx-8 mt-4">
                 <label htmlFor="password">Password:</label>
                 <span className="ml-2 text-slate-500 hover:underline hover:text-slate-700">
-                  <Link to="">Forget Password?</Link>
+                  <Link onClick={handleForgetPassword}>Forget Password?</Link>
                 </span>
               </div>
               <div className="relative flex flex-col">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Login from "./views/Login";
 import Error404 from "./components/Error404";
-import Otp from "./views/Otp";
+import Otp from "./components/Otp";
 import Dashboard from "./views/Dashboard";
 import AddProducts from "./views/AddProducts";
 
@@ -21,6 +21,7 @@ function App() {
       <Otp email={email} /> */}
       {/* <Navbar /> */}
       {/* <Dashboard /> */}
+      <Protec></Protec>
       <AddProducts />
     </>
   );

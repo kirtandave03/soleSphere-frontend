@@ -1,10 +1,9 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-const Otp = () => {
-  const email = useSelector((state) => state.email);
+const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
   const [OTP, setOTP] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [incorrectOTP, setIncorrectOTP] = useState(false);
@@ -19,25 +18,47 @@ const Otp = () => {
   };
 
   const submitHandler = async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp: OTP }),
-    };
+    const headers = { "Content-Type": "application/json" };
 
     try {
       console.log(OTP);
       console.log(email);
-      const response = await fetch(
-        "http://localhost:3000/api/v1/auth/verify-otp",
-        requestOptions
+
+      const response = await axios.post(
+        `${link}`,
+        { email, otp: OTP },
+        { headers }
       );
 
-      if (response.status === 201) {
-        navigate("/dashboard");
+      if (response.status === status) {
+        navigate(`${navigation}`);
         console.log("it worked");
       } else {
         setIncorrectOTP(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleResend = async () => {
+    const headers = { "Content-Type": "application/json" };
+
+    try {
+      const response = await axios.post(
+        "https://solesphere-backend.onrender.com/api/v1/auth/get-otp",
+        { email },
+        { headers }
+      );
+
+      if (response.status === 201) {
+        navigate(`${resendNavigation}`);
+      }
+      if (response.status === 400) {
+        alert("email is required");
+      }
+      if (response.status === 404) {
+        alert("Admin doesn't exists");
       }
     } catch (error) {
       console.error(error);
@@ -62,13 +83,13 @@ const Otp = () => {
     <>
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
         <div className="m-auto w-[560px] h-[307.54px] bg-white flex flex-col justify-center items-center gap-8 align-middle rounded-xl font-sans">
-          <p className="text-3xl">Verify OTP</p>
+          <p className="text-3xl">{text}</p>
           <div className=" relative w-full flex flex-col justify-center items-center gap-4">
             <input
               className={`w-1/3 mx-8 mt-2 p-1 bg-input-bg ${
                 incorrectOTP ? "border-red-600" : "border-input-border"
               } border-2 rounded-md text-center`}
-              type={showPassword ? "text" : "password"} // Change type dynamically
+              type={showPassword ? "text" : "password"}
               name="otp"
               id="otp"
               placeholder="Enter otp here"
@@ -95,6 +116,7 @@ const Otp = () => {
               </button>
               <span className="flex flex-col text-center">
                 <Link
+                  onClick={handleResend}
                   to="/otp"
                   className="text-sm text-slate-500 hover:underline hover:text-slate-700"
                 >

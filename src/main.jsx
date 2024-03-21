@@ -6,13 +6,15 @@ import "./index.css";
 import { Provider } from "react-redux";
 import store from "./redux/store.js";
 import Login from "./views/Login.jsx";
-import Otp from "./views/Otp.jsx";
+import VerifyOTP from "./views/VerifyOTP.jsx";
 import Error404 from "./components/Error404.jsx";
 import Dashboard from "./views/Dashboard.jsx";
 import AddProducts from "./views/AddProducts.jsx";
 import Membership from "./views/Membership.jsx";
 import CategoryAndBrand from "./views/CategoryAndBrand.jsx";
 import AddVariants from "./views/AddVariants.jsx";
+import ForgetPassword from "./views/ForgetPassword.jsx";
+import UpdatePassword from "./views/UpdatePassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +23,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/otp",
-    element: <Otp />,
+    element: <VerifyOTP />,
   },
   {
     path: "/error",
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
   {
     path: "/category-and-brand",
     element: <CategoryAndBrand />,
+  },
+  {
+    path: "/forget-password",
+    element: <ForgetPassword />,
+  },
+  {
+    path: "/update-password",
+    element: <UpdatePassword />,
   },
 ]);
 
