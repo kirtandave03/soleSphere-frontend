@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Otp = () => {
   const email = useSelector((state) => state.email);
@@ -19,23 +20,21 @@ const Otp = () => {
   };
 
   const submitHandler = async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp: OTP }),
-    };
+    const headers = { "Content-Type": "application/json" };
 
     try {
       console.log(OTP);
       console.log(email);
-      const response = await fetch(
-        "http://localhost:3000/api/v1/auth/verify-otp",
-        requestOptions
+
+      const response = await axios.post(
+        "https://solesphere-backend.onrender.com/api/v1/auth/verify-otp",
+        { email, otp: OTP },
+        { headers }
       );
 
       if (response.status === 201) {
-        navigate("/dashboard");
-        console.log("it worked");
+        localStorage.setItem("auth-token", response.data.data.accessToken);
+        navigate("/");
       } else {
         setIncorrectOTP(true);
       }
@@ -66,9 +65,11 @@ const Otp = () => {
           <div className=" relative w-full flex flex-col justify-center items-center gap-4">
             <input
               className={`w-1/3 mx-8 mt-2 p-1 bg-input-bg ${
-                incorrectOTP ? "border-red-600" : "border-input-border"
+                incorrectOTP
+                  ? "border-red-600"
+                  : "border-input-border placeholder: pr-14"
               } border-2 rounded-md text-center`}
-              type={showPassword ? "text" : "password"} // Change type dynamically
+              type={showPassword ? "text" : "password"}
               name="otp"
               id="otp"
               placeholder="Enter otp here"
@@ -77,12 +78,12 @@ const Otp = () => {
             />
             {showPassword ? (
               <FaRegEyeSlash
-                className="absolute right-[12.3rem] top-7 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-[12.3rem] top-[1.65rem] transform -translate-y-1/2 cursor-pointer"
                 onClick={toggleShowPassword}
               />
             ) : (
               <FaRegEye
-                className="absolute right-[12.3rem] top-7 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-[12.3rem] top-[1.65rem] transform -translate-y-1/2 cursor-pointer"
                 onClick={toggleShowPassword}
               />
             )}

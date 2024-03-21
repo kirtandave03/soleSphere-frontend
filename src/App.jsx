@@ -1,29 +1,52 @@
-import { useState } from "react";
-import "./App.css";
-import Login from "./views/Login";
-import Error404 from "./components/Error404";
-import Otp from "./views/Otp";
-import Dashboard from "./views/Dashboard";
-import AddProducts from "./views/AddProducts";
+// App.jsx
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+// import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import Login from "./views/Login.jsx";
+import Otp from "./views/Otp.jsx";
+import Error404 from "./components/Error404.jsx";
+import Dashboard from "./views/Dashboard.jsx";
+import AddProducts from "./views/AddProducts.jsx";
+import CategoryAndBrand from "./views/CategoryAndBrand.jsx";
+import AddVariants from "./views/AddVariants.jsx";
+import Products from "./views/Products.jsx";
+import EditProductPage from "./views/EditProduct.jsx";
+import { BrowserRouter } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
-function App() {
-  const [email, setEmail] = useState("");
-
-  const handleEmailChange = () => {
-    console.log("App");
-    // setEmail(newEmail);
-  };
-
+const App = () => {
   return (
     <>
-      {/* <Login onSubmit={handleEmailChange} />
-      <Error404 />
-      <Otp email={email} /> */}
-      {/* <Navbar /> */}
-      {/* <Dashboard /> */}
-      <AddProducts />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<ProtectedRoute Component={Dashboard} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/otp" element={<Otp />} />
+          <Route path="/*" element={<Error404 />} />
+          <Route
+            path="/add-product"
+            element={<ProtectedRoute Component={AddProducts} />}
+          />
+          <Route
+            path="/add-variant"
+            element={<ProtectedRoute Component={AddVariants} />}
+          />
+          <Route
+            path="/category-and-brand"
+            element={<ProtectedRoute Component={CategoryAndBrand} />}
+          />
+          <Route
+            path="/products"
+            element={<ProtectedRoute Component={Products} />}
+          />
+          <Route
+            path="/edit-product/:productId"
+            element={<ProtectedRoute Component={EditProductPage} />}
+          />
+        </Routes>
+      </BrowserRouter>
     </>
   );
-}
+};
 
 export default App;
