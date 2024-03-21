@@ -51,16 +51,12 @@ function Login() {
   };
 
   const onSubmit = async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    };
+    const headers = { "Content-Type": "application/json" };
 
     try {
       const response = await axios.post(
         "https://solesphere-backend.onrender.com/api/v1/auth/login",
-        data,
+        { email, password },
         { headers }
       );
 
