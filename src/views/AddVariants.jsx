@@ -3,11 +3,14 @@ import TopBar from "../layouts/TopBar";
 import Navbar from "../layouts/Navbar";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { fileUpload } from "../services/fileupload.service";
+import { addVariant, getProducts } from "../services/product.service";
 
 const AddVariants = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isUploaded, setIsUploaded] = useState(false);
@@ -34,31 +37,19 @@ const AddVariants = () => {
     setInputFields([...inputFields, ...newFields]);
   };
 
+  const getAllProducts = async () => {
+    const response = await getProducts(0, 0, query);
+    setFilteredProducts(response.data.data.products);
+  };
+
   useEffect(() => {
-    (async () => {
-      const productData = await axios.get(
-        "https://solesphere-backend.onrender.com/api/v1/products/all-products"
-      );
-      setProducts(productData.data.data);
-      console.log(products);
-    })();
-  }, []);
+    getAllProducts();
+  }, [query]);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
-    filterResults(e.target.value);
-    filterResults(e.target.value);
     setSelectedProduct(e.target.value);
-  };
-
-  const filterResults = (query) => {
-    if (!query) {
-    } else {
-      const filteredResults = products.filter((item) =>
-        item.productName.includes(query)
-      );
-      setSearchResult(filteredResults);
-    }
+    setProducts(filteredProducts);
   };
 
   function convertHexToFlutterFormat(hexColor) {
@@ -100,15 +91,7 @@ const AddVariants = () => {
     }
 
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/file-upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await fileUpload(formData);
 
       setIsUploading(false);
 
@@ -131,7 +114,7 @@ const AddVariants = () => {
   const handleOptionClick = (productName, productId) => {
     setSelectedProduct(productName);
     setProduct_id(productId);
-    setSearchResult([]);
+    setProducts([]);
   };
 
   const onSubmit = async (data) => {
@@ -151,17 +134,8 @@ const AddVariants = () => {
       },
     };
 
-    console.log(variant);
-
-    const apiUrl =
-      "https://solesphere-backend.onrender.com/api/v1/products/add-variant";
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": localStorage.getItem("auth-token"),
-    };
-
     try {
-      var response = await axios.post(apiUrl, variant, { headers });
+      var response = await addVariant();
       if (response.status === 200) {
         alert("New variant Added Successfully");
       }
@@ -211,7 +185,7 @@ const AddVariants = () => {
                     }}
                   />
                   <ul>
-                    {searchResult.map((item, index) => (
+                    {products.map((item, index) => (
                       <li
                         key={index}
                         className="my-2 border border-b-4 p-2 cursor-pointer"

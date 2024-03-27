@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../layouts/Navbar";
 import Topbar from "../layouts/TopBar";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { getBrands } from "../services/brand.service";
+import { getCategories } from "../services/category.service";
+import { fileUpload } from "../services/fileupload.service";
+import { addProduct } from "../services/product.service";
 
 const AddProducts = () => {
   const [category, setCategory] = useState([]);
@@ -13,31 +16,19 @@ const AddProducts = () => {
   const [isDisabled, setisDisabled] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const brands = await axios.get(
-          "https://solesphere-backend.onrender.com/api/v1/brands/"
-        );
-        // console.log(brands.data.data.brands);
-        setBrand(brands.data.data.brands);
-      } catch (error) {
-        alert("Error while fetching brands");
-      }
-    })();
+  const getAllBrands = async () => {
+    const brands = await getBrands();
+    setBrand(brands.data.data.brands);
+  };
 
-    (async () => {
-      try {
-        const categories = await axios.get(
-          "https://solesphere-backend.onrender.com/api/v1/categories"
-        );
-        // console.log(categories.data.data.categories);
-        setCategory(categories.data.data.categories);
-        // console.log(category)
-      } catch (error) {
-        alert("Error while fetching categories");
-      }
-    })();
+  const getAllCategories = async () => {
+    const categories = await getCategories();
+    setCategory(categories.data.data.categories);
+  };
+
+  useEffect(() => {
+    getAllBrands();
+    getAllCategories();
   }, []);
 
   const handleImages = (e) => {
@@ -65,16 +56,7 @@ const AddProducts = () => {
     }
 
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/file-upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
+      const response = await fileUpload(formData);
       if (response.status === 200) {
         setImageUrls(response.data.data);
         setIsUploaded(true);
@@ -151,19 +133,14 @@ const AddProducts = () => {
       ],
     };
 
-    const apiUrl = "https://solesphere-backend.onrender.com/api/v1/products/";
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": localStorage.getItem("auth-token"),
-    };
     try {
-      var response = await axios.post(apiUrl, productData, { headers });
+      var response = await addProduct(productData);
       if (response.status === 200) {
         alert("Product Added Successfully");
       }
     } catch (error) {
       if (error.response.status === 500) {
-        alert("Product Already Exists");
+        alert("Product Already Exists or Internal Server Error");
       } else if (error.response.status === 404) {
         alert("Category or Brand not found");
       } else {

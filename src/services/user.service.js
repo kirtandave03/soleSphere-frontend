@@ -1,7 +1,4 @@
-import {
-  jsonAxiosInstance,
-  formDataAxiosInstance,
-} from "./common/axiosInstances";
+import { jsonAxiosInstance } from "./common/axiosInstances";
 
 export const getUsers = async (searchQuery, rowsPerPage, page) => {
   const url = `/admin/users?q=${searchQuery}&limit=${rowsPerPage}&page=${page}`;
