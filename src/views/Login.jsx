@@ -19,17 +19,18 @@ function Login() {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [fieldsIncorrect, setFieldsIncorrrect] = useState(false);
-  const [inputval, setInputval] = useState("");
   const navigate = useNavigate();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleChange = (e) => {
-    setInputval(e.target.value);
-    console.log(inputval);
-  };
+  // const handleChange = (e) => {
+  //   setInputval(e.target.value);
+  //   console.log(inputval);
+  // };
+
+  const inputval = watch("email", "");
 
   const handleForgetPassword = async () => {
     const headers = { "Content-Type": "application/json" };
@@ -100,10 +101,13 @@ function Login() {
   return (
     <>
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
-        <div className="m-auto w-[560px] h-[350px] bg-white flex flex-col justify-center align-middle rounded-xl">
+        <div className="m-auto w-[560px] h-[360px] bg-white flex flex-col justify-center align-middle rounded-xl">
+          <div className="font-bold text-2xl mb-4 flex justify-center items-center">
+            <span className="text-[#4880FF]">Sole</span>Sphere
+          </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col items-center">
-              <h1 className="font-bold text-2xl font-sans mb-6">Login</h1>
+              <h1 className="font-bold text-2xl font-sans mb-3">Login</h1>
             </div>
             <div className="flex flex-col">
               <label htmlFor="email" className="ml-8 mt-1">
@@ -115,9 +119,6 @@ function Login() {
                 className={`mx-8 mt-2 p-1 bg-input-bg ${
                   fieldsIncorrect ? "border-red-600" : "border-input-border"
                 } border-2 rounded-md`}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
                 {...register("email", {
                   required: {
                     value: true,
@@ -196,7 +197,7 @@ function Login() {
                 disabled={isSubmitting}
                 type="submit"
                 value="Sign In"
-                className="disabled:opacity-50 mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"
+                className="disabled:opacity-50 cursor-pointer mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"
               />
             </div>
           </form>

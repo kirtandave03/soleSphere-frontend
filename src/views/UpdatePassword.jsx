@@ -155,7 +155,7 @@ const UpdatePassword = () => {
               disabled={isSubmitting}
               type="submit"
               value="Update Password"
-              className="mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md hover:cursor-pointer"
+              className="mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md hover:cursor-pointer disabled:opacity-50"
             />
           </div>
         </form>

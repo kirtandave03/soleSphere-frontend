@@ -13,100 +13,54 @@ import {
   InputAdornment,
 } from "@mui/material";
 
-const orderTable = () => {
+const OrderTable = ({
+  columns,
+  data,
+  rowsPerPage,
+  page,
+  handleChangePage,
+  handleChangeRowsPerPage,
+}) => {
   return (
     <div>
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Image
-              </TableCell>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Product Name
-              </TableCell>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Category
-              </TableCell>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Brand
-              </TableCell>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Price
-              </TableCell>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Total Available Colors
-              </TableCell>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Average Rating
-              </TableCell>
-              <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
-                Actions
-              </TableCell>
+              {columns.map((column, index) => (
+                <TableCell
+                  key={index}
+                  style={{ fontWeight: "600", textAlign: "center" }}
+                >
+                  {column}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataToDisplay
+            {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>
-                    <img
-                      src={row.image}
-                      alt="Product Image"
-                      style={{
-                        maxWidth: "100px",
-                        maxHeight: "100px",
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>{row.productName}</TableCell>
-                  <TableCell>{row.category.category}</TableCell>
-                  <TableCell>{row.brand.brand}</TableCell>
-                  <TableCell>{row.discounted_price}</TableCell>
-                  <TableCell style={{ textAlign: "center" }}>
-                    {row.colors}
-                  </TableCell>
-                  <TableCell>
-                    <TableCell
-                      style={{
-                        borderBottom: "0px solid rgba(224, 224, 224, 1)",
-                      }}
-                    >
-                      {row.avgRating !== null ? row.avgRating.toFixed(2) : ""}
-                    </TableCell>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      aria-label="edit"
-                      onClick={() => onEdit(row._id)}
-                    >
-                      <ModeEditOutlineOutlinedIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => onDelete(row.productName)}
-                    >
-                      <DeleteOutlineOutlinedIcon />
-                    </IconButton>
-                  </TableCell>
+                  {Object.keys(row).map((key) => (
+                    <TableCell key={key}>{row[key]}</TableCell>
+                  ))}
                 </TableRow>
               ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(event, newPage) => handleChangePage(newPage)}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={dataToDisplay.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(event, newPage) => handleChangePage(newPage)}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </div>
   );
 };
 
-export default orderTable;
+export default OrderTable;

@@ -5,13 +5,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { FaSpinner } from "react-icons/fa";
+import { IoIosArrowDropdown } from "react-icons/io";
 
 function EditProductPage() {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    watch,
+    clearErrors,
+    formState: { errors, isSubmitting },
+  } = useForm();
   const navigate = useNavigate();
   const { productId } = useParams();
-  const { register, handleSubmit, setValue } = useForm();
-  const accessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxODJmMGE0ODRlNjcwYzY4ODcwNTciLCJlbWFpbCI6ImtpcnRhbmRhdmVAYm9zY3RlY2hsYWJzLmNvbSIsImlhdCI6MTcwOTI3NzkzNn0.apiL-taCwpQs_6KFYYbgMx-ATLNd3RMQQG8YjlHzC68";
+  const accessToken = localStorage.getItem("auth-token");
   const closureTypes = [
     "zipper",
     "button",
@@ -36,7 +44,9 @@ function EditProductPage() {
   const sizeTypes = ["US", "UK", "EU"];
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedColor, setSelectedColor] = useState(null);
   const [productData, setProductData] = useState({
     productName: "",
     shortDescription: "",
@@ -47,13 +57,14 @@ function EditProductPage() {
     sizeType: "",
     category: "",
     brand: "",
+    variant: [],
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const productResponse = await axios.get(
-          `http://localhost:3000/api/v1/products/product-detail?product_id=${productId}`
+          `https://solesphere-backend.onrender.com/api/v1/products/product-detail?product_id=${productId}`
         );
         const categoryResponse = await axios.get(
           "https://solesphere-backend.onrender.com/api/v1/categories"
@@ -76,6 +87,7 @@ function EditProductPage() {
           sizeType: product.sizeType,
           category: product.category.category,
           brand: product.brand.brand,
+          variant: product.variants,
         });
 
         setValue("productName", product.productName);
@@ -87,9 +99,11 @@ function EditProductPage() {
         setValue("sizeType", product.sizeType);
         setValue("category", product.category.category);
         setValue("brand", product.brand.brand);
+        setValue("variants", product.variants);
 
         setCategories(categories);
         setBrands(brands);
+        setVariants(variants);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -100,7 +114,33 @@ function EditProductPage() {
     fetchData();
   }, [productId]);
 
+  useEffect(() => {
+    register("selectedColor");
+  }, [register]);
+
+  const handleColorClick = (color) => {
+    setValue("selectedColor", color);
+    setSelectedColor(color);
+  };
+
   const onSubmit = async (data) => {
+    const updatedVariants = productData.variant.map((variant, index) => {
+      if (variant.color === selectedColor) {
+        return {
+          ...variant,
+          color: convertHexToFlutterFormat(data[`variant${index}`]),
+          sizes: variant.sizes.map((size, sizeIndex) => ({
+            ...size,
+            size: data[`size${sizeIndex}`],
+            actual_price: data[`actualPrice${sizeIndex}`],
+            discounted_price: data[`discountedPrice${sizeIndex}`],
+            stock: data[`stock${sizeIndex}`],
+          })),
+        };
+      }
+      return variant;
+    });
+
     const body = {
       productName: productData.productName,
       updatedProductName: data.productName,
@@ -112,6 +152,7 @@ function EditProductPage() {
       sizeType: data.sizeType,
       category: data.category,
       brand: data.brand,
+      variant: updatedVariants,
     };
 
     const headers = {
@@ -132,11 +173,12 @@ function EditProductPage() {
         alert("Product updated successfully.");
         navigate(-1);
       }
-      if (response.status === 404) {
-        alert(error.response.data.message);
-      }
     } catch (error) {
       console.error("Error updating product:", error);
+
+      if (error.response.status === 404) {
+        alert(error.response.data.message);
+      }
     }
 
     console.log("Form Data:", body);
@@ -149,6 +191,34 @@ function EditProductPage() {
         <span>Loading...</span>
       </div>
     );
+  }
+
+  function convertFlutterToHexFormat(flutterColor) {
+    flutterColor = flutterColor.replace("0xFF", "");
+
+    const r = parseInt(flutterColor.substr(0, 2), 16);
+    const g = parseInt(flutterColor.substr(2, 2), 16);
+    const b = parseInt(flutterColor.substr(4, 2), 16);
+
+    const hexColor = `#${("0" + r.toString(16)).slice(-2)}${(
+      "0" + g.toString(16)
+    ).slice(-2)}${("0" + b.toString(16)).slice(-2)}`;
+
+    return hexColor;
+  }
+
+  function convertHexToFlutterFormat(hexColor) {
+    hexColor = hexColor.replace("#", "");
+
+    const r = parseInt(hexColor.substr(0, 2), 16);
+    const g = parseInt(hexColor.substr(2, 2), 16);
+    const b = parseInt(hexColor.substr(4, 2), 16);
+
+    const flutterColor = `0xFF${("0" + r.toString(16)).slice(-2)}${(
+      "0" + g.toString(16)
+    ).slice(-2)}${("0" + b.toString(16)).slice(-2)}`;
+
+    return flutterColor;
   }
 
   return (
@@ -199,7 +269,7 @@ function EditProductPage() {
                 />
               </div>
               <div className="flex flex-wrap mb-4">
-                <div className="w-full md:w-1/2 pr-2 mb-4 md:mb-0">
+                <div className="w-full md:w-1/3 pr-2 mb-4 md:mb-0">
                   <label className="font-semibold block mb-2">
                     Closure Type
                   </label>
@@ -211,14 +281,14 @@ function EditProductPage() {
                       <option
                         key={closureType}
                         value={closureType}
-                        selected={productData.closureType === closureType}
+                        defaultValue={productData.closureType === closureType}
                       >
                         {closureType}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className="w-full md:w-1/2 pr-2 mb-4 md:mb-0">
+                <div className="w-full md:w-1/3 pr-2 mb-4 md:mb-0">
                   <label className="font-semibold block mb-2">Material</label>
                   <select
                     className="bg-input-bg border-input-bg placeholder:text-center"
@@ -228,16 +298,14 @@ function EditProductPage() {
                       <option
                         key={material}
                         value={material}
-                        selected={productData.material === material}
+                        defaultValue={productData.material === material}
                       >
                         {material}
                       </option>
                     ))}
                   </select>
                 </div>
-              </div>
-              <div className="flex flex-wrap mb-4 mt-4">
-                <div className="w-full md:w-1/2 pr-2 mb-4 md:mb-0">
+                <div className="w-full md:w-1/3 pr-2 mb-4 md:mb-0">
                   <label className="font-semibold block mb-2">Gender</label>
                   <input
                     className="bg-input-bg"
@@ -247,7 +315,7 @@ function EditProductPage() {
                       defaultChecked: productData.gender === "male",
                     })}
                   />
-                  <label>Male</label>
+                  <label className="pr-2">Male</label>
 
                   <input
                     className="bg-input-bg"
@@ -257,7 +325,7 @@ function EditProductPage() {
                       defaultChecked: productData.gender === "female",
                     })}
                   />
-                  <label>Female</label>
+                  <label className="pr-2">Female</label>
 
                   <input
                     className="bg-input-bg"
@@ -269,7 +337,9 @@ function EditProductPage() {
                   />
                   <label>Unisex</label>
                 </div>
-                <div className="w-full md:w-1/2 pl-2">
+              </div>
+              <div className="flex flex-wrap mb-4 mt-4">
+                <div className="w-full md:w-1/3 pl-2">
                   <label className="font-semibold block mb-2">Size Type:</label>
                   <select
                     className="bg-input-bg border-input-bg placeholder:text-center"
@@ -279,16 +349,14 @@ function EditProductPage() {
                       <option
                         key={sizeType}
                         value={sizeType}
-                        selected={productData.sizeType === sizeType}
+                        defaultValue={productData.sizeType === sizeType}
                       >
                         {sizeType}
                       </option>
                     ))}
                   </select>
                 </div>
-              </div>
-              <div className="flex flex-wrap mb-4 mt-4">
-                <div className="w-full md:w-1/2 pr-2 mb-4 md:mb-0">
+                <div className="w-full md:w-1/3 pr-2 mb-4 md:mb-0">
                   <label className="font-semibold block mb-2">Category:</label>
                   <select
                     className="bg-input-bg border-input-bg placeholder:text-center"
@@ -298,14 +366,16 @@ function EditProductPage() {
                       <option
                         key={category._id}
                         value={category.category}
-                        selected={productData.category === category.category}
+                        defaultValue={
+                          productData.category === category.category
+                        }
                       >
                         {category.category}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className="w-full md:w-1/2 pr-2 mb-4 md:mb-0">
+                <div className="w-full md:w-1/3 pr-2 mb-4 md:mb-0">
                   <label className="font-semibold block mb-2">Brand</label>
                   <select
                     className="bg-input-bg border-input-bg placeholder:text-center"
@@ -316,13 +386,125 @@ function EditProductPage() {
                       <option
                         key={brand._id}
                         value={brand.brand}
-                        selected={productData.brand === brand.brand}
+                        defaultValue={productData.brand === brand.brand}
                       >
                         {brand.brand}
                       </option>
                     ))}
                   </select>
                 </div>
+              </div>
+              <div className="flex flex-col flex-wrap mb-4 mt-4">
+                <div className="">
+                  <h2 className="font-semibold text-center mb-2">Variants</h2>
+                  <div className="flex gap-3 justify-center">
+                    {productData.variant.map((variant, index) => (
+                      <div
+                        key={variant.color}
+                        className="flex justify-center items-center gap-1"
+                        onClick={() => handleColorClick(variant.color)}
+                      >
+                        <input
+                          type="color"
+                          defaultValue={convertFlutterToHexFormat(
+                            variant.color
+                          )}
+                          className={`p-0 ${
+                            selectedColor === variant.color
+                              ? "border border-black"
+                              : ""
+                          }`}
+                          {...register(`variant${index}`, {
+                            required: {
+                              value: true,
+                              message: "This field is required ",
+                            },
+                          })}
+                        />
+                        <IoIosArrowDropdown className="mr-2 cursor-pointer" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {selectedColor && (
+                  <div>
+                    {productData.variant.map((variant) => {
+                      if (variant.color === selectedColor) {
+                        return (
+                          <div
+                            key={variant._id}
+                            className="flex justify-around flex-wrap my-2"
+                          >
+                            {variant.sizes.map((size, index) => (
+                              <div
+                                key={size._id}
+                                className="w-56 p-2 bg-white shadow rounded-md"
+                              >
+                                <div className="flex items-center">
+                                  <p className="pr-2">Size: </p>
+                                  <input
+                                    type="text"
+                                    className="bg-input-bg w-7 rounded-md"
+                                    defaultValue={size.size}
+                                    {...register(`size${index}`, {
+                                      required: {
+                                        value: true,
+                                        message: "This field is required ",
+                                      },
+                                    })}
+                                  />
+                                </div>
+                                <div className="flex items-center mb-1">
+                                  <p className="pr-2">Actual Price: </p>
+                                  <input
+                                    type="text"
+                                    className="bg-input-bg w-16 rounded-md"
+                                    defaultValue={size.actual_price}
+                                    {...register(`actualPrice${index}`, {
+                                      required: {
+                                        value: true,
+                                        message: "This field is required ",
+                                      },
+                                    })}
+                                  />
+                                </div>
+                                <div className="flex items-center">
+                                  <p className="pr-2">Discounted Price:</p>
+                                  <input
+                                    type="text"
+                                    className="bg-input-bg w-16 rounded-md"
+                                    defaultValue={size.discounted_price}
+                                    {...register(`discountedPrice${index}`, {
+                                      required: {
+                                        value: true,
+                                        message: "This field is required ",
+                                      },
+                                    })}
+                                  />
+                                </div>
+                                <div className="flex items-center">
+                                  <p className="pr-2">Stock: </p>
+                                  <input
+                                    type="text"
+                                    className="bg-input-bg w-16 rounded-md"
+                                    defaultValue={size.stock}
+                                    {...register(`stock${index}`, {
+                                      required: {
+                                        value: true,
+                                        message: "This field is required ",
+                                      },
+                                    })}
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                )}
               </div>
               <button
                 type="submit"
