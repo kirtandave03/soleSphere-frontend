@@ -182,7 +182,7 @@ const AddProducts = () => {
           <div className="flex">
             <div className="left my-5 ">
               <h1 className="font-bold text-xl">Add New Product</h1>
-              <div className="flex flex-col m-2">
+              <div className="flex flex-col m-2 mx-10">
                 <div>
                   <h3 className="font-semibold">Description</h3>
                   <div className="shadow-lg p-5 rounded-md">

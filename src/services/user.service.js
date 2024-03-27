@@ -28,10 +28,20 @@ export const getDeletedUsers = async (
 };
 
 export const deleteUser = async (id) => {
-  const url = `http://localhost:3000/api/v1/admin/users/${id}`;
+  const url = `/admin/users/${id}`;
   return new Promise((resolve, reject) => {
     jsonAxiosInstance
       .delete(url)
+      .then((res) => resolve(res))
+      .catch((res) => reject(res));
+  });
+};
+
+export const restoreUser = async (_id) => {
+  const url = `/admin/users/${_id}`;
+  return new Promise((resolve, reject) => {
+    jsonAxiosInstance
+      .put(url)
       .then((res) => resolve(res))
       .catch((res) => reject(res));
   });
