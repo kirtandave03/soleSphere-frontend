@@ -19,6 +19,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
 import axios from "axios";
+import { getProducts } from "../services/product.service";
 
 function Products() {
   const navigate = useNavigate();
@@ -36,9 +37,7 @@ function Products() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/products/all-products?page=${page}&limit=${rowsPerPage}&q=${searchQuery}`
-      );
+      const response = await getProducts;
       const responseData = response.data;
 
       console.log(responseData.data.products);
