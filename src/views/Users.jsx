@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../layouts/Navbar";
-import { useNavigate } from "react-router-dom";
 import TopBar from "../layouts/TopBar";
-import axios from "axios";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
 
@@ -19,11 +17,12 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
-import { jsonAxiosInstance } from "../services/common/axiosInstances";
+
 import {
   deleteUser,
   getDeletedUsers,
   getUsers,
+  restoreUser,
 } from "../services/user.service";
 
 const Users = () => {
@@ -115,11 +114,7 @@ const Users = () => {
   };
 
   const handleRestoreUser = async (_id, user) => {
-    const response = await axios.put(
-      `http://localhost:3000/api/v1/admin/users/${_id}`,
-      {},
-      { headers }
-    );
+    const response = await restoreUser(_id);
     setDeletedUsers(deletedUsers.filter((user) => user._id !== _id));
     setUsers([...users, user]);
     setTotalDeletedCount(deletedUsers.length);
