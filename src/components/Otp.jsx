@@ -7,6 +7,7 @@ const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
   const [OTP, setOTP] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [incorrectOTP, setIncorrectOTP] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const handleOTPchange = (event) => {
@@ -18,6 +19,7 @@ const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
   };
 
   const submitHandler = async () => {
+    setIsSubmitted(true);
     const headers = { "Content-Type": "application/json" };
 
     try {
@@ -57,14 +59,16 @@ const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
       if (response.status === 201) {
         navigate(`${resendNavigation}`);
       }
-      if (response.status === 400) {
-        alert("email is required");
-      }
-      if (response.status === 404) {
-        alert("Admin doesn't exists");
-      }
     } catch (error) {
       console.error(error);
+      if (error.response.status === 400) {
+        setIsSubmitted(false);
+        alert("Invalid OTP");
+      }
+      if (error.response.status === 404) {
+        setIsSubmitted(false);
+        alert("Admin doesn't exists");
+      }
     }
   };
 
@@ -86,10 +90,13 @@ const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
     <>
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
         <div className="m-auto w-[560px] h-[307.54px] bg-white flex flex-col justify-center items-center gap-8 align-middle rounded-xl font-sans">
-          <p className="text-3xl">{text}</p>
+          <div className="font-bold text-2xl flex justify-center items-center">
+            <span className="text-[#4880FF]">Sole</span>Sphere
+          </div>
+          <p className="text-2xl">{text}</p>
           <div className=" relative w-full flex flex-col justify-center items-center gap-4">
             <input
-              className={`w-1/3 mx-8 mt-2 p-1 bg-input-bg ${
+              className={`w-1/3 mx-8 p-1 bg-input-bg ${
                 incorrectOTP ? "border-red-600" : "border-input-border"
               } border-2 rounded-md text-center`}
               type={showPassword ? "text" : "password"}
@@ -101,19 +108,20 @@ const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
             />
             {showPassword ? (
               <FaRegEyeSlash
-                className="absolute right-[12.3rem] top-7 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-[12.3rem] top-5 transform -translate-y-1/2 cursor-pointer"
                 onClick={toggleShowPassword}
               />
             ) : (
               <FaRegEye
-                className="absolute right-[12.3rem] top-7 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-[12.3rem] top-5 transform -translate-y-1/2 cursor-pointer"
                 onClick={toggleShowPassword}
               />
             )}
             <div className=" w-full flex flex-col justify-center items-center">
               <button
+                disabled={isSubmitted}
                 onClick={submitHandler}
-                className="w-1/3 bg-[#4880FF] text-lg text-center text-white rounded-lg hover:bg-[#417aff] hover:shadow-md"
+                className={`w-1/3 disabled:opacity-50 bg-[#4880FF] text-lg text-center text-white rounded-lg hover:bg-[#417aff] hover:shadow-md`}
               >
                 Verify
               </button>

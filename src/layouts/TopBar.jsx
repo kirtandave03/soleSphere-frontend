@@ -23,21 +23,18 @@ const TopBar = () => {
         </div>
       </div>
       <div className="flex items-center space-x-4">
-        <div className="relative">
-          
-        </div>
+        <div className="relative"></div>
       </div>
 
       <div className="flex gap-6">
         <div className="flex items-center space-x-4">
-       
           <div className="flex flex-col text-center">
             <span className="text-black font-semibold">{adminName}</span>
             <span className="text-slate-400 text-sm">Admin</span>
           </div>
         </div>
 
-        <div className="relative">
+        {/* <div className="relative">
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className={"mt-3"}>
@@ -86,7 +83,7 @@ const TopBar = () => {
               </div>
             </Menu.Items>
           </Menu>
-        </div>
+        </div> */}
       </div>
     </div>
   );

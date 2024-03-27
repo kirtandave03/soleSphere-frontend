@@ -169,20 +169,8 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-            {/* <div class="rounded-t-none rounded-b-sm p-2">
-              <div class="relative overflow-hidden w-11/12">
-                <canvas
-                  className="inline-block align-baseline w-11/12 overflow-clip"
-                  id="barChart"
-                  style="height: 400px; width: 813px;"
-                  height="800"
-                  width="1626"
-                ></canvas>
-              </div>
-            </div> */}
-            <div>Most Sold Products Table</div>
           </div>
-          <div className="ml-8 bg-white rounded-md flex shadow">
+          <div className="mx-12 mt-3 bg-white rounded-md flex shadow">
             <BarChart
               dataset={dataset}
               xAxis={[{ scaleType: "band", dataKey: "month" }]}
