@@ -15,6 +15,7 @@ import ForgetPassword from "./views/ForgetPassword.jsx";
 import { BrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import UpdatePassword from "./views/UpdatePassword.jsx";
+import Users from "./views/Users.jsx";
 
 const App = () => {
   return (
@@ -47,6 +48,7 @@ const App = () => {
             path="/edit-product/:productId"
             element={<ProtectedRoute Component={EditProductPage} />}
           />
+          <Route path="/users" element={<ProtectedRoute Component={Users} />} />
         </Routes>
       </BrowserRouter>
     </>

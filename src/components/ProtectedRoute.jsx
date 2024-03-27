@@ -14,7 +14,8 @@ const ProtectedRoute = (props) => {
         navigate("/login");
       }
 
-      const url = "http://localhost:3000/api/v1/auth/verify-token";
+      const url =
+        "https://solesphere-backend.onrender.com/api/v1/auth/verify-token";
 
       try {
         var response = await axios.get(url, {

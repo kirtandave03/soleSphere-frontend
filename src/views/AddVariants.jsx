@@ -157,8 +157,7 @@ const AddVariants = () => {
       "https://solesphere-backend.onrender.com/api/v1/products/add-variant";
     const headers = {
       "Content-Type": "application/json",
-      "auth-token":
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxODJmMGE0ODRlNjcwYzY4ODcwNTciLCJlbWFpbCI6ImtpcnRhbmRhdmVAYm9zY3RlY2hsYWJzLmNvbSIsImlhdCI6MTcwOTI3NzkzNn0.apiL-taCwpQs_6KFYYbgMx-ATLNd3RMQQG8YjlHzC68",
+      "auth-token": localStorage.getItem("auth-token"),
     };
 
     try {

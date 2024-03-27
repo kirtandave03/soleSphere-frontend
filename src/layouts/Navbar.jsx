@@ -132,13 +132,13 @@ const Navbar = () => {
             </button>
             <button
               className={`p-4 rounded-r-xl ${
-                selectedButton === "invoice"
+                selectedButton === "users"
                   ? "bg-blue-500 text-white"
                   : "hover:bg-gray-200"
               }`}
-              onClick={() => handleSelect("invoice")}
+              onClick={() => handleSelect("users")}
             >
-              Invoice
+              Users
             </button>
             <button
               className={`p-4 rounded-r-xl ${
