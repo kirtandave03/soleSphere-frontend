@@ -19,7 +19,11 @@ import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
 import axios from "axios";
-import { getProducts } from "../services/product.service";
+import {
+  deleteProduct,
+  getDeletedProducts,
+  getProducts,
+} from "../services/product.service";
 
 function Products() {
   const navigate = useNavigate();
@@ -37,7 +41,7 @@ function Products() {
 
   const fetchProducts = async () => {
     try {
-      const response = await getProducts;
+      const response = await getProducts(page, rowsPerPage, searchQuery);
       const responseData = response.data;
 
       console.log(responseData.data.products);
@@ -50,8 +54,10 @@ function Products() {
 
   const fetchDeletedProducts = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/products/all-products?deleted=true&page=${pageForDeleted}&limit=${rowsPerPageForDeleted}&q=${searchDeletedQuery}`
+      const response = await getDeletedProducts(
+        pageForDeleted,
+        rowsPerPageForDeleted,
+        searchDeletedQuery
       );
       const responseData = response.data;
 
@@ -70,13 +76,7 @@ function Products() {
     };
 
     try {
-      const response = await axios.delete(
-        "https://solesphere-backend.onrender.com/api/v1/products",
-        {
-          headers,
-          data: { productName },
-        }
-      );
+      const response = await deleteProduct(productName);
 
       console.log(response.status);
 
@@ -101,6 +101,7 @@ function Products() {
     try {
       const response = await axios.put(
         `http://localhost:3000/api/v1/admin/products/${productId}`,
+        {},
         {
           headers,
         }
@@ -109,13 +110,13 @@ function Products() {
       console.log(response.status);
 
       if (response.status === 200) {
-        alert("Product Deleted Successfully");
+        alert("Product Restored Successfully");
       } else if (response.status === 404) {
         alert("Product Not Found");
       }
 
       setDeletedRows(
-        deletedRows.filter((deletedRow) => deletedRow._id !== _id)
+        deletedRows.filter((product) => product._id !== productId)
       );
       setRows([...rows, product]);
     } catch (error) {
@@ -384,11 +385,11 @@ function Products() {
                         >
                           Total Available Colors
                         </TableCell>
-                        {/* <TableCell
+                        <TableCell
                           style={{ fontWeight: "600", textAlign: "center" }}
                         >
                           Average Rating
-                        </TableCell> */}
+                        </TableCell>
                         <TableCell
                           style={{ fontWeight: "600", textAlign: "center" }}
                         >
@@ -425,15 +426,11 @@ function Products() {
                             {deletedRow.variants.length}
                           </TableCell>
 
-                          {/* <TableCell
-                            style={{
-                              borderBottom: "0px solid rgba(224, 224, 224, 1)",
-                            }}
-                          >
-                            {deletedRows.averageRating !== null
-                              ? deletedRows.averageRating.toFixed(2)
-                              : ""}
-                          </TableCell> */}
+                          <TableCell style={{ textAlign: "center" }}>
+                            {deletedRow.averageRating !== null
+                              ? deletedRow.averageRating.toFixed(2)
+                              : "No Reviews"}
+                          </TableCell>
                           <TableCell style={{ textAlign: "center" }}>
                             <IconButton
                               aria-label="delete"
