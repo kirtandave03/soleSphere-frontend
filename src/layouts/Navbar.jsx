@@ -39,8 +39,13 @@ const Navbar = () => {
   };
 
   const handleSelect = (selected) => {
-    setSelectedButton(selected);
-    navigate("/" + selected);
+    if (selected == "logout") {
+      localStorage.removeItem("auth-token");
+      navigate("/login");
+    } else {
+      setSelectedButton(selected);
+      navigate("/" + selected);
+    }
   };
 
   return (
