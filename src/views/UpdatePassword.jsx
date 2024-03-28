@@ -4,7 +4,6 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { updatePassword } from "../services/auth.service";
 
 const UpdatePassword = () => {
