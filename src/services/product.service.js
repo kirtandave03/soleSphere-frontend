@@ -58,3 +58,14 @@ export const deleteProduct = async (productName) => {
       .catch((err) => reject(err));
   });
 };
+
+export const restoreProduct = async (productId) => {
+  const url = `admin/products/${productId}`;
+
+  return new Promise((resolve, reject) => {
+    jsonAxiosInstance
+      .put(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
