@@ -135,7 +135,7 @@ const AddVariants = () => {
     };
 
     try {
-      var response = await addVariant();
+      var response = await addVariant(variant);
       if (response.status === 200) {
         alert("New variant Added Successfully");
       }
