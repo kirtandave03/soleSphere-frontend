@@ -18,7 +18,7 @@ import {
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
-import axios from "axios";
+import capitalize from "../utils/capitalize";
 import {
   deleteProduct,
   getDeletedProducts,
@@ -155,15 +155,6 @@ function Products() {
     setSearchDeletedQuery(query);
     setPage(0);
   };
-
-  function capitalize(str) {
-    let arr = str.split(" ");
-
-    const words = arr.map(
-      (word) => word.charAt(0).toUpperCase() + word.slice(1)
-    );
-    return words.join(" ");
-  }
 
   return (
     <div className="flex flex-col h-screen bg-main-bg bg-cover">

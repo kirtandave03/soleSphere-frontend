@@ -3,9 +3,14 @@ import Navbar from "../layouts/Navbar";
 import TopBar from "../layouts/TopBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import capitalize from "../utils/capitalize";
+import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
+import convertFlutterToHexFormat from "../utils/convertFlutterToHexFormat";
 import { FaSpinner } from "react-icons/fa";
 import { IoIosArrowDropdown } from "react-icons/io";
+import { getCategories } from "../services/category.service";
+import { getBrands } from "../services/brand.service";
+import { editProduct, getProductDetails } from "../services/product.service";
 
 function EditProductPage() {
   const {
@@ -19,7 +24,6 @@ function EditProductPage() {
   } = useForm();
   const navigate = useNavigate();
   const { productId } = useParams();
-  const accessToken = localStorage.getItem("auth-token");
   const closureTypes = [
     "zipper",
     "button",
@@ -60,57 +64,53 @@ function EditProductPage() {
     variant: [],
   });
 
+  const fetchData = async () => {
+    try {
+      const productResponse = await getProductDetails(productId);
+
+      const categoryResponse = await getCategories();
+
+      const brandResponse = await getBrands();
+
+      const product = productResponse.data.data;
+      const categories = categoryResponse.data.data.categories;
+      const brands = brandResponse.data.data.brands;
+
+      setProductData({
+        productName: product.productName,
+        shortDescription: product.shortDescription,
+        longDescription: product.longDescription,
+        closureType: product.closureType,
+        material: product.material,
+        gender: product.gender,
+        sizeType: product.sizeType,
+        category: product.category.category,
+        brand: product.brand.brand,
+        variant: product.variants,
+      });
+
+      setValue("productName", capitalize(product.productName));
+      setValue("shortDescription", product.shortDescription);
+      setValue("longDescription", product.longDescription);
+      setValue("closureType", product.closureType);
+      setValue("material", product.material);
+      setValue("gender", product.gender);
+      setValue("sizeType", product.sizeType);
+      setValue("category", product.category.category);
+      setValue("brand", product.brand.brand);
+      setValue("variants", product.variants);
+
+      setCategories(categories);
+      setBrands(brands);
+      setVariants(variants);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productResponse = await axios.get(
-          `https://solesphere-backend.onrender.com/api/v1/products/product-detail?product_id=${productId}`
-        );
-        const categoryResponse = await axios.get(
-          "https://solesphere-backend.onrender.com/api/v1/categories"
-        );
-        const brandResponse = await axios.get(
-          "https://solesphere-backend.onrender.com/api/v1/brands/"
-        );
-
-        const product = productResponse.data.data;
-        const categories = categoryResponse.data.data.categories;
-        const brands = brandResponse.data.data.brands;
-
-        setProductData({
-          productName: product.productName,
-          shortDescription: product.shortDescription,
-          longDescription: product.longDescription,
-          closureType: product.closureType,
-          material: product.material,
-          gender: product.gender,
-          sizeType: product.sizeType,
-          category: product.category.category,
-          brand: product.brand.brand,
-          variant: product.variants,
-        });
-
-        setValue("productName", product.productName);
-        setValue("shortDescription", product.shortDescription);
-        setValue("longDescription", product.longDescription);
-        setValue("closureType", product.closureType);
-        setValue("material", product.material);
-        setValue("gender", product.gender);
-        setValue("sizeType", product.sizeType);
-        setValue("category", product.category.category);
-        setValue("brand", product.brand.brand);
-        setValue("variants", product.variants);
-
-        setCategories(categories);
-        setBrands(brands);
-        setVariants(variants);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [productId]);
 
@@ -155,17 +155,8 @@ function EditProductPage() {
       variant: updatedVariants,
     };
 
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": accessToken,
-    };
-
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/products/edit-product",
-        body,
-        { headers }
-      );
+      const response = await editProduct(body);
 
       console.log(response.status);
 
@@ -177,7 +168,7 @@ function EditProductPage() {
       console.error("Error updating product:", error);
 
       if (error.response.status === 404) {
-        alert(error.response.data.message);
+        alert("not found");
       }
     }
 
@@ -191,34 +182,6 @@ function EditProductPage() {
         <span>Loading...</span>
       </div>
     );
-  }
-
-  function convertFlutterToHexFormat(flutterColor) {
-    flutterColor = flutterColor.replace("0xFF", "");
-
-    const r = parseInt(flutterColor.substr(0, 2), 16);
-    const g = parseInt(flutterColor.substr(2, 2), 16);
-    const b = parseInt(flutterColor.substr(4, 2), 16);
-
-    const hexColor = `#${("0" + r.toString(16)).slice(-2)}${(
-      "0" + g.toString(16)
-    ).slice(-2)}${("0" + b.toString(16)).slice(-2)}`;
-
-    return hexColor;
-  }
-
-  function convertHexToFlutterFormat(hexColor) {
-    hexColor = hexColor.replace("#", "");
-
-    const r = parseInt(hexColor.substr(0, 2), 16);
-    const g = parseInt(hexColor.substr(2, 2), 16);
-    const b = parseInt(hexColor.substr(4, 2), 16);
-
-    const flutterColor = `0xFF${("0" + r.toString(16)).slice(-2)}${(
-      "0" + g.toString(16)
-    ).slice(-2)}${("0" + b.toString(16)).slice(-2)}`;
-
-    return flutterColor;
   }
 
   return (

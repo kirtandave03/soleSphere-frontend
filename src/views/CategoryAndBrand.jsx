@@ -2,9 +2,18 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../layouts/Navbar";
 import TopBar from "../layouts/TopBar";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { getCategories } from "../services/category.service";
-import { getBrands } from "../services/brand.service";
+import {
+  addCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from "../services/category.service";
+import {
+  getBrands,
+  addBrand,
+  deleteBrand,
+  updateBrand,
+} from "../services/brand.service";
 
 function AddCategoriesAndBrands() {
   const {
@@ -55,19 +64,11 @@ function AddCategoriesAndBrands() {
 
   const onAddCatSubmit = async (data) => {
     console.log("i reached onAddCatSubmit");
-    const { newCategory1 } = data;
-
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": accessToken,
-    };
+    const newCategory1 = data.newCategory1;
+    const catToSend = { category: newCategory1 };
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/categories",
-        { category: newCategory1 },
-        { headers }
-      );
+      const response = await addCategory(catToSend);
 
       console.log(response.status);
 
@@ -78,7 +79,8 @@ function AddCategoriesAndBrands() {
     } catch (error) {
       if (error.response.status === 400) {
         setErrorCategory("noCat", {
-          message: "Category is required! or category entered already exists",
+          message:
+            "Category field is required! or Category entered already exists",
         });
       }
       console.error(error);
@@ -88,17 +90,12 @@ function AddCategoriesAndBrands() {
 
   const onUpdCatSubmit = async (data) => {
     const { category2, newCategory2 } = data;
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": accessToken,
-    };
 
     try {
-      const response = await axios.put(
-        "https://solesphere-backend.onrender.com/api/v1/categories",
-        { oldCategory: category2, category: newCategory2 },
-        { headers }
-      );
+      const response = await updateCategory({
+        oldCategory: category2,
+        category: newCategory2,
+      });
 
       console.log(response.status);
 
@@ -125,19 +122,9 @@ function AddCategoriesAndBrands() {
 
   const onDelCatSubmit = async (data) => {
     const { category3 } = data;
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": accessToken,
-    };
 
     try {
-      const response = await axios.delete(
-        "https://solesphere-backend.onrender.com/api/v1/categories",
-        {
-          headers,
-          data: { category: category3 },
-        }
-      );
+      const response = await deleteCategory({ category: category3 });
 
       console.log(response.status);
 
@@ -163,17 +150,8 @@ function AddCategoriesAndBrands() {
     formData.append("brand", newBrand1);
     formData.append("brandIcon", newBrandIcon1[0]);
 
-    const headers = {
-      "Content-Type": "multipart/form-data",
-      "auth-token": accessToken,
-    };
-
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/brands/",
-        formData,
-        { headers }
-      );
+      const response = await addBrand(formData);
 
       console.log(response.status);
 
@@ -205,17 +183,8 @@ function AddCategoriesAndBrands() {
     formData.append("brand", newBrand2);
     formData.append("brandIcon", newBrandIcon2[0]);
 
-    const headers = {
-      "Content-Type": "multipart/form-data",
-      "auth-token": accessToken,
-    };
-
     try {
-      const response = await axios.put(
-        "https://solesphere-backend.onrender.com/api/v1/brands/",
-        formData,
-        { headers }
-      );
+      const response = await updateBrand(formData);
 
       console.log(response.status);
 
@@ -246,19 +215,9 @@ function AddCategoriesAndBrands() {
 
   const onDelBrandSubmit = async (data) => {
     const { brand3 } = data;
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": accessToken,
-    };
 
     try {
-      const response = await axios.delete(
-        "https://solesphere-backend.onrender.com/api/v1/brands/",
-        {
-          headers,
-          data: { brand: brand3 },
-        }
-      );
+      const response = await deleteBrand({ brand: brand3 });
 
       console.log(response.status);
 

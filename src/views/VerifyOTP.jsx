@@ -1,6 +1,7 @@
 import React from "react";
 import Otp from "../components/Otp";
 import { useSelector } from "react-redux";
+import { loginOtp } from "../services/auth.service";
 
 const VerifyOTP = () => {
   const email = useSelector((state) => state.email);
@@ -9,7 +10,7 @@ const VerifyOTP = () => {
     <Otp
       email={email}
       text="Verify OTP"
-      link="https://solesphere-backend.onrender.com/api/v1/auth/verify-otp"
+      service={loginOtp}
       navigation="/"
       status={201}
       resendNavigation="/otp"

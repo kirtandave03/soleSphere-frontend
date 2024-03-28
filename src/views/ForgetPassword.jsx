@@ -1,6 +1,7 @@
 import React from "react";
 import Otp from "../components/Otp";
 import { useSelector } from "react-redux";
+import { forgetPasswordOtp } from "../services/auth.service";
 
 const ForgetPassword = () => {
   const email = useSelector((state) => state.email);
@@ -10,7 +11,7 @@ const ForgetPassword = () => {
       <Otp
         email={email}
         text="Forget Password?"
-        link="https://solesphere-backend.onrender.com/api/v1/auth/forgot-password-verify"
+        service={forgetPasswordOtp}
         navigation="/update-password"
         status={200}
         resendNavigation="/forget-password"

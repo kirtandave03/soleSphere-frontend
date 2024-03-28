@@ -2,10 +2,11 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { forgotPassword, login } from "../services/auth.service";
 
 function Login() {
   const {
@@ -25,22 +26,11 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  // const handleChange = (e) => {
-  //   setInputval(e.target.value);
-  //   console.log(inputval);
-  // };
-
   const inputval = watch("email", "");
 
   const handleForgetPassword = async () => {
-    const headers = { "Content-Type": "application/json" };
-
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/auth/forgot-password",
-        { email: inputval },
-        { headers }
-      );
+      const response = await forgotPassword(inputval);
 
       console.log(response.status);
 
@@ -48,27 +38,22 @@ function Login() {
         dispatch(setEmail(inputval));
         navigate("/forget-password");
       }
-      if (response.status === 400) {
+    } catch (error) {
+      if (error.response.status === 400) {
         alert("Email is required field");
       }
-      if (response.status === 404) {
+      if (error.response.status === 404) {
         alert("Admin not found");
       }
-    } catch (error) {
       console.error(error);
     }
   };
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-    const headers = { "Content-Type": "application/json" };
 
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/auth/login",
-        { email, password },
-        { headers }
-      );
+      const response = await login({ email, password });
 
       console.log(response.status);
 
