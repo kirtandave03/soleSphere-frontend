@@ -458,9 +458,9 @@ function EditProductPage() {
                                         message: "This field is required",
                                       },
                                       pattern: {
-                                        value: /^[0-9]*\.?[0-9]+$/,
+                                        value: /^[1-9]\d*$/,
                                         message:
-                                          "Please enter a positive number",
+                                          "Please enter a positive number without decimal points",
                                       },
                                     })}
                                   />
@@ -530,9 +530,9 @@ function EditProductPage() {
                                         message: "This field is required",
                                       },
                                       pattern: {
-                                        value: /^[0-9]*\.?[0-9]+$/,
+                                        value: /^[1-9]\d*$/,
                                         message:
-                                          "Please enter a positive number",
+                                          "Please enter a positive number without decimal points",
                                       },
                                     })}
                                   />
