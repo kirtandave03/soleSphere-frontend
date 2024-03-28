@@ -39,9 +39,6 @@ function Login() {
         navigate("/forget-password");
       }
     } catch (error) {
-      if (error.response.status === 400) {
-        alert("Email is required field");
-      }
       if (error.response.status === 404) {
         alert("Admin not found");
       }
@@ -64,25 +61,30 @@ function Login() {
       }
     } catch (error) {
       if (error.response.status === 401) {
-        setError("invalid", {
-          message: "Invalid Credentials!",
-        });
+        alert("Invalid credentials");
         setFieldsIncorrrect(true);
       } else if (error.response.status === 404) {
-        setError("noAdmin", {
-          message: "Admin not found!",
-        });
-        setFieldsIncorrrect(true);
-      } else if (error.response.status === 400) {
-        setError("noMailNoPass", {
-          message: "Email and password both are required!",
-        });
+        alert("Admin Not Found");
         setFieldsIncorrrect(true);
       } else {
         navigate("/error");
       }
     }
   };
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        onSubmit();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [onSubmit]);
 
   return (
     <>
@@ -91,7 +93,7 @@ function Login() {
           <div className="font-bold text-2xl mb-4 flex justify-center items-center">
             <span className="text-[#4880FF]">SoleSphere</span>
           </div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col items-center">
               <h1 className="font-bold text-2xl font-sans mb-3">Login</h1>
             </div>
@@ -156,21 +158,6 @@ function Login() {
                   />
                 )}
               </div>
-              {errors.noMailNoPass && (
-                <div className="mx-8 text-red-600 text-sm">
-                  {errors.noMailNoPass.message}
-                </div>
-              )}
-              {errors.invalid && (
-                <div className="mx-8 text-red-600 text-sm">
-                  {errors.invalid.message}
-                </div>
-              )}
-              {errors.noAdmin && (
-                <div className="mx-8 text-red-600 text-sm">
-                  {errors.noAdmin.message}
-                </div>
-              )}
               {errors.noIdea && (
                 <div className="mx-8 text-red-600 text-sm">
                   {errors.noIdea.message}
@@ -178,14 +165,12 @@ function Login() {
               )}
             </div>
             <div className="flex flex-col text-center">
-              <button
+              <input
                 disabled={isSubmitting}
-                type="button"
-                onClick={handleSubmit(onSubmit)}
+                type="submit"
+                value="Log In"
                 className="disabled:opacity-50 cursor-pointer mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"
-              >
-                Log In
-              </button>
+              />
             </div>
           </form>
         </div>
