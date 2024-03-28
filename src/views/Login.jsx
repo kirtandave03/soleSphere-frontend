@@ -153,6 +153,11 @@ function Login() {
                     },
                   })}
                 />
+                {errors.password && (
+                  <div className="mx-8 text-red-600 text-sm">
+                    {errors.password.message}
+                  </div>
+                )}
                 {showPassword ? (
                   <FaRegEyeSlash
                     className="absolute right-12 top-6 transform -translate-y-1/2 cursor-pointer"

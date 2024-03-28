@@ -23,6 +23,7 @@ import {
   deleteProduct,
   getDeletedProducts,
   getProducts,
+  restoreProduct,
 } from "../services/product.service";
 
 function Products() {
@@ -70,17 +71,14 @@ function Products() {
   };
 
   const onDelete = async (productName, product) => {
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": accessToken,
-    };
-
     try {
       const response = await deleteProduct(productName);
 
       console.log(response.status);
 
       if (response.status === 200) {
+        setRows(rows.filter((row) => row.productName !== productName));
+        setDeletedRows([...deletedRows, product]);
         alert("Product Deleted Successfully");
       } else if (response.status === 404) {
         alert("Product Not Found");
@@ -88,37 +86,23 @@ function Products() {
     } catch (error) {
       console.error("Error deleting product:", error);
     }
-    setRows(rows.filter((row) => row.productName !== productName));
-    setDeletedRows([...deletedRows, product]);
   };
 
   const onRestore = async (productId, product) => {
-    const headers = {
-      "Content-Type": "application/json",
-      "auth-token": accessToken,
-    };
-
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/v1/admin/products/${productId}`,
-        {},
-        {
-          headers,
-        }
-      );
+      const response = await restoreProduct(productId);
 
       console.log(response.status);
 
       if (response.status === 200) {
+        setDeletedRows(
+          deletedRows.filter((product) => product._id !== productId)
+        );
+        setRows([...rows, product]);
         alert("Product Restored Successfully");
       } else if (response.status === 404) {
         alert("Product Not Found");
       }
-
-      setDeletedRows(
-        deletedRows.filter((product) => product._id !== productId)
-      );
-      setRows([...rows, product]);
     } catch (error) {
       console.error("Error deleting product:", error);
     }

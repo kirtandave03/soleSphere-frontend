@@ -3,17 +3,26 @@ import Navbar from "../layouts/Navbar";
 import TopBar from "../layouts/TopBar";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { getCategories } from "../services/category.service";
+import { getBrands } from "../services/brand.service";
 
 function AddCategoriesAndBrands() {
   const {
-    register,
-    handleSubmit,
-    setError,
-    watch,
-    formState: { errors, isSubmitting },
+    register: registerCategory,
+    handleSubmit: handleSubmitCategory,
+    setError: setErrorCategory,
+    watch: watchCategory,
+    formState: { errors: errorsCategory, isSubmitting: isSubmittingCategory },
   } = useForm();
-  const accessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxODJmMGE0ODRlNjcwYzY4ODcwNTciLCJlbWFpbCI6ImtpcnRhbmRhdmVAYm9zY3RlY2hsYWJzLmNvbSIsImlhdCI6MTcwOTI3NzkzNn0.apiL-taCwpQs_6KFYYbgMx-ATLNd3RMQQG8YjlHzC68";
+
+  const {
+    register: registerBrand,
+    handleSubmit: handleSubmitBrand,
+    setError: setErrorBrand,
+    watch: watchBrand,
+    formState: { errors: errorsBrand, isSubmitting: isSubmittingBrand },
+  } = useForm();
+  const accessToken = localStorage.getItem("auth-token");
   const [selectedCategoryTab, setSelectedCategoryTab] = useState("add");
   const [selectedBrandTab, setSelectedBrandTab] = useState("add");
   const [categories, setCategories] = useState([]);
@@ -21,44 +30,25 @@ function AddCategoriesAndBrands() {
   const [brandAddIcon, setBrandAddIcon] = useState(null);
   const [brandUpdIcon, setBrandUpdIcon] = useState(null);
 
+  const fetchCategories = async () => {
+    try {
+      const responseCatData = await getCategories();
+      setCategories(responseCatData.data.data.categories);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const responseBrandData = await getBrands();
+      setBrands(responseBrandData.data.data.brands);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    };
-
-    const fetchCategories = async () => {
-      try {
-        const responseCatData = await fetch(
-          "https://solesphere-backend.onrender.com/api/v1/categories",
-          requestOptions
-        );
-
-        const responseData = await responseCatData.json();
-        const fetchedCategories = responseData.data.categories;
-
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchBrands = async () => {
-      try {
-        const responseBrandData = await fetch(
-          "https://solesphere-backend.onrender.com/api/v1/brands/",
-          requestOptions
-        );
-
-        const responseData = await responseBrandData.json();
-        const fetchedBrands = responseData.data.brands;
-
-        setBrands(fetchedBrands);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchCategories();
     fetchBrands();
   }, []);
@@ -74,7 +64,7 @@ function AddCategoriesAndBrands() {
 
     try {
       const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/categories",
+        "http://localhost:3000/api/v1/categories",
         { category: newCategory1 },
         { headers }
       );
@@ -82,14 +72,15 @@ function AddCategoriesAndBrands() {
       console.log(response.status);
 
       if (response.status === 200) {
+        fetchCategories();
         alert("Category added successfully");
       }
-      if (response.status === 400) {
-        setError("noCat", {
-          message: "Category is required!",
+    } catch (error) {
+      if (error.response.status === 400) {
+        setErrorCategory("noCat", {
+          message: "Category is required! or category entered already exists",
         });
       }
-    } catch (error) {
       console.error(error);
       //navigate("/error");
     }
@@ -112,14 +103,21 @@ function AddCategoriesAndBrands() {
       console.log(response.status);
 
       if (response.status === 200) {
+        fetchCategories();
         alert("Category updated successfully");
       }
-      if (response.status === 404) {
-        setError("CatNF", {
+    } catch (error) {
+      if (error.response.status === 404) {
+        setErrorCategory("CatNF", {
           message: "Category not found!",
         });
       }
-    } catch (error) {
+      if (error.response.status === 400) {
+        setErrorCategory("catExists", {
+          message:
+            "field(s) is/are empty or the updated category entered already exists",
+        });
+      }
       console.error(error);
       //navigate("/error");
     }
@@ -144,20 +142,22 @@ function AddCategoriesAndBrands() {
       console.log(response.status);
 
       if (response.status === 200) {
+        fetchCategories();
         alert("Category deleted successfully");
       }
-      if (response.status === 404) {
-        setError("delCat", {
+    } catch (error) {
+      if (error.response.status === 404) {
+        setErrorCategory("delCat", {
           message: "Category not found!",
         });
       }
-    } catch (error) {
       console.error(error);
       //navigate("/error");
     }
   };
 
   const onAddBrandSubmit = async (data) => {
+    console.log("onAddBrandSubmit");
     const { newBrand1, newBrandIcon1 } = data;
     const formData = new FormData();
     formData.append("brand", newBrand1);
@@ -170,7 +170,7 @@ function AddCategoriesAndBrands() {
 
     try {
       const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/brands/",
+        "http://localhost:3000/api/v1/brands/",
         formData,
         { headers }
       );
@@ -178,14 +178,21 @@ function AddCategoriesAndBrands() {
       console.log(response.status);
 
       if (response.status === 200) {
+        fetchBrands();
         alert("Brand added successfully");
       }
-      if (response.status === 400) {
-        setError("addBrand", {
-          message: "Failed to add brand. Please try again later.",
+    } catch (error) {
+      if (error.response.status === 400) {
+        setErrorBrand("addBrand", {
+          message:
+            "brand and/or brand icon is/are required or brand name entered already exists",
         });
       }
-    } catch (error) {
+      if (error.response.status === 500) {
+        setErrorBrand("ISE", {
+          message: "Internal Server Error or error while uploading file",
+        });
+      }
       console.error(error);
       // navigate("/error");
     }
@@ -213,21 +220,27 @@ function AddCategoriesAndBrands() {
       console.log(response.status);
 
       if (response.status === 200) {
+        fetchBrands();
         alert("Brand updated successfully");
       }
-      if (response.status === 400) {
-        setError("noBrand", {
+    } catch (error) {
+      if (error.response.status === 400) {
+        setErrorBrand("brandExists", {
+          message: `All field(s) is/are required or updated brand name entered already exists.`,
+        });
+      }
+      if (error.response.status === 404) {
+        setErrorBrand("noBrand", {
           message: `No such brand exists which needs to update`,
         });
       }
-      if (response.status === 500) {
-        setError("ser", {
+      if (error.response.status === 500) {
+        setErrorBrand("ser", {
           message: `Internal Server Error`,
         });
       }
-    } catch (error) {
       console.error(error);
-      navigate("/error");
+      // navigate("/error");
     }
   };
 
@@ -243,21 +256,22 @@ function AddCategoriesAndBrands() {
         "https://solesphere-backend.onrender.com/api/v1/brands/",
         {
           headers,
-          data: { brand: brand3 }, // Pass data object here
+          data: { brand: brand3 },
         }
       );
 
       console.log(response.status);
 
       if (response.status === 200) {
+        fetchBrands();
         alert("Brand deleted successfully");
       }
-      if (response.status === 404) {
-        setError("BrandNF", {
+    } catch (error) {
+      if (error.response.status === 404) {
+        setErrorBrand("BrandNF", {
           message: "Brand not found!",
         });
       }
-    } catch (error) {
       console.error(error);
       //navigate("/error");
     }
@@ -322,37 +336,44 @@ function AddCategoriesAndBrands() {
                   <div className="mt-4 mx-auto w-full max-w-sm">
                     {selectedCategoryTab === "add" && (
                       <form
-                        onSubmit={handleSubmit(onAddCatSubmit)}
+                        onSubmit={handleSubmitCategory(onAddCatSubmit)}
                         className="flex flex-col gap-3"
                       >
                         <input
                           type="text"
                           placeholder="Category Name"
-                          value={watch("newCategory1")}
+                          value={watchCategory("newCategory1")}
                           className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...register("newCategory1", {
+                          {...registerCategory("newCategory1", {
                             required: {
                               value: true,
                               message: "This field is required ",
                             },
                           })}
                         />
-                        <input
-                          disabled={isSubmitting}
-                          type="submit"
-                          value="Add Category"
+                        {errorsCategory.newCategory1 && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsCategory.newCategory1.message}
+                          </div>
+                        )}
+                        <button
+                          onClick={handleSubmitCategory(onAddCatSubmit)}
+                          disabled={isSubmittingCategory}
+                          type="button"
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        />
-                        {errors.noCat && (
-                          <div className="text-red-600 text-sm">
-                            {errors.noCat.message}
+                        >
+                          Add Category
+                        </button>
+                        {errorsCategory.noCat && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsCategory.noCat.message}
                           </div>
                         )}
                       </form>
                     )}
                     {selectedCategoryTab === "update" && (
                       <form
-                        onSubmit={handleSubmit(onUpdCatSubmit)}
+                        onSubmit={handleSubmitCategory(onUpdCatSubmit)}
                         className="flex flex-col gap-3"
                       >
                         {categories.length > 0 && (
@@ -360,7 +381,7 @@ function AddCategoriesAndBrands() {
                             name="category"
                             id="category"
                             className="bg-input-bg border-input-bg placeholder:text-center"
-                            {...register("category2", {
+                            {...registerCategory("category2", {
                               required: {
                                 value: true,
                                 message: "This field is required ",
@@ -381,32 +402,44 @@ function AddCategoriesAndBrands() {
                           type="text"
                           name="updatedCat"
                           id="updatedCat"
-                          value={watch("newCategory2")}
+                          value={watchCategory("newCategory2")}
                           placeholder="Updated Category"
                           className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...register("newCategory2", {
+                          {...registerCategory("newCategory2", {
                             required: {
                               value: true,
                               message: "This field is required ",
                             },
                           })}
                         />
-                        <input
-                          disabled={isSubmitting}
-                          type="submit"
-                          value="Update Category"
+                        {errorsCategory.newCategory2 && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsCategory.newCategory2.message}
+                          </div>
+                        )}
+                        <button
+                          disabled={isSubmittingCategory}
+                          onClick={handleSubmitCategory(onUpdCatSubmit)}
+                          type="button"
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        />
-                        {errors.CatNF && (
-                          <div className="text-red-600 text-sm">
-                            {errors.CatNF.message}
+                        >
+                          Update Category
+                        </button>
+                        {errorsCategory.CatNF && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsCategory.CatNF.message}
+                          </div>
+                        )}
+                        {errorsCategory.catExists && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsCategory.catExists.message}
                           </div>
                         )}
                       </form>
                     )}
                     {selectedCategoryTab === "delete" && (
                       <form
-                        onSubmit={handleSubmit(onDelCatSubmit)}
+                        onSubmit={handleSubmitCategory(onDelCatSubmit)}
                         className="flex flex-col gap-3"
                       >
                         {categories.length > 0 && (
@@ -414,7 +447,7 @@ function AddCategoriesAndBrands() {
                             className="bg-input-bg border-input-bg placeholder:text-center"
                             name="category"
                             id="category"
-                            {...register("category3", {
+                            {...registerCategory("category3", {
                               required: {
                                 value: true,
                                 message: "This field is required ",
@@ -431,15 +464,17 @@ function AddCategoriesAndBrands() {
                             ))}
                           </select>
                         )}
-                        <input
-                          disabled={isSubmitting}
-                          type="submit"
-                          value="Delete Category"
+                        <button
+                          disabled={isSubmittingCategory}
+                          onClick={handleSubmitCategory(onDelCatSubmit)}
+                          type="button"
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        />
-                        {errors.delCat && (
-                          <div className="text-red-600 text-sm">
-                            {errors.delCat.message}
+                        >
+                          Delete Category
+                        </button>
+                        {errorsCategory.delCat && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsCategory.delCat.message}
                           </div>
                         )}
                       </form>
@@ -491,21 +526,26 @@ function AddCategoriesAndBrands() {
                   <div className="mt-4 mx-auto w-full max-w-sm">
                     {selectedBrandTab === "add" && (
                       <form
-                        onSubmit={handleSubmit(onAddBrandSubmit)}
+                        onSubmit={handleSubmitBrand(onAddBrandSubmit)}
                         className="flex flex-col gap-3"
                       >
                         <input
                           type="text"
                           placeholder="Brand Name"
-                          value={watch("newBrand1")}
+                          value={watchBrand("newBrand1")}
                           className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...register("newBrand1", {
+                          {...registerBrand("newBrand1", {
                             required: {
                               value: true,
                               message: "This field is required ",
                             },
                           })}
                         />
+                        {errorsBrand.newBrand1 && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.newBrand1.message}
+                          </div>
+                        )}
                         <input
                           type="file"
                           name="brandLogo"
@@ -514,28 +554,41 @@ function AddCategoriesAndBrands() {
                           multiple={false}
                           onChange={handleAddFileChange}
                           className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...register("newBrandIcon1", {
+                          {...registerBrand("newBrandIcon1", {
                             required: {
                               value: true,
                               message: "This field is required",
                             },
                           })}
                         />
-                        <input
-                          type="submit"
-                          value="Add Brand"
+                        {errorsBrand.newBrandIcon1 && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.newBrandIcon1.message}
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          disabled={isSubmittingBrand}
+                          onClick={handleSubmitBrand(onAddBrandSubmit)}
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        />
-                        {errors.addBrand && (
-                          <div className="text-red-600 text-sm">
-                            {errors.addBrand.message}
+                        >
+                          Add Brand
+                        </button>
+                        {errorsBrand.addBrand && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.addBrand.message}
+                          </div>
+                        )}
+                        {errorsBrand.ISE && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.ISE.message}
                           </div>
                         )}
                       </form>
                     )}
                     {selectedBrandTab === "update" && (
                       <form
-                        onSubmit={handleSubmit(onUpdBrandSubmit)}
+                        onSubmit={handleSubmitBrand(onUpdBrandSubmit)}
                         className="flex flex-col gap-3"
                       >
                         {brands.length > 0 && (
@@ -543,7 +596,7 @@ function AddCategoriesAndBrands() {
                             name="brand"
                             id="brand"
                             className="bg-input-bg border-input-bg placeholder:text-center"
-                            {...register("brand2", {
+                            {...registerBrand("brand2", {
                               required: {
                                 value: true,
                                 message: "This field is required ",
@@ -563,13 +616,18 @@ function AddCategoriesAndBrands() {
                           id="updatedBrand"
                           placeholder="Updated Brand"
                           className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...register("newBrand2", {
+                          {...registerBrand("newBrand2", {
                             required: {
                               value: true,
                               message: "This field is required ",
                             },
                           })}
                         />
+                        {errorsBrand.newBrand2 && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.newBrand2.message}
+                          </div>
+                        )}
                         <input
                           type="file"
                           name="updatedBrandLogo"
@@ -578,33 +636,46 @@ function AddCategoriesAndBrands() {
                           multiple={false}
                           onChange={handleUpdFileChange}
                           className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...register("newBrandIcon2", {
+                          {...registerBrand("newBrandIcon2", {
                             required: {
                               value: true,
                               message: "This field is required",
                             },
                           })}
                         />
-                        <input
-                          type="submit"
-                          value="Update Brand"
-                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        />
-                        {errors.noBrand && (
-                          <div className="text-red-600 text-sm">
-                            {errors.noBrand.message}
+                        {errorsBrand.newBrandIcon2 && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.newBrandIcon2.message}
                           </div>
                         )}
-                        {errors.ser && (
-                          <div className="text-red-600 text-sm">
-                            {errors.ser.message}
+                        <button
+                          type="button"
+                          disabled={isSubmittingBrand}
+                          onClick={handleSubmitBrand(onUpdBrandSubmit)}
+                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                        >
+                          Update Brand
+                        </button>
+                        {errorsBrand.noBrand && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.noBrand.message}
+                          </div>
+                        )}
+                        {errorsBrand.ser && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.ser.message}
+                          </div>
+                        )}
+                        {errorsBrand.brandExists && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.brandExists.message}
                           </div>
                         )}
                       </form>
                     )}
                     {selectedBrandTab === "delete" && (
                       <form
-                        onSubmit={handleSubmit(onDelBrandSubmit)}
+                        onSubmit={handleSubmitBrand(onDelBrandSubmit)}
                         className="flex flex-col gap-3"
                       >
                         {brands.length > 0 && (
@@ -612,7 +683,7 @@ function AddCategoriesAndBrands() {
                             name="brand"
                             id="brand"
                             className="bg-input-bg border-input-bg placeholder:text-center"
-                            {...register("brand3", {
+                            {...registerBrand("brand3", {
                               required: {
                                 value: true,
                                 message: "This field is required ",
@@ -626,14 +697,17 @@ function AddCategoriesAndBrands() {
                             ))}
                           </select>
                         )}
-                        <input
-                          type="submit"
-                          value="Delete Brand"
+                        <button
+                          type="button"
+                          disabled={isSubmittingBrand}
+                          onClick={handleSubmitBrand(onDelBrandSubmit)}
                           className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        />
-                        {errors.BrandNF && (
-                          <div className="text-red-600 text-sm">
-                            {errors.BrandNF.message}
+                        >
+                          Delete Brand
+                        </button>
+                        {errorsBrand.BrandNF && (
+                          <div className="text-red-600 text-sm text-center">
+                            {errorsBrand.BrandNF.message}
                           </div>
                         )}
                       </form>
