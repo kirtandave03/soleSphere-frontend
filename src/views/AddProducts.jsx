@@ -6,6 +6,7 @@ import { getBrands } from "../services/brand.service";
 import { getCategories } from "../services/category.service";
 import { fileUpload } from "../services/fileupload.service";
 import { addProduct } from "../services/product.service";
+import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
 
 const AddProducts = () => {
   const [category, setCategory] = useState([]);
@@ -93,20 +94,6 @@ const AddProducts = () => {
     setInputFields([...inputFields, ...newFields]);
   };
 
-  function convertHexToFlutterFormat(hexColor) {
-    hexColor = hexColor.replace("#", "");
-
-    const r = parseInt(hexColor.substr(0, 2), 16);
-    const g = parseInt(hexColor.substr(2, 2), 16);
-    const b = parseInt(hexColor.substr(4, 2), 16);
-
-    const flutterColor = `0xFF${("0" + r.toString(16)).slice(-2)}${(
-      "0" + g.toString(16)
-    ).slice(-2)}${("0" + b.toString(16)).slice(-2)}`;
-
-    return flutterColor;
-  }
-
   const onSubmit = async (data) => {
     const hexColor = convertHexToFlutterFormat(data.color);
     const productData = {
@@ -139,8 +126,10 @@ const AddProducts = () => {
         alert("Product Added Successfully");
       }
     } catch (error) {
-      if (error.response.status === 500) {
-        alert("Product Already Exists or Internal Server Error");
+      if (error.response.status === 400) {
+        alert("Product Already Exists");
+      } else if (error.response.status === 500) {
+        alert("Internal Server Error");
       } else if (error.response.status === 404) {
         alert("Category or Brand not found");
       } else {

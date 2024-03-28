@@ -5,9 +5,9 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { fileUpload } from "../services/fileupload.service";
 import { addVariant, getProducts } from "../services/product.service";
+import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
 
 const AddVariants = () => {
-  const [searchResult, setSearchResult] = useState([]);
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -51,20 +51,6 @@ const AddVariants = () => {
     setSelectedProduct(e.target.value);
     setProducts(filteredProducts);
   };
-
-  function convertHexToFlutterFormat(hexColor) {
-    hexColor = hexColor.replace("#", "");
-
-    const r = parseInt(hexColor.substr(0, 2), 16);
-    const g = parseInt(hexColor.substr(2, 2), 16);
-    const b = parseInt(hexColor.substr(4, 2), 16);
-
-    const flutterColor = `0xFF${("0" + r.toString(16)).slice(-2)}${(
-      "0" + g.toString(16)
-    ).slice(-2)}${("0" + b.toString(16)).slice(-2)}`;
-
-    return flutterColor;
-  }
 
   const handleImages = (e) => {
     setSelectedFiles(e.target.files);

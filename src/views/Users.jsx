@@ -24,6 +24,7 @@ import {
   getUsers,
   restoreUser,
 } from "../services/user.service";
+import capitalize from "../utils/capitalize";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -36,17 +37,6 @@ const Users = () => {
   const [totalDeletedCount, setTotalDeletedCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchQueryDeleted, setSearchQueryDeleted] = useState("");
-
-  const token = localStorage.getItem("auth-token");
-  // MOVE FILE TO UTILS
-  function capitalize(str) {
-    let arr = str.split(" ");
-
-    const words = arr.map(
-      (word) => word.charAt(0).toUpperCase() + word.slice(1)
-    );
-    return words.join(" ");
-  }
 
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value);
@@ -74,19 +64,22 @@ const Users = () => {
       setUsers(response.data.data.users);
       setTotalCount(response.data.data.totalCount);
     } catch (error) {
-      console.log(error);
+      alert("Error While fetching Users");
     }
   };
 
   const fetchDeletedUsers = async () => {
-    const response = await getDeletedUsers(
-      searchQueryDeleted,
-      rowsPerPageForDeleted,
-      pageForDeleted
-    );
-    setTotalDeletedCount(response.data.data.totalDeletedCount);
-    setDeletedUsers(response.data.data.deletedUsers);
-    console.log(totalDeletedCount);
+    try {
+      const response = await getDeletedUsers(
+        searchQueryDeleted,
+        rowsPerPageForDeleted,
+        pageForDeleted
+      );
+      setTotalDeletedCount(response.data.data.totalDeletedCount);
+      setDeletedUsers(response.data.data.deletedUsers);
+    } catch (error) {
+      alert("Error while fetching Deleted Users");
+    }
   };
 
   useEffect(() => {
@@ -106,19 +99,39 @@ const Users = () => {
   };
 
   const handleDelete = async (id, user) => {
-    const response = await deleteUser(id);
-    setUsers(users.filter((user) => user._id !== id));
-    setDeletedUsers([...deletedUsers, user]);
-    setTotalDeletedCount(deletedUsers.length);
-    setTotalCount(users.length);
+    try {
+      const response = await deleteUser(id);
+      setUsers(users.filter((user) => user._id !== id));
+      setDeletedUsers([...deletedUsers, user]);
+      setTotalDeletedCount(deletedUsers.length);
+      setTotalCount(users.length);
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("User Not Found");
+      } else if (error.response.status === 500) {
+        alert("Internal Server Error");
+      } else {
+        alert("Something Went Wrong");
+      }
+    }
   };
 
   const handleRestoreUser = async (_id, user) => {
-    const response = await restoreUser(_id);
-    setDeletedUsers(deletedUsers.filter((user) => user._id !== _id));
-    setUsers([...users, user]);
-    setTotalDeletedCount(deletedUsers.length);
-    setTotalCount(users.length);
+    try {
+      const response = await restoreUser(_id);
+      setDeletedUsers(deletedUsers.filter((user) => user._id !== _id));
+      setUsers([...users, user]);
+      setTotalDeletedCount(deletedUsers.length);
+      setTotalCount(users.length);
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("User Not Found");
+      } else if (error.response.status === 500) {
+        alert("Internal Server Error");
+      } else {
+        alert("Something Went Wrong");
+      }
+    }
   };
 
   return (
