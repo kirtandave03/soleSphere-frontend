@@ -3,7 +3,14 @@ import React, { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
+const Otp = ({
+  email,
+  text,
+  service,
+  navigation,
+  status,
+  resendNavigation,
+}) => {
   const [OTP, setOTP] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [incorrectOTP, setIncorrectOTP] = useState(false);
@@ -20,17 +27,16 @@ const Otp = ({ email, text, link, navigation, status, resendNavigation }) => {
 
   const submitHandler = async () => {
     setIsSubmitted(true);
-    const headers = { "Content-Type": "application/json" };
+    const data = { email, otp: OTP };
 
     try {
       console.log(OTP);
       console.log(email);
 
-      const response = await axios.post(
-        `${link}`,
-        { email, otp: OTP },
-        { headers }
-      );
+      const response = await service(data);
+
+      console.log(response.status);
+      console.log(response);
 
       if (response.status === status) {
         status === 201 &&

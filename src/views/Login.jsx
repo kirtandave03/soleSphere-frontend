@@ -2,16 +2,17 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { forgotPassword, login } from "../services/auth.service";
 
 function Login() {
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     watch,
     clearErrors,
     formState: { errors, isSubmitting },
@@ -25,22 +26,11 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  // const handleChange = (e) => {
-  //   setInputval(e.target.value);
-  //   console.log(inputval);
-  // };
-
   const inputval = watch("email", "");
 
   const handleForgetPassword = async () => {
-    const headers = { "Content-Type": "application/json" };
-
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/auth/forgot-password",
-        { email: inputval },
-        { headers }
-      );
+      const response = await forgotPassword(inputval);
 
       console.log(response.status);
 
@@ -48,27 +38,23 @@ function Login() {
         dispatch(setEmail(inputval));
         navigate("/forget-password");
       }
-      if (response.status === 400) {
+    } catch (error) {
+      if (error.response.status === 400) {
         alert("Email is required field");
       }
-      if (response.status === 404) {
+      if (error.response.status === 404) {
         alert("Admin not found");
       }
-    } catch (error) {
       console.error(error);
     }
   };
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-    const headers = { "Content-Type": "application/json" };
+    clearErrors();
 
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/auth/login",
-        { email, password },
-        { headers }
-      );
+      const response = await login({ email, password });
 
       console.log(response.status);
 
@@ -105,7 +91,7 @@ function Login() {
           <div className="font-bold text-2xl mb-4 flex justify-center items-center">
             <span className="text-[#4880FF]">Sole</span>Sphere
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form>
             <div className="flex flex-col items-center">
               <h1 className="font-bold text-2xl font-sans mb-3">Login</h1>
             </div>
@@ -170,12 +156,6 @@ function Login() {
                   />
                 )}
               </div>
-
-              {errors.password && (
-                <div className="mx-8 text-red-600 text-sm">
-                  {errors.password.message}
-                </div>
-              )}
               {errors.noMailNoPass && (
                 <div className="mx-8 text-red-600 text-sm">
                   {errors.noMailNoPass.message}
@@ -198,12 +178,14 @@ function Login() {
               )}
             </div>
             <div className="flex flex-col text-center">
-              <input
+              <button
                 disabled={isSubmitting}
-                type="submit"
-                value="Sign In"
+                type="button"
+                onClick={handleSubmit(onSubmit)}
                 className="disabled:opacity-50 cursor-pointer mx-8 mt-8 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md"
-              />
+              >
+                Log In
+              </button>
             </div>
           </form>
         </div>

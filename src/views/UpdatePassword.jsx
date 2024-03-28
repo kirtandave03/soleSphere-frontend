@@ -4,7 +4,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { updatePassword } from "../services/auth.service";
 
 const UpdatePassword = () => {
   const {
@@ -32,28 +32,28 @@ const UpdatePassword = () => {
     const headers = { "Content-Type": "application/json" };
 
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/auth/change-password",
-        { email, password: data.password, confirmPassword: data.password2 },
-        { headers }
-      );
+      const response = await updatePassword({
+        email: email,
+        password: data.password,
+        confirmPassword: data.password2,
+      });
 
       console.log(response.status);
 
       if (response.status === 200) {
         navigate("/login");
       }
-      if (response.status === 400) {
+    } catch (error) {
+      if (error.response.status === 400) {
         setError("notSame", {
           message: "Passwords doesn't match",
         });
       }
-      if (response.status === 401) {
+      if (error.response.status === 401) {
         setError("unAuth", {
           message: "Unauthorized to change data",
         });
       }
-    } catch (error) {
       console.error(error);
       //   navigate("/error");
     }
