@@ -166,6 +166,16 @@ const AddProducts = () => {
                             value: true,
                             message: "This field is required ",
                           },
+                          minLength: {
+                            value: 3,
+                            message:
+                              "Product name must be at least 3 characters long",
+                          },
+                          maxLength: {
+                            value: 30,
+                            message:
+                              "Product name must be at most 30 characters long",
+                          },
                         })}
                       />
                       {errors.productName && (
@@ -186,6 +196,16 @@ const AddProducts = () => {
                           required: {
                             value: true,
                             message: "This field is required ",
+                          },
+                          minLength: {
+                            value: 75,
+                            message:
+                              "Short description must be at least 75 characters long",
+                          },
+                          maxLength: {
+                            value: 200,
+                            message:
+                              "Short description must be at most 30 characters long",
                           },
                         })}
                       />
@@ -213,6 +233,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
+                        <option value="">Select category</option>
                         {category.map((item) => {
                           return (
                             <option key={item._id} value={item._id}>
@@ -245,6 +266,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
+                        <option value="">Select category</option>
                         {brand.map((item) => {
                           return (
                             <option key={item._id} value={item._id}>
@@ -277,6 +299,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
+                        <option value="">Select category</option>
                         <option value="UK">UK</option>
                         <option value="US">US</option>
                         <option value="EU">EU</option>
@@ -305,6 +328,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
+                        <option value="">Select category</option>
                         <option value="zipper">Zipper</option>
                         <option value="button">Button</option>
                         <option value="hook and loop">Hook and Loop</option>
@@ -342,6 +366,7 @@ const AddProducts = () => {
                         },
                       })}
                     >
+                      <option value="">Select category</option>
                       <option value="leather">Leather</option>
                       <option value="suede">Suede</option>
                       <option value="canvas">Canvas</option>
@@ -376,6 +401,11 @@ const AddProducts = () => {
                           value: true,
                           message: "This field is required ",
                         },
+                        minLength: {
+                          value: 75,
+                          message:
+                            "Long description must be at least 75 characters long",
+                        },
                       })}
                     />
 
@@ -402,6 +432,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
+                        <option value="">Select category</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="female">Unisex</option>
@@ -500,6 +531,10 @@ const AddProducts = () => {
                       value: true,
                       message: "This field is required",
                     },
+                    pattern: {
+                      value: /^[0-9]*\.?[0-9]+$/,
+                      message: "Please enter a positive number",
+                    },
                   })} // Adding required validation rule
                   type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
@@ -510,6 +545,10 @@ const AddProducts = () => {
                     required: {
                       value: true,
                       message: "This field is required",
+                    },
+                    pattern: {
+                      value: /^[0-9]*\.?[0-9]+$/,
+                      message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
                   type="text"
@@ -522,6 +561,10 @@ const AddProducts = () => {
                       value: true,
                       message: "This field is required",
                     },
+                    pattern: {
+                      value: /^[0-9]*\.?[0-9]+$/,
+                      message: "Please enter a positive number",
+                    },
                   })} // Adding required validation rule
                   type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
@@ -532,6 +575,10 @@ const AddProducts = () => {
                     required: {
                       value: true,
                       message: "This field is required",
+                    },
+                    pattern: {
+                      value: /^[0-9]*\.?[0-9]+$/,
+                      message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
                   type="text"

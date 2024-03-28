@@ -202,9 +202,25 @@ function EditProductPage() {
                     className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
                     type="text"
                     {...register("productName", {
+                      required: "Product name is required",
+                      minLength: {
+                        value: 3,
+                        message:
+                          "Product name must be at least 3 characters long",
+                      },
+                      maxLength: {
+                        value: 30,
+                        message:
+                          "Product name must be at most 30 characters long",
+                      },
                       defaultValue: productData.productName,
                     })}
                   />
+                  {errors.productName && (
+                    <div className="text-red-600 text-sm mb-1">
+                      {errors.productName.message}
+                    </div>
+                  )}
                 </div>
                 <div className="w-full md:w-1/2 pl-2">
                   <label className="font-semibold block mb-2">
@@ -214,9 +230,25 @@ function EditProductPage() {
                     rows={5}
                     className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
                     {...register("shortDescription", {
+                      required: "Short description is required",
+                      minLength: {
+                        value: 75,
+                        message:
+                          "Short description must be at least 75 characters long",
+                      },
+                      maxLength: {
+                        value: 200,
+                        message:
+                          "Short description must be at most 30 characters long",
+                      },
                       defaultValue: productData.shortDescription,
                     })}
                   />
+                  {errors.shortDescription && (
+                    <div className="text-red-600 text-sm mb-1">
+                      {errors.shortDescription.message}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="mb-4">
@@ -227,9 +259,20 @@ function EditProductPage() {
                   rows={5}
                   className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
                   {...register("longDescription", {
+                    required: "Long description is required",
+                    minLength: {
+                      value: 75,
+                      message:
+                        "Long description must be at least 75 characters long",
+                    },
                     defaultValue: productData.longDescription,
                   })}
                 />
+                {errors.longDescription && (
+                  <div className="text-red-600 text-sm mb-1">
+                    {errors.longDescription.message}
+                  </div>
+                )}
               </div>
               <div className="flex flex-wrap mb-4">
                 <div className="w-full md:w-1/3 pr-2 mb-4 md:mb-0">
@@ -422,6 +465,11 @@ function EditProductPage() {
                                     })}
                                   />
                                 </div>
+                                {errors[`size${index}`] && (
+                                  <div className="text-red-600 text-sm mb-1">
+                                    {errors[`size${index}`].message}
+                                  </div>
+                                )}
                                 <div className="flex items-center mb-1">
                                   <p className="pr-2">Actual Price: </p>
                                   <input
@@ -441,6 +489,11 @@ function EditProductPage() {
                                     })}
                                   />
                                 </div>
+                                {errors[`actualPrice${index}`] && (
+                                  <div className="text-red-600 text-sm mb-1">
+                                    {errors[`actualPrice${index}`].message}
+                                  </div>
+                                )}
                                 <div className="flex items-center">
                                   <p className="pr-2">Discounted Price:</p>
                                   <input
@@ -460,6 +513,11 @@ function EditProductPage() {
                                     })}
                                   />
                                 </div>
+                                {errors[`discountedPrice${index}`] && (
+                                  <div className="text-red-600 text-sm mb-1">
+                                    {errors[`discountedPrice${index}`].message}
+                                  </div>
+                                )}
                                 <div className="flex items-center">
                                   <p className="pr-2">Stock: </p>
                                   <input
@@ -479,6 +537,11 @@ function EditProductPage() {
                                     })}
                                   />
                                 </div>
+                                {errors[`stock${index}`] && (
+                                  <div className="text-red-600 text-sm mb-1">
+                                    {errors[`stock${index}`].message}
+                                  </div>
+                                )}
                               </div>
                             ))}
                           </div>
@@ -490,8 +553,9 @@ function EditProductPage() {
                 )}
               </div>
               <button
+                disabled={isSubmitting}
                 type="submit"
-                className="mt-4 w-1/2 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md mx-auto block"
+                className="mt-4 w-1/2 p-1 bg-[#4880FF] bg-cover text-white py-1 px-3 rounded-md hover:bg-[#417aff] hover:shadow-md mx-auto block disabled:opacity-50"
               >
                 Update
               </button>
