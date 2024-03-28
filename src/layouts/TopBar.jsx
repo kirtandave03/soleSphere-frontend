@@ -1,10 +1,5 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Menu } from "@headlessui/react";
-import { MdManageAccounts, MdLogout } from "react-icons/md";
-import { FaKey } from "react-icons/fa6";
-import { IoIosArrowDropdown } from "react-icons/io";
-import { CiSearch } from "react-icons/ci";
 
 const TopBar = () => {
   const email = useSelector((state) => state.email);
@@ -19,7 +14,9 @@ const TopBar = () => {
     <div className="h-12 w-full bg-white py-4 pl-2 pr-6 flex justify-between items-center">
       <div className="flex items-center">
         <div className="font-bold text-xl">
-          <span className="text-[#4880FF]">Sole</span>Sphere
+          <a href="/">
+            <span className="text-[#4880FF]">SoleSphere</span>
+          </a>
         </div>
       </div>
       <div className="flex items-center space-x-4">

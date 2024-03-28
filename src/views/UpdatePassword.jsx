@@ -64,6 +64,9 @@ const UpdatePassword = () => {
       <div className="m-auto w-[560px] h-[350px] bg-white flex flex-col justify-center align-middle rounded-xl">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center">
+            <div className="font-bold text-2xl my-2 flex justify-center items-center">
+              <span className="text-[#4880FF]">SoleSphere</span>
+            </div>
             <h1 className="font-bold text-2xl font-sans mb-6">
               Update Password
             </h1>

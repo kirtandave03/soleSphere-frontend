@@ -97,7 +97,7 @@ const Otp = ({
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
         <div className="m-auto w-[560px] h-[307.54px] bg-white flex flex-col justify-center items-center gap-8 align-middle rounded-xl font-sans">
           <div className="font-bold text-2xl flex justify-center items-center">
-            <span className="text-[#4880FF]">Sole</span>Sphere
+            <span className="text-[#4880FF]">SoleSphere</span>
           </div>
           <p className="text-2xl">{text}</p>
           <div className=" relative w-full flex flex-col justify-center items-center gap-4">

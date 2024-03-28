@@ -412,7 +412,12 @@ function EditProductPage() {
                                     {...register(`size${index}`, {
                                       required: {
                                         value: true,
-                                        message: "This field is required ",
+                                        message: "This field is required",
+                                      },
+                                      pattern: {
+                                        value: /^[0-9]*\.?[0-9]+$/,
+                                        message:
+                                          "Please enter a positive number",
                                       },
                                     })}
                                   />
@@ -426,7 +431,12 @@ function EditProductPage() {
                                     {...register(`actualPrice${index}`, {
                                       required: {
                                         value: true,
-                                        message: "This field is required ",
+                                        message: "This field is required",
+                                      },
+                                      pattern: {
+                                        value: /^[0-9]*\.?[0-9]+$/,
+                                        message:
+                                          "Please enter a positive number",
                                       },
                                     })}
                                   />
@@ -440,7 +450,12 @@ function EditProductPage() {
                                     {...register(`discountedPrice${index}`, {
                                       required: {
                                         value: true,
-                                        message: "This field is required ",
+                                        message: "This field is required",
+                                      },
+                                      pattern: {
+                                        value: /^[0-9]*\.?[0-9]+$/,
+                                        message:
+                                          "Please enter a positive number",
                                       },
                                     })}
                                   />
@@ -454,7 +469,12 @@ function EditProductPage() {
                                     {...register(`stock${index}`, {
                                       required: {
                                         value: true,
-                                        message: "This field is required ",
+                                        message: "This field is required",
+                                      },
+                                      pattern: {
+                                        value: /^[0-9]*\.?[0-9]+$/,
+                                        message:
+                                          "Please enter a positive number",
                                       },
                                     })}
                                   />

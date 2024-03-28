@@ -145,7 +145,7 @@ const Navbar = () => {
             >
               Users
             </button>
-            <button
+            {/* <button
               className={`p-4 rounded-r-xl ${
                 selectedButton === "team"
                   ? "bg-blue-500 text-white"
@@ -154,7 +154,7 @@ const Navbar = () => {
               onClick={() => handleSelect("team")}
             >
               Team
-            </button>
+            </button> */}
           </div>
           <button
             className={`p-4 rounded-r-xl ${

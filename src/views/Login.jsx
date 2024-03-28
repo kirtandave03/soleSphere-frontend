@@ -89,7 +89,7 @@ function Login() {
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
         <div className="m-auto w-[560px] h-[360px] bg-white flex flex-col justify-center align-middle rounded-xl">
           <div className="font-bold text-2xl mb-4 flex justify-center items-center">
-            <span className="text-[#4880FF]">Sole</span>Sphere
+            <span className="text-[#4880FF]">SoleSphere</span>
           </div>
           <form>
             <div className="flex flex-col items-center">
