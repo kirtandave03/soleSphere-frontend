@@ -532,8 +532,9 @@ const AddProducts = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[0-9]*\.?[0-9]+$/,
-                      message: "Please enter a positive number",
+                      value: /^[1-9]\d*$/,
+                      message:
+                        "Please enter a positive number without decimal points",
                     },
                   })} // Adding required validation rule
                   type="text"
@@ -577,8 +578,9 @@ const AddProducts = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[0-9]*\.?[0-9]+$/,
-                      message: "Please enter a positive number",
+                      value: /^[1-9]\d*$/,
+                      message:
+                        "Please enter a positive number without decimal points",
                     },
                   })} // Adding required validation rule
                   type="text"
