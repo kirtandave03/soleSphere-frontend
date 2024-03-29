@@ -36,7 +36,6 @@ function Products() {
   const [rowsPerPageForDeleted, setRowsPerPageForDeleted] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchDeletedQuery, setSearchDeletedQuery] = useState("");
-  const accessToken = localStorage.getItem("auth-token");
   const [totalProducts, setTotalProducts] = useState();
   const [totalDeletedProducts, setTotalDeletedProducts] = useState();
 
