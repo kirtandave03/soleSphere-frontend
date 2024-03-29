@@ -460,7 +460,7 @@ function EditProductPage() {
                                       pattern: {
                                         value: /^[1-9]\d*$/,
                                         message:
-                                          "Please enter a positive number without decimal points",
+                                          "Please enter a positive number without decimal pointsb",
                                       },
                                     })}
                                   />
