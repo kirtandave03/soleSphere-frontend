@@ -231,7 +231,7 @@ const AddProducts = () => {
                           maxLength: {
                             value: 200,
                             message:
-                              "Short description must be at most 30 characters long",
+                              "Short description must be at most 200 characters long",
                           },
                         })}
                       />

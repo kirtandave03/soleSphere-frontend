@@ -136,6 +136,32 @@ const AddVariants = () => {
     }
   };
 
+  const hasDynamicFieldErrors = () => {
+    return inputFields.some((_, index) => {
+      const dynamicFieldError = errors.variants && errors.variants[index];
+      return dynamicFieldError && Object.keys(dynamicFieldError).length > 0;
+    });
+  };
+
+  const handleDynamicFieldValidation = (value, index, fieldName) => {
+    const isRequired = true; // Change to false if not required
+    const isValid = /^[1-9]*\.?[0-9]+$/.test(value); // Positive integer pattern
+
+    if (isRequired && !value.trim()) {
+      setError(`variants[${index}].${fieldName}`, {
+        type: "required",
+        message: "This field is required",
+      });
+    } else if (!isValid) {
+      setError(`variants[${index}].${fieldName}`, {
+        type: "pattern",
+        message: "Please enter a positive number without decimal points",
+      });
+    } else {
+      setError(`variants[${index}].${fieldName}`, null);
+    }
+  };
+
   return (
     <div>
       <TopBar />
@@ -265,8 +291,21 @@ const AddVariants = () => {
                       value: true,
                       message: "This field is required",
                     },
+                    pattern: {
+                      value: /^[1-9]\d*$/,
+                      message: "Validation violated ",
+                    },
+                    validate: {
+                      min: (value) =>
+                        parseInt(value) >= 1 || "Value must be at least 1",
+                      max: (value) =>
+                        parseInt(value) <= 48 || "Value must be at most 48",
+                    },
                   })} // Adding required validation rule
                   type="text"
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(e.target.value, index, `size`)
+                  }
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Size"
                 />
@@ -276,8 +315,19 @@ const AddVariants = () => {
                       value: true,
                       message: "This field is required",
                     },
+                    pattern: {
+                      value: /^[1-9]*\.?[0-9]+$/,
+                      message: "Please enter a positive number",
+                    },
                   })} // Adding required validation rule
                   type="text"
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(
+                      e.target.value,
+                      index,
+                      `actual_price`
+                    )
+                  }
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Actual Price"
                 />
@@ -287,7 +337,18 @@ const AddVariants = () => {
                       value: true,
                       message: "This field is required",
                     },
+                    pattern: {
+                      value: /^[1-9]*\.?[0-9]+$/,
+                      message: "Please enter a positive number",
+                    },
                   })} // Adding required validation rule
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(
+                      e.target.value,
+                      index,
+                      `discounted_price`
+                    )
+                  }
                   type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Discounted Price"
@@ -298,19 +359,35 @@ const AddVariants = () => {
                       value: true,
                       message: "This field is required",
                     },
+                    pattern: {
+                      value: /^[0-9]\d*$/,
+                      message:
+                        "Please enter a positive number without decimal points",
+                    },
                   })} // Adding required validation rule
                   type="text"
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(e.target.value, index, `stock`)
+                  }
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Stock"
                 />
-                {errors[field.fieldName] && (
-                  <div className="text-red-500 block mt-1">
-                    {errors[field.fieldName].message}
-                  </div>
-                )}
+                {errors.variants &&
+                  errors.variants[index] &&
+                  errors.variants[index].size && (
+                    <div className="text-red-600 text-sm mt-4">
+                      {errors.variants[index].size.message}
+                    </div>
+                  )}
               </div>
             ))}
           </div>
+          {hasDynamicFieldErrors() && (
+            <div className="text-red-500 block mx-3">
+              There are errors in the above dynamic fields. Please fix them.it
+              can only contain positive numeric values
+            </div>
+          )}
           <button
             className="button float-right bg-blue-500 p-1 px-2 rounded-md text-white"
             type="button"
