@@ -49,7 +49,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex min-w-[10vw]">
       <div className="flex flex-col bg-white text-black ">
         {bigScreen ? (
           ""

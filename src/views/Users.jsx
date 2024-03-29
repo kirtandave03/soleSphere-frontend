@@ -139,7 +139,7 @@ const Users = () => {
       <TopBar />
       <div className="flex">
         <Navbar />
-        <div className="w-[90vw]">
+        <div className="w-[85vw]">
           <h1 className="p-1 font-bold text-2xl">Users</h1>
           <div>
             <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
