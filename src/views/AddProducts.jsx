@@ -139,6 +139,32 @@ const AddProducts = () => {
     // console.log(productData);
   };
 
+  const hasDynamicFieldErrors = () => {
+    return inputFields.some((_, index) => {
+      const dynamicFieldError = errors.variants && errors.variants[index];
+      return dynamicFieldError && Object.keys(dynamicFieldError).length > 0;
+    });
+  };
+
+  // Function to handle dynamic field validation
+  const handleDynamicFieldValidation = (value, index, fieldName) => {
+    const isRequired = true; // Change to false if not required
+    const isValid = /^[1-9]\d*$/.test(value); // Positive integer pattern
+
+    if (isRequired && !value.trim()) {
+      setError(`variants[${index}].${fieldName}`, {
+        type: "required",
+        message: "This field is required",
+      });
+    } else if (!isValid) {
+      setError(`variants[${index}].${fieldName}`, {
+        type: "pattern",
+        message: "Please enter a positive number without decimal points",
+      });
+    } else {
+      setError(`variants[${index}].${fieldName}`, null);
+    }
+  };
   return (
     <div>
       <Topbar />
@@ -205,7 +231,7 @@ const AddProducts = () => {
                           maxLength: {
                             value: 200,
                             message:
-                              "Short description must be at most 30 characters long",
+                              "Short description must be at most 200 characters long",
                           },
                         })}
                       />
@@ -233,7 +259,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
-                        <option value="">Select category</option>
+                        <option value="">Select Category</option>
                         {category.map((item) => {
                           return (
                             <option key={item._id} value={item._id}>
@@ -266,7 +292,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
-                        <option value="">Select category</option>
+                        <option value="">Select Brand</option>
                         {brand.map((item) => {
                           return (
                             <option key={item._id} value={item._id}>
@@ -299,7 +325,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
-                        <option value="">Select category</option>
+                        <option value="">Select Size Type</option>
                         <option value="UK">UK</option>
                         <option value="US">US</option>
                         <option value="EU">EU</option>
@@ -328,7 +354,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
-                        <option value="">Select category</option>
+                        <option value="">Select Closure Type</option>
                         <option value="zipper">Zipper</option>
                         <option value="button">Button</option>
                         <option value="hook and loop">Hook and Loop</option>
@@ -366,7 +392,7 @@ const AddProducts = () => {
                         },
                       })}
                     >
-                      <option value="">Select category</option>
+                      <option value="">Select Material</option>
                       <option value="leather">Leather</option>
                       <option value="suede">Suede</option>
                       <option value="canvas">Canvas</option>
@@ -432,7 +458,7 @@ const AddProducts = () => {
                           },
                         })}
                       >
-                        <option value="">Select category</option>
+                        <option value="">Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="female">Unisex</option>
@@ -484,17 +510,17 @@ const AddProducts = () => {
                         multiple
                         accept="image/*"
                         className="border border-black rounded-md w-full"
-                        {...register("images", {})}
+                        {...register("images")}
                         onChange={(e) => handleImages(e)}
                       />
                       {errors.required && (
                         <div className="text-red-600 text-sm">
-                          {errors.required.message}{" "}
+                          {errors.required.message}
                         </div>
                       )}
                       {errors.maxLen && (
                         <div className="text-red-600 text-sm">
-                          {errors.maxLen.message}{" "}
+                          {errors.maxLen.message}
                         </div>
                       )}
 
@@ -529,18 +555,27 @@ const AddProducts = () => {
                   {...register(`variants[${index}].size`, {
                     required: {
                       value: true,
-                      message: "This field is required",
+                      message: "these fields are required",
                     },
                     pattern: {
                       value: /^[1-9]\d*$/,
-                      message:
-                        "Please enter a positive number without decimal points",
+                      message: "Validation violated ",
+                    },
+                    validate: {
+                      min: (value) =>
+                        parseInt(value) >= 1 || "Value must be at least 1",
+                      max: (value) =>
+                        parseInt(value) <= 48 || "Value must be at most 48",
                     },
                   })} // Adding required validation rule
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(e.target.value, index, `size`)
+                  }
                   type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Size"
                 />
+
                 <input
                   {...register(`variants[${index}].actual_price`, {
                     required: {
@@ -548,10 +583,17 @@ const AddProducts = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[0-9]*\.?[0-9]+$/,
+                      value: /^[1-9]*\.?[0-9]+$/,
                       message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(
+                      e.target.value,
+                      index,
+                      `actual_price`
+                    )
+                  }
                   type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Actual Price"
@@ -563,10 +605,17 @@ const AddProducts = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[0-9]*\.?[0-9]+$/,
+                      value: /^[1-9]*\.?[0-9]+$/,
                       message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(
+                      e.target.value,
+                      index,
+                      `discounted_price`
+                    )
+                  }
                   type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Discounted Price"
@@ -578,23 +627,39 @@ const AddProducts = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[1-9]\d*$/,
+                      value: /^[0-9]\d*$/,
                       message:
                         "Please enter a positive number without decimal points",
                     },
                   })} // Adding required validation rule
+                  onSubmit={(e) =>
+                    handleDynamicFieldValidation(
+                      e.target.value,
+                      index,
+                      `variants[${index}].stock`
+                    )
+                  }
                   type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Stock"
                 />
-                {errors[field.fieldName] && (
-                  <div className="text-red-500 block mt-1">
-                    {errors[field.fieldName].message}
-                  </div>
-                )}
+
+                {errors.variants &&
+                  errors.variants[index] &&
+                  errors.variants[index].size && (
+                    <div className="text-red-600 text-sm mt-4">
+                      {errors.variants[index].size.message}
+                    </div>
+                  )}
               </div>
             ))}
           </div>
+          {hasDynamicFieldErrors() && (
+            <div className="text-red-500 block mx-3">
+              There are errors in the above dynamic fields. Please fix them.it
+              can only contain positive numeric values
+            </div>
+          )}
 
           <button
             className="button float-right bg-blue-500 p-1 px-2 rounded-md text-white"

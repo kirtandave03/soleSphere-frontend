@@ -160,7 +160,7 @@ function Products() {
       <TopBar />
       <div className="flex flex-grow">
         <Navbar />
-        <div className="w-full flex-col">
+        <div className="w-[90vw] flex-col">
           <div className="p-4 w-full">
             <h1 className="font-bold text-lg my-2 ml-4">Products</h1>
 
