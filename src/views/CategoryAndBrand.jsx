@@ -78,10 +78,7 @@ function AddCategoriesAndBrands() {
       }
     } catch (error) {
       if (error.response.status === 400) {
-        setErrorCategory("noCat", {
-          message:
-            "Category field is required! or Category entered already exists",
-        });
+        alert("Category field is required! or Category entered already exists");
       }
       console.error(error);
       //navigate("/error");
@@ -105,15 +102,12 @@ function AddCategoriesAndBrands() {
       }
     } catch (error) {
       if (error.response.status === 404) {
-        setErrorCategory("CatNF", {
-          message: "Category not found!",
-        });
+        alert("Category not found!");
       }
       if (error.response.status === 400) {
-        setErrorCategory("catExists", {
-          message:
-            "field(s) is/are empty or the updated category entered already exists",
-        });
+        alert(
+          "field(s) is/are empty or the updated category entered already exists"
+        );
       }
       console.error(error);
       //navigate("/error");
@@ -134,9 +128,7 @@ function AddCategoriesAndBrands() {
       }
     } catch (error) {
       if (error.response.status === 404) {
-        setErrorCategory("delCat", {
-          message: "Category not found!",
-        });
+        alert("Category not found!");
       }
       console.error(error);
       //navigate("/error");
@@ -161,15 +153,12 @@ function AddCategoriesAndBrands() {
       }
     } catch (error) {
       if (error.response.status === 400) {
-        setErrorBrand("addBrand", {
-          message:
-            "brand and/or brand icon is/are required or brand name entered already exists",
-        });
+        alert(
+          "brand and/or brand icon is/are required or brand name entered already exists"
+        );
       }
       if (error.response.status === 500) {
-        setErrorBrand("ISE", {
-          message: "Internal Server Error or error while uploading file",
-        });
+        alert("Internal Server Error or error while uploading file");
       }
       console.error(error);
       // navigate("/error");
@@ -194,19 +183,15 @@ function AddCategoriesAndBrands() {
       }
     } catch (error) {
       if (error.response.status === 400) {
-        setErrorBrand("brandExists", {
-          message: `All field(s) is/are required or updated brand name entered already exists.`,
-        });
+        alert(
+          `All field(s) is/are required or updated brand name entered already exists.`
+        );
       }
       if (error.response.status === 404) {
-        setErrorBrand("noBrand", {
-          message: `No such brand exists which needs to update`,
-        });
+        alert(`No such brand exists which needs to update`);
       }
       if (error.response.status === 500) {
-        setErrorBrand("ser", {
-          message: `Internal Server Error`,
-        });
+        alert(`Internal Server Error`);
       }
       console.error(error);
       // navigate("/error");
@@ -227,9 +212,7 @@ function AddCategoriesAndBrands() {
       }
     } catch (error) {
       if (error.response.status === 404) {
-        setErrorBrand("BrandNF", {
-          message: "Brand not found!",
-        });
+        alert("Brand not found!");
       }
       console.error(error);
       //navigate("/error");
@@ -308,6 +291,21 @@ function AddCategoriesAndBrands() {
                               value: true,
                               message: "This field is required ",
                             },
+                            minLength: {
+                              value: 3,
+                              message:
+                                "Category name must be at least 3 characters long",
+                            },
+                            maxLength: {
+                              value: 50,
+                              message:
+                                "Category name cannot exceed 50 characters",
+                            },
+                            pattern: {
+                              value: /^[a-zA-Z0-9\s]+$/,
+                              message:
+                                "Category name must contain only letters, numbers, and spaces",
+                            },
                           })}
                         />
                         {errorsCategory.newCategory1 && (
@@ -368,6 +366,21 @@ function AddCategoriesAndBrands() {
                             required: {
                               value: true,
                               message: "This field is required ",
+                            },
+                            minLength: {
+                              value: 3,
+                              message:
+                                "Category name must be at least 3 characters long",
+                            },
+                            maxLength: {
+                              value: 50,
+                              message:
+                                "Category name cannot exceed 50 characters",
+                            },
+                            pattern: {
+                              value: /^[a-zA-Z0-9\s]+$/,
+                              message:
+                                "Category name must contain only letters, numbers, and spaces",
                             },
                           })}
                         />
@@ -498,6 +511,20 @@ function AddCategoriesAndBrands() {
                               value: true,
                               message: "This field is required ",
                             },
+                            minLength: {
+                              value: 3,
+                              message:
+                                "Brand name must be at least 3 characters long",
+                            },
+                            maxLength: {
+                              value: 50,
+                              message: "Brand name cannot exceed 50 characters",
+                            },
+                            pattern: {
+                              value: /^[\p{L}\d\s\-&'()]+$/u,
+                              message:
+                                "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
+                            },
                           })}
                         />
                         {errorsBrand.newBrand1 && (
@@ -579,6 +606,20 @@ function AddCategoriesAndBrands() {
                             required: {
                               value: true,
                               message: "This field is required ",
+                            },
+                            minLength: {
+                              value: 3,
+                              message:
+                                "Brand name must be at least 3 characters long",
+                            },
+                            maxLength: {
+                              value: 50,
+                              message: "Brand name cannot exceed 50 characters",
+                            },
+                            pattern: {
+                              value: /^[\p{L}\d\s\-&'()]+$/u,
+                              message:
+                                "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
                             },
                           })}
                         />

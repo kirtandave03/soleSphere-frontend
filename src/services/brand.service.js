@@ -1,4 +1,7 @@
-import { jsonAxiosInstance } from "./common/axiosInstances";
+import {
+  formDataAxiosInstance,
+  jsonAxiosInstance,
+} from "./common/axiosInstances";
 
 export const getBrands = async () => {
   const url = `/brands/`;
