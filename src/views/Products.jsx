@@ -25,6 +25,7 @@ import {
   getProducts,
   restoreProduct,
 } from "../services/product.service";
+import Alert from "@mui/material/Alert";
 
 function Products() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function Products() {
   const [searchDeletedQuery, setSearchDeletedQuery] = useState("");
   const [totalProducts, setTotalProducts] = useState();
   const [totalDeletedProducts, setTotalDeletedProducts] = useState();
+  const [productNotFound, setProductNotFound] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -78,12 +80,12 @@ function Products() {
       if (response.status === 200) {
         setRows(rows.filter((row) => row.productName !== productName));
         setDeletedRows([...deletedRows, product]);
-        alert("Product Deleted Successfully");
-      } else if (response.status === 404) {
-        alert("Product Not Found");
       }
     } catch (error) {
       console.error("Error deleting product:", error);
+      if (error.response.status === 404) {
+        setProductNotFound(true);
+      }
     }
   };
 
@@ -98,12 +100,12 @@ function Products() {
           deletedRows.filter((product) => product._id !== productId)
         );
         setRows([...rows, product]);
-        alert("Product Restored Successfully");
-      } else if (response.status === 404) {
-        alert("Product Not Found");
       }
     } catch (error) {
       console.error("Error deleting product:", error);
+      if (error.response.status === 404) {
+        setProductNotFound(true);
+      }
     }
   };
 
@@ -163,7 +165,21 @@ function Products() {
         <div className="w-[90vw] flex-col">
           <div className="p-4 w-full">
             <h1 className="font-bold text-lg my-2 ml-4">Products</h1>
-
+            <div className="relative">
+              <div className="w-full absolute flex justify-center items-center">
+                {productNotFound && (
+                  <Alert
+                    severity="error"
+                    className="w-full"
+                    onClose={() => {
+                      setProductNotFound(false);
+                    }}
+                  >
+                    Product not found!
+                  </Alert>
+                )}
+              </div>
+            </div>
             <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
               <TextField
                 id="search"

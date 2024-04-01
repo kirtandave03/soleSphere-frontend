@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../layouts/Navbar";
 import Topbar from "../layouts/TopBar";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { getBrands } from "../services/brand.service";
 import { getCategories } from "../services/category.service";
 import { fileUpload } from "../services/fileupload.service";
@@ -81,6 +81,7 @@ const AddProducts = () => {
     control,
     setError,
     clearErrors,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -93,6 +94,10 @@ const AddProducts = () => {
     }
     setInputFields([...inputFields, ...newFields]);
   };
+
+  const productName = watch("productName");
+  const shortDescription = watch("shortDesc");
+  const longDescription = watch("longDescription");
 
   const onSubmit = async (data) => {
     const hexColor = convertHexToFlutterFormat(data.color);
@@ -180,7 +185,11 @@ const AddProducts = () => {
                   <div className="shadow-lg p-5 rounded-md">
                     <div className="flex flex-col">
                       <label htmlFor="productName" className="font-light ">
-                        Product Name
+                        Product Name{" "}
+                        <span>
+                          {" "}
+                          ({productName ? productName.length : 0}/30)
+                        </span>
                       </label>
 
                       <input
@@ -203,6 +212,8 @@ const AddProducts = () => {
                               "Product name must be at most 30 characters long",
                           },
                         })}
+                        maxLength={30}
+                        minLength={3}
                       />
                       {errors.productName && (
                         <div className="text-red-600 text-sm">
@@ -211,7 +222,11 @@ const AddProducts = () => {
                       )}
 
                       <label className="font-light" htmlFor="shortDesc">
-                        Short Description
+                        Short Description{" "}
+                        <span>
+                          {" "}
+                          ({shortDescription ? shortDescription.length : 0}/200)
+                        </span>
                       </label>
                       <textarea
                         rows="4"
@@ -234,6 +249,8 @@ const AddProducts = () => {
                               "Short description must be at most 200 characters long",
                           },
                         })}
+                        maxLength={200}
+                        minLength={75}
                       />
                       {errors.shortDesc && (
                         <div className="text-red-600 text-sm">
@@ -416,6 +433,10 @@ const AddProducts = () => {
                   <div className="longDescription shadow-lg p-5 rounded-md flex flex-col">
                     <label htmlFor="longDescription" className="font-light ">
                       Long Description
+                      <span>
+                        {" "}
+                        ({longDescription ? longDescription.length : 0}/600)
+                      </span>
                     </label>
                     <textarea
                       className="rounded-md border p-2 border-black"
@@ -432,7 +453,14 @@ const AddProducts = () => {
                           message:
                             "Long description must be at least 75 characters long",
                         },
+                        maxLength: {
+                          value: 600,
+                          message:
+                            "Long description must be at most 600 characters long",
+                        },
                       })}
+                      maxLength={600}
+                      minLength={75}
                     />
 
                     {errors.longDescription && (

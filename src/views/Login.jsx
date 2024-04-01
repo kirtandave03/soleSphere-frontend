@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
 import { useForm } from "react-hook-form";
 import { forgotPassword, login } from "../services/auth.service";
+import Alert from "@mui/material/Alert";
 
 function Login() {
   const {
@@ -21,6 +22,10 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [fieldsIncorrect, setFieldsIncorrrect] = useState(false);
   const navigate = useNavigate();
+  const [adminNotFound, setAdminNotFound] = useState(false);
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const [sww, setSww] = useState(false);
+  const [emailRequired, setEmailRequired] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -39,8 +44,12 @@ function Login() {
         navigate("/forget-password");
       }
     } catch (error) {
-      if (error.response.status === 404) {
-        alert("Admin not found");
+      if (error.response.status === 400) {
+        setEmailRequired(true);
+      } else if (error.response.status === 404) {
+        setAdminNotFound(true);
+      } else {
+        setSww(true);
       }
       console.error(error);
     }
@@ -60,14 +69,15 @@ function Login() {
         navigate("/otp");
       }
     } catch (error) {
+      console.error(error);
       if (error.response.status === 401) {
-        alert("Invalid credentials");
+        setInvalidCredentials(true);
         setFieldsIncorrrect(true);
       } else if (error.response.status === 404) {
-        alert("Admin Not Found");
+        setAdminNotFound(true);
         setFieldsIncorrrect(true);
       } else {
-        navigate("/error");
+        setSww(true);
       }
     }
   };
@@ -86,8 +96,77 @@ function Login() {
     };
   }, [onSubmit]);
 
+  useEffect(() => {
+    let timer;
+    if (adminNotFound) {
+      timer = setTimeout(() => {
+        setAdminNotFound(false);
+      }, 5000);
+    }
+
+    if (sww) {
+      timer = setTimeout(() => {
+        setSww(false);
+      }, 5000);
+    }
+
+    if (invalidCredentials) {
+      timer = setTimeout(() => {
+        setInvalidCredentials(false);
+      }, 5000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [adminNotFound, sww, invalidCredentials]);
+
   return (
-    <>
+    <div className="relative">
+      <div className="w-full absolute flex justify-center items-center">
+        {adminNotFound && (
+          <Alert
+            severity="error"
+            className="w-full"
+            onClose={() => {
+              setAdminNotFound(false);
+            }}
+          >
+            Admin not found!
+          </Alert>
+        )}
+        {invalidCredentials && (
+          <Alert
+            severity="error"
+            className="w-full"
+            onClose={() => {
+              setInvalidCredentials(false);
+            }}
+          >
+            Invalid Credentials!
+          </Alert>
+        )}
+        {sww && (
+          <Alert
+            severity="error"
+            className="w-full"
+            onClose={() => {
+              setSww(false);
+            }}
+          >
+            Something went wrong! Please try again later.
+          </Alert>
+        )}
+        {emailRequired && (
+          <Alert
+            severity="error"
+            className="w-full"
+            onClose={() => {
+              setEmailRequired(false);
+            }}
+          >
+            Please enter the email id.
+          </Alert>
+        )}
+      </div>
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
         <div className="m-auto w-[560px] h-[360px] bg-white flex flex-col justify-center align-middle rounded-xl">
           <div className="font-bold text-2xl mb-4 flex justify-center items-center">
@@ -175,7 +254,7 @@ function Login() {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

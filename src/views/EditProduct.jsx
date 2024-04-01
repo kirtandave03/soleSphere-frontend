@@ -123,6 +123,10 @@ function EditProductPage() {
     setSelectedColor(color);
   };
 
+  const productName = watch("productName");
+  const shortDescription = watch("shortDescription");
+  const longDescription = watch("longDescription");
+
   const onSubmit = async (data) => {
     const updatedVariants = productData.variant.map((variant, index) => {
       if (variant.color === selectedColor) {
@@ -161,7 +165,6 @@ function EditProductPage() {
       console.log(response.status);
 
       if (response.status === 200) {
-        alert("Product updated successfully.");
         navigate(-1);
       }
     } catch (error) {
@@ -197,6 +200,7 @@ function EditProductPage() {
                 <div className="w-full md:w-1/2 pr-2 mb-4 md:mb-0">
                   <label className="font-semibold block mb-2">
                     Product Name
+                    <span> ({productName ? productName.length : 0}/30)</span>
                   </label>
                   <input
                     className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
@@ -215,6 +219,8 @@ function EditProductPage() {
                       },
                       defaultValue: productData.productName,
                     })}
+                    maxLength={30}
+                    minLength={3}
                   />
                   {errors.productName && (
                     <div className="text-red-600 text-sm mb-1">
@@ -225,6 +231,10 @@ function EditProductPage() {
                 <div className="w-full md:w-1/2 pl-2">
                   <label className="font-semibold block mb-2">
                     Short Description
+                    <span>
+                      {" "}
+                      ({shortDescription ? shortDescription.length : 0}/200)
+                    </span>
                   </label>
                   <textarea
                     rows={5}
@@ -239,10 +249,12 @@ function EditProductPage() {
                       maxLength: {
                         value: 200,
                         message:
-                          "Short description must be at most 30 characters long",
+                          "Short description must be at most 200 characters long",
                       },
                       defaultValue: productData.shortDescription,
                     })}
+                    maxLength={200}
+                    minLength={75}
                   />
                   {errors.shortDescription && (
                     <div className="text-red-600 text-sm mb-1">
@@ -254,6 +266,10 @@ function EditProductPage() {
               <div className="mb-4">
                 <label className="font-semibold block mb-2">
                   Long Description
+                  <span>
+                    {" "}
+                    ({longDescription ? longDescription.length : 0}/600)
+                  </span>
                 </label>
                 <textarea
                   rows={5}
@@ -265,8 +281,15 @@ function EditProductPage() {
                       message:
                         "Long description must be at least 75 characters long",
                     },
+                    maxLength: {
+                      value: 600,
+                      message:
+                        "Long description must be at most 600 characters long",
+                    },
                     defaultValue: productData.longDescription,
                   })}
+                  maxLength={600}
+                  minLength={75}
                 />
                 {errors.longDescription && (
                   <div className="text-red-600 text-sm mb-1">

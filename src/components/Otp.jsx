@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 
 const Otp = ({
   email,
@@ -15,6 +16,7 @@ const Otp = ({
   const [showPassword, setShowPassword] = useState(false);
   const [incorrectOTP, setIncorrectOTP] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [adminNotFound, setAdminNotFound] = useState(false);
   const navigate = useNavigate();
 
   const handleOTPchange = (event) => {
@@ -45,9 +47,13 @@ const Otp = ({
         navigate(`${navigation}`);
         console.log("it worked");
       } else {
-        setIncorrectOTP(true);
       }
     } catch (error) {
+      if (error) {
+        setIncorrectOTP(true);
+        setIsSubmitted(false);
+        console.log(incorrectOTP, isSubmitted);
+      }
       console.error(error);
     }
   };
@@ -66,15 +72,14 @@ const Otp = ({
         navigate(`${resendNavigation}`);
       }
     } catch (error) {
-      console.error(error);
       if (error.response.status === 400) {
-        setIsSubmitted(false);
-        alert("Invalid OTP");
+        navigate("/login");
       }
       if (error.response.status === 404) {
-        setIsSubmitted(false);
-        alert("Admin doesn't exists");
+        x;
+        setAdminNotFound(true);
       }
+      console.error(error);
     }
   };
 
@@ -92,8 +97,49 @@ const Otp = ({
     };
   }, [submitHandler]);
 
+  useEffect(() => {
+    let timer;
+    if (adminNotFound) {
+      timer = setTimeout(() => {
+        setAdminNotFound(false);
+      }, 5000);
+    }
+
+    if (incorrectOTP) {
+      timer = setTimeout(() => {
+        setIncorrectOTP(false);
+      }, 5000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [adminNotFound, incorrectOTP]);
+
   return (
-    <>
+    <div className="relative">
+      <div className="w-full absolute flex justify-center items-center">
+        {incorrectOTP && (
+          <Alert
+            severity="error"
+            className="w-full"
+            onClose={() => {
+              setIncorrectOTP(false);
+            }}
+          >
+            Incorrect OTP!
+          </Alert>
+        )}
+        {adminNotFound && (
+          <Alert
+            severity="error"
+            className="w-full"
+            onClose={() => {
+              setAdminNotFound(false);
+            }}
+          >
+            Admin not found!
+          </Alert>
+        )}
+      </div>
       <div className="w-screen h-screen bg-login-bg bg-cover flex justify-center items-center font-semibold">
         <div className="m-auto w-[560px] h-[307.54px] bg-white flex flex-col justify-center items-center gap-8 align-middle rounded-xl font-sans">
           <div className="font-bold text-2xl flex justify-center items-center">
@@ -144,7 +190,7 @@ const Otp = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

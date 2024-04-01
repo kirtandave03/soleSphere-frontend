@@ -12,6 +12,9 @@ export default {
         "input-border": "#d8d8d8",
         "main-bg": "#f5f6fa",
       },
+      animation: {
+        growline: "growLine 5s linear infinite",
+      },
     },
   },
   plugins: [],

@@ -80,7 +80,7 @@ function OrderList() {
       <TopBar />
       <div className="flex flex-grow">
         <Navbar />
-        <div className="w-[90vw] flex-col">
+        <div className="w-full flex-col">
           <div className="p-4 w-full">
             <h1 className="font-bold text-lg my-2 ml-4">Order Lists</h1>
             <div>
@@ -125,14 +125,8 @@ function OrderList() {
                               row.orderStatus === "Completed"
                                 ? "rgb(22 163 74)"
                                 : row.orderStatus === "Pending"
-                                ? "rgb(202 138 4)"
-                                : "rgb(220 38 38)",
-                            backgroundColor:
-                              row.orderStatus === "Completed"
-                                ? "rgb(220 252 231)"
-                                : row.orderStatus === "Pending"
-                                ? "rgb(254 249 195)"
-                                : "rgb(254 226 226)",
+                                ? "#F89A00"
+                                : "#F00010",
                           }}
                         >
                           {row.orderStatus}

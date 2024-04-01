@@ -184,7 +184,18 @@ function Dashboard() {
               {...chartSetting}
             />
           </div>
-          <div>Most Sold Products Table</div>
+          <div>
+            <h2>Most Sold Products Table</h2>
+            {/* <OrderTable
+              columns={columns}
+              data={orderDetails}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              getStatusClasses={getStatusClasses}
+            /> */}
+          </div>
         </div>
       </div>
     </div>
