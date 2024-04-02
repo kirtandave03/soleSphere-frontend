@@ -46,7 +46,7 @@ function Products() {
       const response = await getProducts(page, rowsPerPage, searchQuery);
       const responseData = response.data;
 
-      console.log(responseData.data.products);
+      // console.log(responseData.data.products);
       setRows(responseData.data.products);
       setTotalProducts(responseData.data.totalCount);
     } catch (error) {
@@ -63,7 +63,7 @@ function Products() {
       );
       const responseData = response.data;
 
-      console.log(responseData.data.deletedProducts);
+      // console.log(responseData.data.deletedProducts);
       setDeletedRows(responseData.data.deletedProducts);
       setTotalDeletedProducts(responseData.data.totalCount);
     } catch (error) {
@@ -75,7 +75,7 @@ function Products() {
     try {
       const response = await deleteProduct(productName);
 
-      console.log(response.status);
+      // console.log(response.status);
 
       if (response.status === 200) {
         setRows(rows.filter((row) => row.productName !== productName));
@@ -93,7 +93,7 @@ function Products() {
     try {
       const response = await restoreProduct(productId);
 
-      console.log(response.status);
+      // console.log(response.status);
 
       if (response.status === 200) {
         setDeletedRows(
@@ -132,13 +132,13 @@ function Products() {
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
-    setPage(page + 1);
+    setPage(page);
   };
 
   const handleChangeRowsPerPageForDeleted = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPageForDeleted(newRowsPerPage);
-    setPageForDeleted(pageForDeleted + 1);
+    setPageForDeleted(pageForDeleted);
   };
 
   const onEdit = (productId) => {

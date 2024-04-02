@@ -14,6 +14,7 @@ import {
   deleteBrand,
   updateBrand,
 } from "../services/brand.service";
+import Alert from "@mui/material/Alert";
 
 function AddCategoriesAndBrands() {
   const {
@@ -38,12 +39,24 @@ function AddCategoriesAndBrands() {
   const [brands, setBrands] = useState([]);
   const [brandAddIcon, setBrandAddIcon] = useState(null);
   const [brandUpdIcon, setBrandUpdIcon] = useState(null);
+  const [noCategories, setNoCategories] = useState(false);
+  const [noBrands, setNoBrands] = useState(false);
+  const [catExists, setCatExists] = useState(false);
+  const [brandExists, setBrandExists] = useState(false);
+  const [ISR, setISR] = useState(false);
+  const [catAdd, setCatAdd] = useState(false);
+  const [catUpd, setCatUpd] = useState(false);
+  const [catDel, setCatDel] = useState(false);
+  const [brandAdd, setBrandAdd] = useState(false);
+  const [brandUpd, setBrandUpd] = useState(false);
+  const [brandDel, setBrandDel] = useState(false);
 
   const fetchCategories = async () => {
     try {
       const responseCatData = await getCategories();
       setCategories(responseCatData.data.data.categories);
     } catch (error) {
+      setNoCategories(true);
       console.error(error);
     }
   };
@@ -53,6 +66,7 @@ function AddCategoriesAndBrands() {
       const responseBrandData = await getBrands();
       setBrands(responseBrandData.data.data.brands);
     } catch (error) {
+      setNoBrands(true);
       console.error(error);
     }
   };
@@ -74,11 +88,12 @@ function AddCategoriesAndBrands() {
 
       if (response.status === 200) {
         fetchCategories();
-        alert("Category added successfully");
+        setCatAdd(true);
       }
     } catch (error) {
       if (error.response.status === 400) {
-        alert("Category field is required! or Category entered already exists");
+        setCatExists(true);
+        // alert("Category field is required! or Category entered already exists");
       }
       console.error(error);
       //navigate("/error");
@@ -98,16 +113,11 @@ function AddCategoriesAndBrands() {
 
       if (response.status === 200) {
         fetchCategories();
-        alert("Category updated successfully");
+        setCatUpd(true);
       }
     } catch (error) {
-      if (error.response.status === 404) {
-        alert("Category not found!");
-      }
       if (error.response.status === 400) {
-        alert(
-          "field(s) is/are empty or the updated category entered already exists"
-        );
+        setCatExists(true);
       }
       console.error(error);
       //navigate("/error");
@@ -124,12 +134,9 @@ function AddCategoriesAndBrands() {
 
       if (response.status === 200) {
         fetchCategories();
-        alert("Category deleted successfully");
+        setCatDel(true);
       }
     } catch (error) {
-      if (error.response.status === 404) {
-        alert("Category not found!");
-      }
       console.error(error);
       //navigate("/error");
     }
@@ -149,16 +156,14 @@ function AddCategoriesAndBrands() {
 
       if (response.status === 200) {
         fetchBrands();
-        alert("Brand added successfully");
+        setBrandAdd(true);
       }
     } catch (error) {
       if (error.response.status === 400) {
-        alert(
-          "brand and/or brand icon is/are required or brand name entered already exists"
-        );
+        setBrandExists(true);
       }
       if (error.response.status === 500) {
-        alert("Internal Server Error or error while uploading file");
+        setISR(true);
       }
       console.error(error);
       // navigate("/error");
@@ -179,19 +184,14 @@ function AddCategoriesAndBrands() {
 
       if (response.status === 200) {
         fetchBrands();
-        alert("Brand updated successfully");
+        setBrandUpd(true);
       }
     } catch (error) {
       if (error.response.status === 400) {
-        alert(
-          `All field(s) is/are required or updated brand name entered already exists.`
-        );
-      }
-      if (error.response.status === 404) {
-        alert(`No such brand exists which needs to update`);
+        setBrandExists(true);
       }
       if (error.response.status === 500) {
-        alert(`Internal Server Error`);
+        setISR(true);
       }
       console.error(error);
       // navigate("/error");
@@ -208,12 +208,9 @@ function AddCategoriesAndBrands() {
 
       if (response.status === 200) {
         fetchBrands();
-        alert("Brand deleted successfully");
+        setBrandDel(true);
       }
     } catch (error) {
-      if (error.response.status === 404) {
-        alert("Brand not found!");
-      }
       console.error(error);
       //navigate("/error");
     }
@@ -227,12 +224,218 @@ function AddCategoriesAndBrands() {
     setBrandUpdIcon(event.target.files[0]);
   };
 
+  useEffect(() => {
+    let timer;
+    if (ISR) {
+      timer = setTimeout(() => {
+        setISR(false);
+      }, 5000);
+    }
+
+    if (brandExists) {
+      timer = setTimeout(() => {
+        setBrandExists(false);
+      }, 5000);
+    }
+
+    if (catExists) {
+      timer = setTimeout(() => {
+        setCatExists(false);
+      }, 5000);
+    }
+
+    if (noBrands) {
+      timer = setTimeout(() => {
+        setNoBrands(false);
+      }, 5000);
+    }
+
+    if (noCategories) {
+      timer = setTimeout(() => {
+        setNoCategories(false);
+      }, 5000);
+    }
+
+    if (catAdd) {
+      timer = setTimeout(() => {
+        setCatAdd(false);
+      }, 5000);
+    }
+
+    if (brandAdd) {
+      timer = setTimeout(() => {
+        setBrandAdd(false);
+      }, 5000);
+    }
+
+    if (catUpd) {
+      timer = setTimeout(() => {
+        setCatUpd(false);
+      }, 5000);
+    }
+
+    if (brandUpd) {
+      timer = setTimeout(() => {
+        setBrandUpd(false);
+      }, 5000);
+    }
+
+    if (catDel) {
+      timer = setTimeout(() => {
+        setCatDel(false);
+      }, 5000);
+    }
+
+    if (brandDel) {
+      timer = setTimeout(() => {
+        setBrandDel(false);
+      }, 5000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [
+    ISR,
+    brandExists,
+    catExists,
+    noBrands,
+    noCategories,
+    catAdd,
+    catDel,
+    catUpd,
+    brandAdd,
+    brandDel,
+    brandUpd,
+  ]);
+
   return (
     <div className="flex flex-col h-screen bg-main-bg bg-cover">
       <TopBar />
       <div className="flex flex-grow">
         <Navbar />
         <div className="flex-grow flex flex-col justify-center">
+          <div className="w-full flex justify-center items-center">
+            {noCategories && (
+              <Alert
+                severity="error"
+                className="w-full"
+                onClose={() => {
+                  setNoCategories(false);
+                }}
+              >
+                Error fetching categories!
+              </Alert>
+            )}
+            {noBrands && (
+              <Alert
+                severity="error"
+                className="w-full"
+                onClose={() => {
+                  setNoBrands(false);
+                }}
+              >
+                Error fetching brands!
+              </Alert>
+            )}
+            {catExists && (
+              <Alert
+                severity="error"
+                className="w-full"
+                onClose={() => {
+                  setCatExists(false);
+                }}
+              >
+                Category entered alredy exists!
+              </Alert>
+            )}
+            {brandExists && (
+              <Alert
+                severity="error"
+                className="w-full"
+                onClose={() => {
+                  setBrandExists(false);
+                }}
+              >
+                Brand name entered alredy exists!
+              </Alert>
+            )}
+            {ISR && (
+              <Alert
+                severity="error"
+                className="w-full"
+                onClose={() => {
+                  setISR(false);
+                }}
+              >
+                Internal Server Error or error while uploading file!
+              </Alert>
+            )}
+            {catAdd && (
+              <Alert
+                severity="success"
+                className="w-full"
+                onClose={() => {
+                  setCatAdd(false);
+                }}
+              >
+                Category Added successfully :)
+              </Alert>
+            )}
+            {catUpd && (
+              <Alert
+                severity="success"
+                className="w-full"
+                onClose={() => {
+                  setCatUpd(false);
+                }}
+              >
+                Category updated successfully :)
+              </Alert>
+            )}
+            {catDel && (
+              <Alert
+                severity="success"
+                className="w-full"
+                onClose={() => {
+                  setCatDel(false);
+                }}
+              >
+                Category Deleted successfully :)
+              </Alert>
+            )}
+            {brandAdd && (
+              <Alert
+                severity="success"
+                className="w-full"
+                onClose={() => {
+                  setBrandAdd(false);
+                }}
+              >
+                Brand Added successfully :)
+              </Alert>
+            )}
+            {brandUpd && (
+              <Alert
+                severity="success"
+                className="w-full"
+                onClose={() => {
+                  setBrandUpd(false);
+                }}
+              >
+                Brand updated successfully :)
+              </Alert>
+            )}
+            {brandDel && (
+              <Alert
+                severity="success"
+                className="w-full"
+                onClose={() => {
+                  setBrandDel(false);
+                }}
+              >
+                Brand Deleted successfully :)
+              </Alert>
+            )}
+          </div>
           <div className="p-4">
             <h1 className="font-bold mb-4 text-lg text-center">
               Categories and Brands

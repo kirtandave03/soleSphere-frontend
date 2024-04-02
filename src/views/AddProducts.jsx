@@ -215,6 +215,9 @@ const AddProducts = () => {
                         maxLength={30}
                         minLength={3}
                       />
+                      <div className="font-light text-base mb-1">
+                        (At least 3 characters)*
+                      </div>
                       {errors.productName && (
                         <div className="text-red-600 text-sm">
                           {errors.productName.message}
@@ -252,6 +255,9 @@ const AddProducts = () => {
                         maxLength={200}
                         minLength={75}
                       />
+                      <div className="font-light text-base">
+                        (At least 75 characters)*
+                      </div>
                       {errors.shortDesc && (
                         <div className="text-red-600 text-sm">
                           {errors.shortDesc.message}
@@ -462,7 +468,9 @@ const AddProducts = () => {
                       maxLength={600}
                       minLength={75}
                     />
-
+                    <div className="font-light text-base">
+                      (At least 75 characters)*
+                    </div>
                     {errors.longDescription && (
                       <div className="text-red-600 text-sm">
                         {errors.longDescription.message}
