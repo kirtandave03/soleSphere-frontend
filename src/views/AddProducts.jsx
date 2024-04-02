@@ -7,6 +7,7 @@ import { getCategories } from "../services/category.service";
 import { fileUpload } from "../services/fileupload.service";
 import { addProduct } from "../services/product.service";
 import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
+import Alert from "@mui/material/Alert";
 
 const AddProducts = () => {
   const [category, setCategory] = useState([]);
@@ -16,6 +17,14 @@ const AddProducts = () => {
   const [isUploaded, setIsUploaded] = useState(false);
   const [isDisabled, setisDisabled] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
+
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadFail, setUploadFail] = useState(false);
+  const [wentWrong, setWentWrong] = useState(false);
+  const [productExists, setProductExists] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   const getAllBrands = async () => {
     const brands = await getBrands();
@@ -61,7 +70,7 @@ const AddProducts = () => {
       if (response.status === 200) {
         setImageUrls(response.data.data);
         setIsUploaded(true);
-        alert("Images uploaded Successfully");
+        setUploadSuccess(true);
         setisDisabled(false);
       }
 
@@ -69,9 +78,10 @@ const AddProducts = () => {
       // console.log(response)
     } catch (error) {
       if (error.response.status === 500) {
-        alert("Sorry,We are unable to upload image right now!");
+        setUploadFail(true);
+      } else {
+        setWentWrong(true);
       }
-      console.error("Error uploading images:", error);
     }
   };
 
@@ -128,17 +138,18 @@ const AddProducts = () => {
     try {
       var response = await addProduct(productData);
       if (response.status === 200) {
-        alert("Product Added Successfully");
+        setSubmitSuccess(true);
       }
     } catch (error) {
       if (error.response.status === 400) {
-        alert("Product Already Exists");
+        setProductExists(true);
       } else if (error.response.status === 500) {
+        setServerError(true);
         alert("Internal Server Error");
       } else if (error.response.status === 404) {
-        alert("Category or Brand not found");
+        setNotFound(true);
       } else {
-        alert("Something went wrong");
+        setWentWrong(true);
       }
     }
     // console.log(productData);
@@ -171,8 +182,143 @@ const AddProducts = () => {
     }
   };
 
+  useEffect(() => {
+    let timer;
+    if (submitSuccess) {
+      timer = setTimeout(() => {
+        setSubmitSuccess(false);
+      }, 5000);
+    }
+
+    if (uploadSuccess) {
+      timer = setTimeout(() => {
+        setUploadSuccess(false);
+      }, 5000);
+    }
+
+    if (uploadFail) {
+      timer = setTimeout(() => {
+        setUploadFail(false);
+      }, 5000);
+    }
+    if (notFound) {
+      timer = setTimeout(() => {
+        setNotFound(false);
+      }, 5000);
+    }
+    if (productExists) {
+      timer = setTimeout(() => {
+        setProductExists(false);
+      }, 5000);
+    }
+    if (serverError) {
+      timer = setTimeout(() => {
+        setServerError(false);
+      }, 5000);
+    }
+    if (wentWrong) {
+      timer = setTimeout(() => {
+        setWentWrong(false);
+      }, 5000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [
+    submitSuccess,
+    uploadSuccess,
+    uploadFail,
+    notFound,
+    productExists,
+    serverError,
+    wentWrong,
+  ]);
   return (
     <div>
+      {uploadSuccess && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="success"
+          className="w-full"
+          onClose={() => {
+            setUploadSuccess(false);
+          }}
+        >
+          Images Uploaded Successfully!
+        </Alert>
+      )}
+      {submitSuccess && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="success"
+          className="w-full"
+          onClose={() => {
+            setSubmitSuccess(false);
+          }}
+        >
+          Product Added Successfully!
+        </Alert>
+      )}
+      {uploadFail && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setUploadFail(false);
+          }}
+        >
+          Sorry,We are unable to upload image right now!;
+        </Alert>
+      )}
+      {wentWrong && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setWentWrong(false);
+          }}
+        >
+          Something Went Wrong!;
+        </Alert>
+      )}
+      {productExists && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setProductExists(false);
+          }}
+        >
+          Product Already Exists!
+        </Alert>
+      )}
+      {notFound && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setNotFound(false);
+          }}
+        >
+          Brand Or Category Not Found!;
+        </Alert>
+      )}
+      {serverError && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setServerError(false);
+          }}
+        >
+          Brand Or Category Not Found!;
+        </Alert>
+      )}
+
       <Topbar />
       <div className="flex gap-4">
         <Navbar />
@@ -186,11 +332,8 @@ const AddProducts = () => {
                   <div className="shadow-lg p-5 rounded-md">
                     <div className="flex flex-col">
                       <label htmlFor="productName" className="font-light ">
-                        Product Name{" "}
-                        <span>
-                          {" "}
-                          ({productName ? productName.length : 0}/30)
-                        </span>
+                        Product Name
+                        <span>({productName ? productName.length : 0}/30)</span>
                       </label>
 
                       <input
