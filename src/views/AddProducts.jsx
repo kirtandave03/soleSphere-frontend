@@ -154,7 +154,7 @@ const AddProducts = () => {
   // Function to handle dynamic field validation
   const handleDynamicFieldValidation = (value, index, fieldName) => {
     const isRequired = true; // Change to false if not required
-    const isValid = /^[1-9]\d*$/.test(value); // Positive integer pattern
+    const isValid = /^[0-9]\d*\.?\d+$/.test(value); // Floating-point number pattern
 
     if (isRequired && !value.trim()) {
       setError(`variants[${index}].${fieldName}`, {
@@ -164,12 +164,13 @@ const AddProducts = () => {
     } else if (!isValid) {
       setError(`variants[${index}].${fieldName}`, {
         type: "pattern",
-        message: "Please enter a positive number without decimal points",
+        message: "Please enter a positive number",
       });
     } else {
       setError(`variants[${index}].${fieldName}`, null);
     }
   };
+
   return (
     <div>
       <Topbar />
@@ -611,10 +612,11 @@ const AddProducts = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[1-9]*\.?[0-9]+$/,
+                      value: /^[0-9]\d*\.?\d+$/,
                       message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
+                  type="text"
                   onSubmit={(e) =>
                     handleDynamicFieldValidation(
                       e.target.value,
@@ -622,7 +624,6 @@ const AddProducts = () => {
                       `actual_price`
                     )
                   }
-                  type="text"
                   className="border m-2 border-black w-[18vw] p-2 rounded-lg"
                   placeholder="Actual Price"
                 />
@@ -633,7 +634,7 @@ const AddProducts = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[1-9]*\.?[0-9]+$/,
+                      value: /^[0-9]\d*\.?\d+$/,
                       message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
