@@ -145,7 +145,7 @@ const AddVariants = () => {
 
   const handleDynamicFieldValidation = (value, index, fieldName) => {
     const isRequired = true; // Change to false if not required
-    const isValid = /^[1-9]*\.?[0-9]+$/.test(value); // Positive integer pattern
+    const isValid = /^[0-9]\d*\.?\d+$/.test(value); // Floating-point number pattern
 
     if (isRequired && !value.trim()) {
       setError(`variants[${index}].${fieldName}`, {
@@ -155,13 +155,12 @@ const AddVariants = () => {
     } else if (!isValid) {
       setError(`variants[${index}].${fieldName}`, {
         type: "pattern",
-        message: "Please enter a positive number without decimal points",
+        message: "Please enter a positive number",
       });
     } else {
       setError(`variants[${index}].${fieldName}`, null);
     }
   };
-
   return (
     <div>
       <TopBar />
@@ -292,7 +291,7 @@ const AddVariants = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[1-9]\d*$/,
+                      value: /^[0-9]\d*$/,
                       message: "Validation violated ",
                     },
                     validate: {
@@ -316,7 +315,7 @@ const AddVariants = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[1-9]*\.?[0-9]+$/,
+                      value: /^[0-9]\d*\.?\d+$/,
                       message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
@@ -338,7 +337,7 @@ const AddVariants = () => {
                       message: "This field is required",
                     },
                     pattern: {
-                      value: /^[1-9]*\.?[0-9]+$/,
+                      value: /^[0-9]\d*\.?\d+$/,
                       message: "Please enter a positive number",
                     },
                   })} // Adding required validation rule
