@@ -227,7 +227,7 @@ function Products() {
                 }}
               />
             </div>
-            <div className="mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto">
+            <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
               <div className="w-full">
                 <TableContainer component={Paper}>
                   <Table aria-label="simple table">
@@ -376,7 +376,7 @@ function Products() {
                 }}
               />
             </div>
-            <div className="mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto">
+            <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
               <div className="w-full">
                 <TableContainer component={Paper}>
                   <Table aria-label="simple table">
