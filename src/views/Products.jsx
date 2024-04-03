@@ -64,7 +64,7 @@ function Products() {
       );
       const responseData = response.data;
 
-      // console.log(responseData.data.deletedProducts);
+      console.log(responseData.data.deletedProducts);
       setDeletedRows(responseData.data.deletedProducts);
       setTotalDeletedProducts(responseData.data.totalCount);
     } catch (error) {
@@ -76,11 +76,27 @@ function Products() {
     try {
       const response = await deleteProduct(productName);
 
-      // console.log(response.status);
+      // console.log(product);
 
       if (response.status === 200) {
         setRows(rows.filter((row) => row.productName !== productName));
-        setDeletedRows([...deletedRows, product]);
+
+        const toAddProduct = {
+          productName: product.productName,
+          variants: [
+            {
+              image_urls: [product.image],
+              sizes: [{ discounted_price: product.discounted_price }],
+            },
+          ],
+          category: { category: product.category },
+          brand: { brand: product.brand },
+          averageRating: product.avgRating,
+        };
+
+        // console.log(toAddProduct);
+
+        setDeletedRows([...deletedRows, toAddProduct]);
       }
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -100,7 +116,17 @@ function Products() {
         setDeletedRows(
           deletedRows.filter((product) => product._id !== productId)
         );
-        setRows([...rows, product]);
+
+        const toAddProduct = {
+          productName: product.productName,
+          image: product.variants[0].image_urls[0],
+          category: product.category.category,
+          brand: product.brand.brand,
+          discounted_price: product.variants[0].sizes[0].discounted_price,
+          colors: product.variants.length,
+          avgRating: product.averageRating,
+        };
+        setRows([...rows, toAddProduct]);
       }
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -230,6 +256,11 @@ function Products() {
                         <TableCell
                           style={{ fontWeight: "600", textAlign: "center" }}
                         >
+                          Size
+                        </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "600", textAlign: "center" }}
+                        >
                           Price
                         </TableCell>
                         <TableCell
@@ -263,18 +294,11 @@ function Products() {
                                 }}
                               />
                             </TableCell>
-                            <TableCell style={{ textAlign: "center" }}>
-                              {capitalize(row.productName)}
-                            </TableCell>
-                            <TableCell style={{ textAlign: "center" }}>
-                              {capitalize(row.category)}
-                            </TableCell>
-                            <TableCell style={{ textAlign: "center" }}>
-                              {capitalize(row.brand)}
-                            </TableCell>
-                            <TableCell style={{ textAlign: "center" }}>
-                              {row.discounted_price}
-                            </TableCell>
+                            <TableCell>{capitalize(row.productName)}</TableCell>
+                            <TableCell>{capitalize(row.category)}</TableCell>
+                            <TableCell>{capitalize(row.brand)}</TableCell>
+                            <TableCell>{row.size}</TableCell>
+                            <TableCell>{row.discounted_price}</TableCell>
                             <TableCell style={{ textAlign: "center" }}>
                               {row.colors}
                             </TableCell>
@@ -285,19 +309,30 @@ function Products() {
                                 : "No Reviews"}
                             </TableCell>
 
-                            <TableCell style={{ textAlign: "center" }}>
-                              <IconButton
-                                aria-label="edit"
-                                onClick={() => onEdit(row._id)}
+                            <TableCell
+                              style={{
+                                textAlign: "center",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
                               >
-                                <FaRegEdit />
-                              </IconButton>
-                              <IconButton
-                                aria-label="delete"
-                                onClick={() => onDelete(row.productName, row)}
-                              >
-                                <RiDeleteBinLine />
-                              </IconButton>
+                                <IconButton
+                                  aria-label="edit"
+                                  onClick={() => onEdit(row._id)}
+                                >
+                                  <FaRegEdit />
+                                </IconButton>
+                                <IconButton
+                                  aria-label="delete"
+                                  onClick={() => onDelete(row.productName, row)}
+                                >
+                                  <RiDeleteBinLine />
+                                </IconButton>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -370,6 +405,11 @@ function Products() {
                         <TableCell
                           style={{ fontWeight: "600", textAlign: "center" }}
                         >
+                          Size
+                        </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "600", textAlign: "center" }}
+                        >
                           Price
                         </TableCell>
                         <TableCell
@@ -410,6 +450,9 @@ function Products() {
                           </TableCell>
                           <TableCell style={{ textAlign: "center" }}>
                             {capitalize(deletedRow.brand.brand)}
+                          </TableCell>
+                          <TableCell style={{ textAlign: "center" }}>
+                            {deletedRow.variants[0].sizes[0].size}
                           </TableCell>
                           <TableCell style={{ textAlign: "center" }}>
                             {deletedRow.variants[0].sizes[0].discounted_price}
