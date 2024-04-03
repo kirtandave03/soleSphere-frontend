@@ -342,6 +342,9 @@ const AddVariants = () => {
                       handleInputChange(e);
                     }}
                   />
+                  <div className="font-light text-base mt-1 mb-1">
+                    (At least 3 characters)*
+                  </div>
                   <ul>
                     {products.map((item, index) => (
                       <li

@@ -301,7 +301,6 @@ function EditProductPage() {
                   <label className="font-semibold block mb-2">
                     Long Description
                     <span className="font-light text-base">
-                      {" "}
                       ({longDescription ? longDescription.length : 0}/600)
                     </span>
                   </label>
