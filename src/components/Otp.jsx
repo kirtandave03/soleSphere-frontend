@@ -17,6 +17,8 @@ const Otp = ({
   const [incorrectOTP, setIncorrectOTP] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [adminNotFound, setAdminNotFound] = useState(false);
+  const [timer, setTimer] = useState(90);
+  const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
 
   const handleOTPchange = (event) => {
@@ -70,13 +72,22 @@ const Otp = ({
 
       if (response.status === 201) {
         navigate(`${resendNavigation}`);
+        setTimer(90);
+        setDisabled(true);
+        const countdown = setInterval(() => {
+          setTimer((prevTimer) => prevTimer - 1);
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(countdown);
+          setDisabled(false);
+        }, 90000);
       }
     } catch (error) {
       if (error.response.status === 400) {
         navigate("/login");
       }
       if (error.response.status === 404) {
-        x;
         setAdminNotFound(true);
       }
       console.error(error);
@@ -181,8 +192,14 @@ const Otp = ({
                 <Link
                   onClick={handleResend}
                   to="/otp"
-                  className="text-sm text-slate-500 hover:underline hover:text-slate-700"
+                  className={`text-sm text-slate-500 hover:underline ${
+                    disabled
+                      ? "opacity-50 pointer-events-none cursor-not-allowed"
+                      : "hover:text-slate-700"
+                  }`}
                 >
+                  <span>OTP will expire in {timer}s</span>
+                  <br />
                   Re-send OTP
                 </Link>
               </span>
