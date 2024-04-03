@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { fileUpload } from "../services/fileupload.service";
 import { addVariant, getProducts } from "../services/product.service";
 import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
+import Alert from "@mui/material/Alert";
 
 const AddVariants = () => {
   const [query, setQuery] = useState("");
@@ -18,6 +19,14 @@ const AddVariants = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [product_id, setProduct_id] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadFail, setUploadFail] = useState(false);
+  const [wentWrong, setWentWrong] = useState(false);
+  const [variantExists, setVariantExists] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   const {
     register,
@@ -84,16 +93,17 @@ const AddVariants = () => {
       if (response.status === 200) {
         setImageUrls(response.data.data);
         setIsUploaded(true);
-        alert("Images uploaded Successfully");
+        setUploadSuccess(true);
         setisDisabled(false);
       }
 
       // console.log(response)
     } catch (error) {
       if (error.response.status === 500) {
-        alert("Sorry,We are unable to upload image right now!");
+        setUploadFail(true);
+      } else {
+        setWentWrong(true);
       }
-      console.error("Error uploading images:", error);
     }
   };
 
@@ -104,10 +114,10 @@ const AddVariants = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log(data.color);
     const hexColor = convertHexToFlutterFormat(data.color);
-
     const variant = {
-      product_id,
+      productName: selectedProduct,
       variants: {
         color: hexColor,
         image_urls: imageUrls,
@@ -123,15 +133,17 @@ const AddVariants = () => {
     try {
       var response = await addVariant(variant);
       if (response.status === 200) {
-        alert("New variant Added Successfully");
+        setSubmitSuccess(true);
       }
     } catch (error) {
       if (error.response.status === 500) {
-        alert("Internal Server Error");
+        setServerError(true);
+      } else if (error.response.status === 404) {
+        setNotFound(true);
       } else if (error.response.status === 400) {
-        alert("Variant Already Exists");
+        setVariantExists(true);
       } else {
-        alert("Something went wrong");
+        setWentWrong(true);
       }
     }
   };
@@ -161,8 +173,143 @@ const AddVariants = () => {
       setError(`variants[${index}].${fieldName}`, null);
     }
   };
+
+  useEffect(() => {
+    let timer;
+    if (submitSuccess) {
+      timer = setTimeout(() => {
+        setSubmitSuccess(false);
+      }, 5000);
+    }
+
+    if (uploadSuccess) {
+      timer = setTimeout(() => {
+        setUploadSuccess(false);
+      }, 5000);
+    }
+
+    if (uploadFail) {
+      timer = setTimeout(() => {
+        setUploadFail(false);
+      }, 5000);
+    }
+    if (notFound) {
+      timer = setTimeout(() => {
+        setNotFound(false);
+      }, 5000);
+    }
+    if (variantExists) {
+      timer = setTimeout(() => {
+        setVariantExists(false);
+      }, 5000);
+    }
+    if (serverError) {
+      timer = setTimeout(() => {
+        setServerError(false);
+      }, 5000);
+    }
+    if (wentWrong) {
+      timer = setTimeout(() => {
+        setWentWrong(false);
+      }, 5000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [
+    submitSuccess,
+    uploadSuccess,
+    uploadFail,
+    notFound,
+    variantExists,
+    serverError,
+    wentWrong,
+  ]);
   return (
     <div>
+      {uploadSuccess && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="success"
+          className="w-full"
+          onClose={() => {
+            setUploadSuccess(false);
+          }}
+        >
+          Images Uploaded Successfully!
+        </Alert>
+      )}
+      {submitSuccess && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="success"
+          className="w-full"
+          onClose={() => {
+            setSubmitSuccess(false);
+          }}
+        >
+          Variant Added Successfully!
+        </Alert>
+      )}
+      {uploadFail && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setUploadFail(false);
+          }}
+        >
+          Sorry,We are unable to upload image right now!
+        </Alert>
+      )}
+      {wentWrong && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setWentWrong(false);
+          }}
+        >
+          Something Went Wrong!
+        </Alert>
+      )}
+      {variantExists && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setVariantExists(false);
+          }}
+        >
+          Variant Already Exists!
+        </Alert>
+      )}
+      {notFound && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setNotFound(false);
+          }}
+        >
+          Product Not Found!
+        </Alert>
+      )}
+      {serverError && (
+        <Alert
+          style={{ position: "fixed" }}
+          severity="error"
+          className="w-full"
+          onClose={() => {
+            setServerError(false);
+          }}
+        >
+          Internal Server Error!
+        </Alert>
+      )}
       <TopBar />
       <div className="flex gap-4 ">
         <Navbar />
@@ -200,9 +347,7 @@ const AddVariants = () => {
                       <li
                         key={index}
                         className="my-2 border border-b-4 p-2 cursor-pointer"
-                        onClick={() =>
-                          handleOptionClick(item.productName, item._id)
-                        }
+                        onClick={() => handleOptionClick(item.productName)}
                       >
                         {item.productName}
                       </li>
@@ -260,12 +405,12 @@ const AddVariants = () => {
                   </button>
                   {errors.required && (
                     <div className="text-red-600 text-sm">
-                      {errors.required.message}{" "}
+                      {errors.required.message}
                     </div>
                   )}
                   {errors.maxLen && (
                     <div className="text-red-600 text-sm">
-                      {errors.maxLen.message}{" "}
+                      {errors.maxLen.message}
                     </div>
                   )}
                 </div>

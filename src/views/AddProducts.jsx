@@ -110,7 +110,9 @@ const AddProducts = () => {
   const longDescription = watch("longDescription");
 
   const onSubmit = async (data) => {
+    console.log(data.color);
     const hexColor = convertHexToFlutterFormat(data.color);
+    console.log("Afetr Function : ", hexColor);
     const productData = {
       productName: data.productName,
       shortDescription: data.shortDesc,
@@ -145,7 +147,6 @@ const AddProducts = () => {
         setProductExists(true);
       } else if (error.response.status === 500) {
         setServerError(true);
-        alert("Internal Server Error");
       } else if (error.response.status === 404) {
         setNotFound(true);
       } else {
@@ -267,7 +268,7 @@ const AddProducts = () => {
             setUploadFail(false);
           }}
         >
-          Sorry,We are unable to upload image right now!;
+          Sorry,We are unable to upload image right now!
         </Alert>
       )}
       {wentWrong && (
@@ -279,7 +280,7 @@ const AddProducts = () => {
             setWentWrong(false);
           }}
         >
-          Something Went Wrong!;
+          Something Went Wrong!
         </Alert>
       )}
       {productExists && (
@@ -303,7 +304,7 @@ const AddProducts = () => {
             setNotFound(false);
           }}
         >
-          Brand Or Category Not Found!;
+          Brand Or Category Not Found!
         </Alert>
       )}
       {serverError && (
@@ -315,7 +316,7 @@ const AddProducts = () => {
             setServerError(false);
           }}
         >
-          Brand Or Category Not Found!;
+          Internal Server Error!
         </Alert>
       )}
 
