@@ -76,7 +76,6 @@ const Otp = ({
         navigate("/login");
       }
       if (error.response.status === 404) {
-        x;
         setAdminNotFound(true);
       }
       console.error(error);
