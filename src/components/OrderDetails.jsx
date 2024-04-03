@@ -1,9 +1,10 @@
 import React from "react";
 import convertFlutterToHexFormat from "../utils/convertFlutterToHexFormat";
+import capitalize from "../utils/capitalize";
 
 function OrderDetails({ order, setDetails }) {
   return (
-    <div className="w-2/5 absolute right-0 top-0 h-full flex-col justify-between bg-white p-4 shadow-lg transition-all duration-500">
+    <div className="w-2/5 absolute right-0 top-0 flex-col justify-between bg-white p-4 shadow-lg transition-all duration-500">
       <div>
         <div className="flex justify-between">
           <h2 className="text-lg font-bold">#{order._id}</h2>
@@ -46,10 +47,10 @@ function OrderDetails({ order, setDetails }) {
               <img
                 src={product.image_url}
                 alt=""
-                className="w-15 h-20 object-cover rounded-full"
+                className="max-w-20 max-h-14 object-cover"
               />
-              <div className="h-20 flex-col justify-between">
-                <div>{product.productName}</div>
+              <div className="ml-5 h-20 flex-col justify-between">
+                <div>{capitalize(product.productName)}</div>
                 <div className="flex gap-2 items-center">
                   <div
                     style={{

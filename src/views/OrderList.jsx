@@ -28,12 +28,13 @@ function OrderList() {
   ]);
   const [orderDetails, setOrderDetails] = useState([]);
   const [details, setDetails] = useState(null);
+  const [totalOrders, setTotalOrder] = useState();
 
   const fetchOrders = async () => {
     try {
       const response = await getOrders(rowsPerPage, page);
       // console.log(response);
-      const dataNeeded = response.data.data;
+      const dataNeeded = response.data.data.orders;
 
       const formattedOrders = dataNeeded.map((order) => {
         const {
@@ -58,7 +59,8 @@ function OrderList() {
       });
 
       setOrderDetails(formattedOrders);
-      console.log(orderDetails);
+      setTotalOrder(response.data.data.totalOrders);
+      // console.log(orderDetails);
     } catch (error) {
       console.error("error fetching orders");
     }
@@ -96,7 +98,11 @@ function OrderList() {
       <div className="flex flex-grow">
         <Navbar />
         <div className="w-full flex-col">
-          <div className={`p-4 w-full ${details ? "opacity-25" : ""}`}>
+          <div
+            className={`p-4 w-full ${
+              details ? "opacity-25 pointer-events-none cursor-not-allowed" : ""
+            }`}
+          >
             <h1 className="font-bold text-lg my-2 ml-4">Order Lists</h1>
             <div>
               <TableContainer component={Paper}>
@@ -133,7 +139,9 @@ function OrderList() {
                         <TableCell style={{ textAlign: "center" }}>
                           {row.transactionId}
                         </TableCell>
-                        <TableCell style={{ textAlign: "center" }}>
+                        <TableCell
+                          style={{ textAlign: "center", minWidth: "7rem" }}
+                        >
                           {row.date}
                         </TableCell>
                         <TableCell
@@ -157,7 +165,7 @@ function OrderList() {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
-                  count={orderDetails.length}
+                  count={totalOrders || orderDetails.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={(event, newPage) => handleChangePage(newPage)}
