@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TopBar from "../layouts/TopBar";
 import Navbar from "../layouts/Navbar";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { fileUpload } from "../services/fileupload.service";
 import { addVariant, getProducts } from "../services/product.service";
