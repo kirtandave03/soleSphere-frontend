@@ -7,7 +7,7 @@ import capitalize from "../utils/capitalize";
 import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
 import convertFlutterToHexFormat from "../utils/convertFlutterToHexFormat";
 import { FaSpinner } from "react-icons/fa";
-import { IoIosArrowDropdown } from "react-icons/io";
+import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 import { getCategories } from "../services/category.service";
 import { getBrands } from "../services/brand.service";
 import { editProduct, getProductDetails } from "../services/product.service";
@@ -51,6 +51,7 @@ function EditProductPage() {
   const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [productData, setProductData] = useState({
     productName: "",
     shortDescription: "",
@@ -121,6 +122,10 @@ function EditProductPage() {
   const handleColorClick = (color) => {
     setValue("selectedColor", color);
     setSelectedColor(color);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const productName = watch("productName");
@@ -200,7 +205,10 @@ function EditProductPage() {
                 <div className="w-full md:w-1/2 pr-2 mb-4 md:mb-0">
                   <label className="font-semibold block mb-2">
                     Product Name
-                    <span> ({productName ? productName.length : 0}/30)</span>
+                    <span className="font-light text-base">
+                      {" "}
+                      ({productName ? productName.length : 0}/30)
+                    </span>
                   </label>
                   <input
                     className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
@@ -222,6 +230,9 @@ function EditProductPage() {
                     maxLength={30}
                     minLength={3}
                   />
+                  <div className="font-light text-base">
+                    (At least 3 characters)*
+                  </div>
                   {errors.productName && (
                     <div className="text-red-600 text-sm mb-1">
                       {errors.productName.message}
@@ -231,7 +242,7 @@ function EditProductPage() {
                 <div className="w-full md:w-1/2 pl-2">
                   <label className="font-semibold block mb-2">
                     Short Description
-                    <span>
+                    <span className="font-light text-base">
                       {" "}
                       ({shortDescription ? shortDescription.length : 0}/200)
                     </span>
@@ -256,6 +267,9 @@ function EditProductPage() {
                     maxLength={200}
                     minLength={75}
                   />
+                  <div className="font-light text-base">
+                    (At least 75 characters)*
+                  </div>
                   {errors.shortDescription && (
                     <div className="text-red-600 text-sm mb-1">
                       {errors.shortDescription.message}
@@ -266,7 +280,7 @@ function EditProductPage() {
               <div className="mb-4">
                 <label className="font-semibold block mb-2">
                   Long Description
-                  <span>
+                  <span className="font-light text-base">
                     {" "}
                     ({longDescription ? longDescription.length : 0}/600)
                   </span>
@@ -291,6 +305,9 @@ function EditProductPage() {
                   maxLength={600}
                   minLength={75}
                 />
+                <div className="font-light text-base">
+                  (At least 75 characters)*
+                </div>
                 {errors.longDescription && (
                   <div className="text-red-600 text-sm mb-1">
                     {errors.longDescription.message}
@@ -450,12 +467,22 @@ function EditProductPage() {
                             },
                           })}
                         />
-                        <IoIosArrowDropdown className="mr-2 cursor-pointer" />
+                        {isDropdownOpen ? (
+                          <IoIosArrowDropup
+                            onClick={toggleDropdown}
+                            className="mr-2 cursor-pointer"
+                          />
+                        ) : (
+                          <IoIosArrowDropdown
+                            onClick={toggleDropdown}
+                            className="mr-2 cursor-pointer"
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
-                {selectedColor && (
+                {isDropdownOpen && selectedColor && (
                   <div>
                     {productData.variant.map((variant) => {
                       if (variant.color === selectedColor) {

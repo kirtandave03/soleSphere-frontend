@@ -10,3 +10,14 @@ export const getOrders = async (limit, page) => {
       .catch((err) => reject(err));
   });
 };
+
+export const getOrderDetails = async (orderId) => {
+  const url = `/admin/orders/${orderId}`;
+
+  return new Promise((resolve, reject) => {
+    jsonAxiosInstance
+      .get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

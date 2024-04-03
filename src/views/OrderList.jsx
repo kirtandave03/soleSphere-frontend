@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getOrders } from "../services/order.service";
+import { getOrders, getOrderDetails } from "../services/order.service";
 import TopBar from "../layouts/TopBar";
 import Navbar from "../layouts/Navbar";
+import OrderDetails from "../components/OrderDetails";
 import capitalize from "../utils/capitalize";
 import {
   Table,
@@ -26,11 +27,12 @@ function OrderList() {
     "Order Status",
   ]);
   const [orderDetails, setOrderDetails] = useState([]);
+  const [details, setDetails] = useState(null);
 
   const fetchOrders = async () => {
     try {
       const response = await getOrders(rowsPerPage, page);
-      console.log(response);
+      // console.log(response);
       const dataNeeded = response.data.data;
 
       const formattedOrders = dataNeeded.map((order) => {
@@ -75,13 +77,26 @@ function OrderList() {
     setPage(0);
   };
 
+  const handleClick = async (orderId) => {
+    try {
+      const response = await getOrderDetails(orderId);
+      const responseNeeded = response.data.data;
+
+      console.log(responseNeeded);
+
+      setDetails(responseNeeded);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen  bg-main-bg bg-cover bg-red-100">
       <TopBar />
       <div className="flex flex-grow">
         <Navbar />
         <div className="w-full flex-col">
-          <div className="p-4 w-full">
+          <div className={`p-4 w-full ${details ? "opacity-25" : ""}`}>
             <h1 className="font-bold text-lg my-2 ml-4">Order Lists</h1>
             <div>
               <TableContainer component={Paper}>
@@ -101,7 +116,11 @@ function OrderList() {
 
                   <TableBody>
                     {orderDetails.map((row, rowIndex) => (
-                      <TableRow key={rowIndex}>
+                      <TableRow
+                        className="cursor-pointer"
+                        key={rowIndex}
+                        onClick={() => handleClick(row.orderId)}
+                      >
                         <TableCell style={{ textAlign: "center" }}>
                           {row.orderId}
                         </TableCell>
@@ -146,6 +165,11 @@ function OrderList() {
                 />
               </TableContainer>
             </div>
+          </div>
+          <div>
+            {details && (
+              <OrderDetails order={details} setDetails={setDetails} />
+            )}
           </div>
         </div>
       </div>
