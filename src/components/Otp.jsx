@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
+import { login } from "../services/auth.service";
 
 const Otp = ({
   email,
+  password,
   text,
   service,
   navigation,
@@ -64,11 +66,7 @@ const Otp = ({
     const headers = { "Content-Type": "application/json" };
 
     try {
-      const response = await axios.post(
-        "https://solesphere-backend.onrender.com/api/v1/auth/get-otp",
-        { email },
-        { headers }
-      );
+      const response = await login({ email: email, password: password });
 
       if (response.status === 201) {
         navigate(`${resendNavigation}`);
@@ -107,6 +105,28 @@ const Otp = ({
       document.removeEventListener("keydown", handleKeyPress);
     };
   }, [submitHandler]);
+
+  useEffect(() => {
+    setDisabled(true);
+    const countdown = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer >= 0) {
+          return prevTimer - 1;
+        } else {
+          clearInterval(countdown);
+          setDisabled(false);
+          return 0;
+        }
+      });
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(countdown);
+      setDisabled(false);
+    }, 90000);
+
+    return () => clearInterval(countdown);
+  }, []);
 
   useEffect(() => {
     let timer;
