@@ -134,20 +134,79 @@ function EditProductPage() {
   const shortDescription = watch("shortDescription");
   const longDescription = watch("longDescription");
 
+  // const onSubmit = async (data) => {
+  //   const updatedVariants = productData.variant.map((variant, index) => {
+  //     if (variant.color === selectedColor) {
+  //       return {
+  //         ...variant,
+  //         color: convertHexToFlutterFormat(data[`variant${index}`]),
+  //         sizes: variant.sizes.map((size, sizeIndex) => ({
+  //           ...size,
+  //           size: data[`size${sizeIndex}`],
+  //           actual_price: data[`actualPrice${sizeIndex}`],
+  //           discounted_price: data[`discountedPrice${sizeIndex}`],
+  //           stock: data[`stock${sizeIndex}`],
+  //         })),
+  //       };
+  //     }
+  //     return variant;
+  //   });
+
+  //   const body = {
+  //     productName: productData.productName,
+  //     updatedProductName: data.productName,
+  //     shortDescription: data.shortDescription,
+  //     longDescription: data.longDescription,
+  //     closureType: data.closureType,
+  //     material: data.material,
+  //     gender: data.gender,
+  //     sizeType: data.sizeType,
+  //     category: data.category,
+  //     brand: data.brand,
+  //     variant: updatedVariants,
+  //   };
+
+  //   try {
+  //     const response = await editProduct(body);
+
+  //     console.log(response.status);
+
+  //     if (response.status === 200) {
+  //       setShowAlert(true);
+  //       setTimeout(() => {
+  //         setShowAlert(false);
+  //         navigate(-1);
+  //       }, 5000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating product:", error);
+
+  //     if (error.response.status === 404) {
+  //       alert("not found");
+  //     }
+  //   }
+
+  //   console.log("Form Data:", body);
+  // };
+
   const onSubmit = async (data) => {
     const updatedVariants = productData.variant.map((variant, index) => {
-      console.log(variant.color);
       if (variant.color === selectedColor) {
+        const updatedSizes = variant.sizes.map((size, sizeIndex) => {
+          return {
+            ...size,
+            size: data[`size${sizeIndex}`] || size.size, // Retain existing size if not updated
+            actual_price: data[`actualPrice${sizeIndex}`] || size.actual_price, // Retain existing actual price if not updated
+            discounted_price:
+              data[`discountedPrice${sizeIndex}`] || size.discounted_price, // Retain existing discounted price if not updated
+            stock: data[`stock${sizeIndex}`] || size.stock, // Retain existing stock if not updated
+          };
+        });
+
         return {
           ...variant,
           color: convertHexToFlutterFormat(data[`variant${index}`]),
-          sizes: variant.sizes.map((size, sizeIndex) => ({
-            ...size,
-            size: data[`size${sizeIndex}`],
-            actual_price: data[`actualPrice${sizeIndex}`],
-            discounted_price: data[`discountedPrice${sizeIndex}`],
-            stock: data[`stock${sizeIndex}`],
-          })),
+          sizes: updatedSizes,
         };
       }
       return variant;
