@@ -4,6 +4,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setEmail } from "../redux/features/emailSlice";
+import { setPassword } from "../redux/features/passwordSlice";
 import { useForm } from "react-hook-form";
 import { forgotPassword, login } from "../services/auth.service";
 import Alert from "@mui/material/Alert";
@@ -66,6 +67,7 @@ function Login() {
 
       if (response.status === 201) {
         dispatch(setEmail(email));
+        dispatch(setPassword(password));
         navigate("/otp");
       }
     } catch (error) {
