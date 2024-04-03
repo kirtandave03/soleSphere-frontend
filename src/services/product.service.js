@@ -10,6 +10,16 @@ export const getProducts = async (page, rowsPerPage, searchQuery) => {
       .catch((err) => reject(err));
   });
 };
+export const getAllProducts = async (page, rowsPerPage, searchQuery) => {
+  const url = `/products/all-products?page=${page}&limit=${rowsPerPage}&q=${searchQuery}`;
+
+  return new Promise((resolve, reject) => {
+    jsonAxiosInstance
+      .get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
 
 export const addProduct = async (productData) => {
   const url = `/admin/products/`;

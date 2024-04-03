@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import TopBar from "../layouts/TopBar";
+import Lottie from "lottie-react-web";
 import Navbar from "../layouts/Navbar";
 import { useForm } from "react-hook-form";
 import { fileUpload } from "../services/fileupload.service";
-import { addVariant, getProducts } from "../services/product.service";
+import { addVariant, getAllProducts } from "../services/product.service";
 import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
 import Alert from "@mui/material/Alert";
-
+import animationData from "../utils/loading.json";
 const AddVariants = () => {
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
@@ -18,6 +19,7 @@ const AddVariants = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [product_id, setProduct_id] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -45,13 +47,13 @@ const AddVariants = () => {
     setInputFields([...inputFields, ...newFields]);
   };
 
-  const getAllProducts = async () => {
-    const response = await getProducts(0, 0, query);
+  const GetAllProducts = async () => {
+    const response = await getAllProducts(0, 0, query);
     setFilteredProducts(response.data.data.products);
   };
 
   useEffect(() => {
-    getAllProducts();
+    GetAllProducts();
   }, [query]);
 
   const handleInputChange = (e) => {
@@ -77,7 +79,7 @@ const AddVariants = () => {
     }
 
     setIsUploading(true);
-
+    setLoading(true);
     const formData = new FormData();
 
     for (let i = 0; i < selectedFiles.length; i++) {
@@ -92,12 +94,14 @@ const AddVariants = () => {
       if (response.status === 200) {
         setImageUrls(response.data.data);
         setIsUploaded(true);
+        setLoading(false);
         setUploadSuccess(true);
         setisDisabled(false);
       }
 
       // console.log(response)
     } catch (error) {
+      setLoading(false);
       if (error.response.status === 500) {
         setUploadFail(true);
       } else {
@@ -113,7 +117,7 @@ const AddVariants = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data.color);
+    setLoading(true);
     const hexColor = convertHexToFlutterFormat(data.color);
     const variant = {
       productName: selectedProduct,
@@ -133,8 +137,10 @@ const AddVariants = () => {
       var response = await addVariant(variant);
       if (response.status === 200) {
         setSubmitSuccess(true);
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       if (error.response.status === 500) {
         setServerError(true);
       } else if (error.response.status === 404) {
@@ -224,333 +230,365 @@ const AddVariants = () => {
     wentWrong,
   ]);
   return (
-    <div>
-      {uploadSuccess && (
-        <Alert
-          style={{ position: "fixed" }}
-          severity="success"
-          className="w-full"
-          onClose={() => {
-            setUploadSuccess(false);
+    <>
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100vw",
+            height: "100vh",
           }}
         >
-          Images Uploaded Successfully!
-        </Alert>
-      )}
-      {submitSuccess && (
-        <Alert
-          style={{ position: "fixed" }}
-          severity="success"
-          className="w-full"
-          onClose={() => {
-            setSubmitSuccess(false);
-          }}
-        >
-          Variant Added Successfully!
-        </Alert>
-      )}
-      {uploadFail && (
-        <Alert
-          style={{ position: "fixed" }}
-          severity="error"
-          className="w-full"
-          onClose={() => {
-            setUploadFail(false);
-          }}
-        >
-          Sorry,We are unable to upload image right now!
-        </Alert>
-      )}
-      {wentWrong && (
-        <Alert
-          style={{ position: "fixed" }}
-          severity="error"
-          className="w-full"
-          onClose={() => {
-            setWentWrong(false);
-          }}
-        >
-          Something Went Wrong!
-        </Alert>
-      )}
-      {variantExists && (
-        <Alert
-          style={{ position: "fixed" }}
-          severity="error"
-          className="w-full"
-          onClose={() => {
-            setVariantExists(false);
-          }}
-        >
-          Variant Already Exists!
-        </Alert>
-      )}
-      {notFound && (
-        <Alert
-          style={{ position: "fixed" }}
-          severity="error"
-          className="w-full"
-          onClose={() => {
-            setNotFound(false);
-          }}
-        >
-          Product Not Found!
-        </Alert>
-      )}
-      {serverError && (
-        <Alert
-          style={{ position: "fixed" }}
-          severity="error"
-          className="w-full"
-          onClose={() => {
-            setServerError(false);
-          }}
-        >
-          Internal Server Error!
-        </Alert>
-      )}
-      <TopBar />
-      <div className="flex gap-4 ">
-        <Navbar />
-        <form action="" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex ">
-            <div className="flex flex-col">
-              <h2 className="text-xl font-bold">Add Variant</h2>
-              <h2 className="font-semibold my-3 mx-6">
-                Product, Color, Images
-              </h2>
-            </div>
-            <div className="my-6 flex justify-center ">
-              <div className="flex flex-col my-6">
-                <div className="p-4 shadow-lg my-2">
-                  <label htmlFor="product_id" className="font-extralight">
-                    Product Name
-                  </label>
-                  <input
-                    className="mx-2 border w-[30vw] border-black rounded-lg"
-                    type="text"
-                    id="product_id"
-                    {...register("productName", {
-                      required: {
-                        value: true,
-                        message: "This field is required ",
-                      },
-                    })}
-                    value={selectedProduct}
-                    onChange={(e) => {
-                      handleInputChange(e);
-                    }}
-                  />
-                  <div className="font-light text-base mt-1 mb-1">
-                    (At least 3 characters)*
-                  </div>
-                  <ul>
-                    {products.map((item, index) => (
-                      <li
-                        key={index}
-                        className="my-2 border border-b-4 p-2 cursor-pointer"
-                        onClick={() => handleOptionClick(item.productName)}
-                      >
-                        {item.productName}
-                      </li>
-                    ))}
-                  </ul>
-                  {errors.productName && (
-                    <div className="text-red-600 text-sm">
-                      {errors.productName.message}
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4 shadow-lg my-2 ">
-                  <label htmlFor="color" className="font-extralight">
-                    Choose Color
-                  </label>
-                  <input
-                    className="w-[30vw] border border-black rounded-lg m-4"
-                    type="color"
-                    id="color"
-                    {...register("color", {
-                      required: {
-                        value: false,
-                        message: "This field is required",
-                      },
-                    })}
-                  />
-                  {errors.color && (
-                    <div className="text-red-600 text-sm">
-                      {errors.color.message}
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4 shadow-lg my-2 ">
-                  <label htmlFor="images" className="font-extralight">
-                    Upload Images
-                  </label>
-                  <input
-                    className="w-[20vw] border border-black rounded-lg m-4"
-                    type="file"
-                    id="images"
-                    multiple
-                    accept="image/*"
-                    {...register("images")}
-                    onChange={(e) => handleImages(e)}
-                  />
-                  <button
-                    disabled={isUploaded || isUploading}
-                    type="button"
-                    className="disabled:opacity-50 bg-blue-500 my-2 p-1 px-2 rounded-md text-white"
-                    onClick={(e) => handleUploadImages(e)}
-                  >
-                    Upload Images
-                  </button>
-                  {errors.required && (
-                    <div className="text-red-600 text-sm">
-                      {errors.required.message}
-                    </div>
-                  )}
-                  {errors.maxLen && (
-                    <div className="text-red-600 text-sm">
-                      {errors.maxLen.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="variants ">
-            <p className="font-bold text-xl my-2">
-              Add Variant
-              <span className="my-2 font-extralight text-sm">
-                - Add Size, Actual Price, Discounted Price, Stock
-              </span>
-            </p>
-          </div>
-          <div className="flex flex-wrap">
-            {inputFields.map((field, index) => (
-              <div key={field.id} className="flex flex-row mx-2">
-                <input
-                  {...register(`variants[${index}].size`, {
-                    required: {
-                      value: true,
-                      message: "This field is required",
-                    },
-                    pattern: {
-                      value: /^[0-9]\d*$/,
-                      message: "Validation violated ",
-                    },
-                    validate: {
-                      min: (value) =>
-                        parseInt(value) >= 1 || "Value must be at least 1",
-                      max: (value) =>
-                        parseInt(value) <= 48 || "Value must be at most 48",
-                    },
-                  })} // Adding required validation rule
-                  type="text"
-                  onSubmit={(e) =>
-                    handleDynamicFieldValidation(e.target.value, index, `size`)
-                  }
-                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                  placeholder="Size"
-                />
-                <input
-                  {...register(`variants[${index}].actual_price`, {
-                    required: {
-                      value: true,
-                      message: "This field is required",
-                    },
-                    pattern: {
-                      value: /^[0-9]\d*\.?\d+$/,
-                      message: "Please enter a positive number",
-                    },
-                  })} // Adding required validation rule
-                  type="text"
-                  onSubmit={(e) =>
-                    handleDynamicFieldValidation(
-                      e.target.value,
-                      index,
-                      `actual_price`
-                    )
-                  }
-                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                  placeholder="Actual Price"
-                />
-                <input
-                  {...register(`variants[${index}].discounted_price`, {
-                    required: {
-                      value: true,
-                      message: "This field is required",
-                    },
-                    pattern: {
-                      value: /^[0-9]\d*\.?\d+$/,
-                      message: "Please enter a positive number",
-                    },
-                  })} // Adding required validation rule
-                  onSubmit={(e) =>
-                    handleDynamicFieldValidation(
-                      e.target.value,
-                      index,
-                      `discounted_price`
-                    )
-                  }
-                  type="text"
-                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                  placeholder="Discounted Price"
-                />
-                <input
-                  {...register(`variants[${index}].stock`, {
-                    required: {
-                      value: true,
-                      message: "This field is required",
-                    },
-                    pattern: {
-                      value: /^[0-9]\d*$/,
-                      message:
-                        "Please enter a positive number without decimal points",
-                    },
-                  })} // Adding required validation rule
-                  type="text"
-                  onSubmit={(e) =>
-                    handleDynamicFieldValidation(e.target.value, index, `stock`)
-                  }
-                  className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                  placeholder="Stock"
-                />
-                {errors.variants &&
-                  errors.variants[index] &&
-                  errors.variants[index].size && (
-                    <div className="text-red-600 text-sm mt-4">
-                      {errors.variants[index].size.message}
-                    </div>
-                  )}
-              </div>
-            ))}
-          </div>
-          {hasDynamicFieldErrors() && (
-            <div className="text-red-500 block mx-3">
-              There are errors in the above dynamic fields. Please fix them.it
-              can only contain positive numeric values
-            </div>
-          )}
-          <button
-            className="button float-right bg-blue-500 p-1 px-2 rounded-md text-white"
-            type="button"
-            onClick={addInputFields}
-          >
-            Add More Sizes
-          </button>
-
-          <input
-            disabled={isDisabled || isSubmitting}
-            type="submit"
-            value="Add Variant"
-            className="cursor-pointer disabled:opacity-50 m-2 rounded-lg button bg-blue-500 p-2 text-white w-full"
+          <Lottie
+            options={{
+              animationData: animationData,
+              loop: true,
+              autoplay: true,
+            }}
+            width={200}
+            height={200}
           />
-        </form>
-      </div>
-    </div>
+        </div>
+      ) : (
+        <div aria-disabled={loading}>
+          {uploadSuccess && (
+            <Alert
+              style={{ position: "fixed" }}
+              severity="success"
+              className="w-full"
+              onClose={() => {
+                setUploadSuccess(false);
+              }}
+            >
+              Images Uploaded Successfully!
+            </Alert>
+          )}
+          {submitSuccess && (
+            <Alert
+              style={{ position: "fixed" }}
+              severity="success"
+              className="w-full"
+              onClose={() => {
+                setSubmitSuccess(false);
+              }}
+            >
+              Variant Added Successfully!
+            </Alert>
+          )}
+          {uploadFail && (
+            <Alert
+              style={{ position: "fixed" }}
+              severity="error"
+              className="w-full"
+              onClose={() => {
+                setUploadFail(false);
+              }}
+            >
+              Sorry,We are unable to upload image right now!
+            </Alert>
+          )}
+          {wentWrong && (
+            <Alert
+              style={{ position: "fixed" }}
+              severity="error"
+              className="w-full"
+              onClose={() => {
+                setWentWrong(false);
+              }}
+            >
+              Something Went Wrong!
+            </Alert>
+          )}
+          {variantExists && (
+            <Alert
+              style={{ position: "fixed" }}
+              severity="error"
+              className="w-full"
+              onClose={() => {
+                setVariantExists(false);
+              }}
+            >
+              Variant Already Exists!
+            </Alert>
+          )}
+          {notFound && (
+            <Alert
+              style={{ position: "fixed" }}
+              severity="error"
+              className="w-full"
+              onClose={() => {
+                setNotFound(false);
+              }}
+            >
+              Product Not Found!
+            </Alert>
+          )}
+          {serverError && (
+            <Alert
+              style={{ position: "fixed" }}
+              severity="error"
+              className="w-full"
+              onClose={() => {
+                setServerError(false);
+              }}
+            >
+              Internal Server Error!
+            </Alert>
+          )}
+          <TopBar />
+          <div className="flex gap-4 ">
+            <Navbar />
+            <form action="" onSubmit={handleSubmit(onSubmit)}>
+              <div className="flex ">
+                <div className="flex flex-col">
+                  <h2 className="text-xl font-bold">Add Variant</h2>
+                  <h2 className="font-semibold my-3 mx-6">
+                    Product, Color, Images
+                  </h2>
+                </div>
+                <div className="my-6 flex justify-center ">
+                  <div className="flex flex-col my-6">
+                    <div className="p-4 shadow-lg my-2">
+                      <label htmlFor="product_id" className="font-extralight">
+                        Product Name
+                      </label>
+                      <input
+                        className="mx-2 border w-[30vw] border-black rounded-lg"
+                        type="text"
+                        id="product_id"
+                        {...register("productName", {
+                          required: {
+                            value: true,
+                            message: "This field is required ",
+                          },
+                        })}
+                        value={selectedProduct}
+                        onChange={(e) => {
+                          handleInputChange(e);
+                        }}
+                      />
+                      <div className="font-light text-base mt-1 mb-1">
+                        (At least 3 characters)*
+                      </div>
+                      <ul>
+                        {products.map((item, index) => (
+                          <li
+                            key={index}
+                            className="my-2 border border-b-4 p-2 cursor-pointer"
+                            onClick={() => handleOptionClick(item.productName)}
+                          >
+                            {item.productName}
+                          </li>
+                        ))}
+                      </ul>
+                      {errors.productName && (
+                        <div className="text-red-600 text-sm">
+                          {errors.productName.message}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-4 shadow-lg my-2 ">
+                      <label htmlFor="color" className="font-extralight">
+                        Choose Color
+                      </label>
+                      <input
+                        className="w-[30vw] border border-black rounded-lg m-4"
+                        type="color"
+                        id="color"
+                        {...register("color", {
+                          required: {
+                            value: false,
+                            message: "This field is required",
+                          },
+                        })}
+                      />
+                      {errors.color && (
+                        <div className="text-red-600 text-sm">
+                          {errors.color.message}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-4 shadow-lg my-2 ">
+                      <label htmlFor="images" className="font-extralight">
+                        Upload Images
+                      </label>
+                      <input
+                        className="w-[20vw] border border-black rounded-lg m-4"
+                        type="file"
+                        id="images"
+                        multiple
+                        accept="image/*"
+                        {...register("images")}
+                        onChange={(e) => handleImages(e)}
+                      />
+                      <button
+                        disabled={isUploaded || isUploading}
+                        type="button"
+                        className="disabled:opacity-50 bg-blue-500 my-2 p-1 px-2 rounded-md text-white"
+                        onClick={(e) => handleUploadImages(e)}
+                      >
+                        Upload Images
+                      </button>
+                      {errors.required && (
+                        <div className="text-red-600 text-sm">
+                          {errors.required.message}
+                        </div>
+                      )}
+                      {errors.maxLen && (
+                        <div className="text-red-600 text-sm">
+                          {errors.maxLen.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="variants ">
+                <p className="font-bold text-xl my-2">
+                  Add Variant
+                  <span className="my-2 font-extralight text-sm">
+                    - Add Size, Actual Price, Discounted Price, Stock
+                  </span>
+                </p>
+              </div>
+              <div className="flex flex-wrap">
+                {inputFields.map((field, index) => (
+                  <div key={field.id} className="flex flex-row mx-2">
+                    <input
+                      {...register(`variants[${index}].size`, {
+                        required: {
+                          value: true,
+                          message: "This field is required",
+                        },
+                        pattern: {
+                          value: /^[0-9]\d*$/,
+                          message: "Validation violated ",
+                        },
+                        validate: {
+                          min: (value) =>
+                            parseInt(value) >= 1 || "Value must be at least 1",
+                          max: (value) =>
+                            parseInt(value) <= 48 || "Value must be at most 48",
+                        },
+                      })} // Adding required validation rule
+                      type="text"
+                      onSubmit={(e) =>
+                        handleDynamicFieldValidation(
+                          e.target.value,
+                          index,
+                          `size`
+                        )
+                      }
+                      className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                      placeholder="Size"
+                    />
+                    <input
+                      {...register(`variants[${index}].actual_price`, {
+                        required: {
+                          value: true,
+                          message: "This field is required",
+                        },
+                        pattern: {
+                          value: /^[0-9]\d*\.?\d+$/,
+                          message: "Please enter a positive number",
+                        },
+                      })} // Adding required validation rule
+                      type="text"
+                      onSubmit={(e) =>
+                        handleDynamicFieldValidation(
+                          e.target.value,
+                          index,
+                          `actual_price`
+                        )
+                      }
+                      className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                      placeholder="Actual Price"
+                    />
+                    <input
+                      {...register(`variants[${index}].discounted_price`, {
+                        required: {
+                          value: true,
+                          message: "This field is required",
+                        },
+                        pattern: {
+                          value: /^[0-9]\d*\.?\d+$/,
+                          message: "Please enter a positive number",
+                        },
+                      })} // Adding required validation rule
+                      onSubmit={(e) =>
+                        handleDynamicFieldValidation(
+                          e.target.value,
+                          index,
+                          `discounted_price`
+                        )
+                      }
+                      type="text"
+                      className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                      placeholder="Discounted Price"
+                    />
+                    <input
+                      {...register(`variants[${index}].stock`, {
+                        required: {
+                          value: true,
+                          message: "This field is required",
+                        },
+                        pattern: {
+                          value: /^[0-9]\d*$/,
+                          message:
+                            "Please enter a positive number without decimal points",
+                        },
+                      })} // Adding required validation rule
+                      type="text"
+                      onSubmit={(e) =>
+                        handleDynamicFieldValidation(
+                          e.target.value,
+                          index,
+                          `stock`
+                        )
+                      }
+                      className="border m-2 border-black w-[18vw] p-2 rounded-lg"
+                      placeholder="Stock"
+                    />
+                    {errors.variants &&
+                      errors.variants[index] &&
+                      errors.variants[index].size && (
+                        <div className="text-red-600 text-sm mt-4">
+                          {errors.variants[index].size.message}
+                        </div>
+                      )}
+                  </div>
+                ))}
+              </div>
+              {hasDynamicFieldErrors() && (
+                <div className="text-red-500 block mx-3">
+                  There are errors in the above dynamic fields. Please fix
+                  them.it can only contain positive numeric values
+                </div>
+              )}
+              <button
+                className="button float-right bg-blue-500 p-1 px-2 rounded-md text-white"
+                type="button"
+                onClick={addInputFields}
+              >
+                Add More Sizes
+              </button>
+
+              <input
+                disabled={isDisabled || isSubmitting}
+                type="submit"
+                value="Add Variant"
+                className="cursor-pointer disabled:opacity-50 m-2 rounded-lg button bg-blue-500 p-2 text-white w-full"
+              />
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
