@@ -46,9 +46,10 @@ function Products() {
       const response = await getProducts(page, rowsPerPage, searchQuery);
       const responseData = response.data;
 
-      // console.log(responseData.data.products);
-      setRows(responseData.data.products);
-      setTotalProducts(responseData.data.totalCount);
+      console.log(response.data.data.responseData);
+
+      setRows(responseData.data.responseData);
+      setTotalProducts(responseData.data.totalProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -249,63 +250,64 @@ function Products() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows.map((row) => (
-                        <TableRow key={row._id}>
-                          <TableCell>
-                            <img
-                              src={row.variants[0].image_urls[0]}
-                              alt="Product Image"
-                              style={{
-                                maxWidth: "100px",
-                                maxHeight: "100px",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.productName)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.category.category)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.brand.brand)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {row.variants[0].sizes[0].discounted_price}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {row.variants.length}
-                          </TableCell>
+                      {rows &&
+                        rows.map((row) => (
+                          <TableRow key={row._id}>
+                            <TableCell>
+                              <img
+                                src={row.image}
+                                alt="Product Image"
+                                style={{
+                                  maxWidth: "100px",
+                                  maxHeight: "100px",
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell style={{ textAlign: "center" }}>
+                              {capitalize(row.productName)}
+                            </TableCell>
+                            <TableCell style={{ textAlign: "center" }}>
+                              {capitalize(row.category)}
+                            </TableCell>
+                            <TableCell style={{ textAlign: "center" }}>
+                              {capitalize(row.brand)}
+                            </TableCell>
+                            <TableCell style={{ textAlign: "center" }}>
+                              {row.discounted_price}
+                            </TableCell>
+                            <TableCell style={{ textAlign: "center" }}>
+                              {row.colors}
+                            </TableCell>
 
-                          <TableCell style={{ textAlign: "center" }}>
-                            {row.averageRating !== null
-                              ? row.averageRating.toFixed(2)
-                              : "No Reviews"}
-                          </TableCell>
+                            <TableCell style={{ textAlign: "center" }}>
+                              {row.avgRating !== null
+                                ? row.avgRating.toFixed(2)
+                                : "No Reviews"}
+                            </TableCell>
 
-                          <TableCell style={{ textAlign: "center" }}>
-                            <IconButton
-                              aria-label="edit"
-                              onClick={() => onEdit(row._id)}
-                            >
-                              <FaRegEdit />
-                            </IconButton>
-                            <IconButton
-                              aria-label="delete"
-                              onClick={() => onDelete(row.productName, row)}
-                            >
-                              <RiDeleteBinLine />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                            <TableCell style={{ textAlign: "center" }}>
+                              <IconButton
+                                aria-label="edit"
+                                onClick={() => onEdit(row._id)}
+                              >
+                                <FaRegEdit />
+                              </IconButton>
+                              <IconButton
+                                aria-label="delete"
+                                onClick={() => onDelete(row.productName, row)}
+                              >
+                                <RiDeleteBinLine />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
-                  count={totalProducts || rows.length}
+                  count={totalProducts}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={(event, newPage) =>
