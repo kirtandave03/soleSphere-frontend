@@ -1,7 +1,7 @@
 import { jsonAxiosInstance } from "./common/axiosInstances";
 
 export const getProducts = async (page, rowsPerPage, searchQuery) => {
-  const url = `/products/all-products?page=${page}&limit=${rowsPerPage}&q=${searchQuery}`;
+  const url = `/products/search?q=${searchQuery}&page=${page}&limit=${rowsPerPage}`;
 
   return new Promise((resolve, reject) => {
     jsonAxiosInstance
