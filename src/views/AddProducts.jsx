@@ -243,6 +243,7 @@ const AddProducts = () => {
   ]);
   return (
     <>
+      {/* <Topbar /> */}
       {loading ? (
         <div
           style={{
@@ -350,11 +351,10 @@ const AddProducts = () => {
             </Alert>
           )}
 
-          <Topbar />
           <div className="flex gap-4">
             <Navbar />
             <form action="" onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex">
+              <div className="flex mt-[6vh]">
                 <div className="left my-5 ">
                   <h1 className="font-bold text-xl">Add New Product</h1>
                   <div className="flex flex-col m-2 mx-10">
@@ -760,7 +760,7 @@ const AddProducts = () => {
 
               <div className="variants ">
                 <p className="font-bold text-xl my-2">
-                  Add Variant
+                  Add More Sizes
                   <span className="my-2 font-extralight text-sm">
                     - Add Size, Actual Price, Discounted Price, Stock
                   </span>

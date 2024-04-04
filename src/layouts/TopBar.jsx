@@ -11,14 +11,14 @@ const TopBar = () => {
   };
 
   return (
-    <div className="h-12 w-full bg-white py-4 pl-2 pr-6 flex justify-between items-center">
-      <div className="flex items-center">
+    <div className="h-12 w-full bg-white py-4 pl-2 pr-6 flex justify-between items-center sticky top-0 left-0 z-10">
+      {/* <div className="flex items-center">
         <div className="font-bold text-xl">
           <a href="/">
             <span className="text-[#4880FF]">SoleSphere</span>
           </a>
         </div>
-      </div>
+      </div> */}
       <div className="flex items-center space-x-4">
         <div className="relative"></div>
       </div>

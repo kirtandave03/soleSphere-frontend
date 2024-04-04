@@ -212,311 +212,331 @@ const Users = () => {
             </Alert>
           )}
           <div>
-            <TopBar />
+            {/* <TopBar /> */}
             <div className="flex">
               <Navbar />
-              <div className="w-[85vw]">
-                <h1 className="p-1 font-bold text-2xl">Users</h1>
-                <div>
-                  <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
-                    <TextField
-                      id="search"
-                      label="Search by email, phone or username"
-                      variant="outlined"
-                      value={searchQuery}
-                      onChange={handleSearch}
-                      style={{ width: "80vw" }}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="search"
-                              onClick={handleSearch}
-                            ></IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
+              <div className="w-[80vw] flex flex-col mt-[6vh]">
+                <div className="flex justify-center items-center">
+                  <div>
+                    <h1 className="p-1 font-bold text-2xl">Users</h1>
+                    <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
+                      <TextField
+                        id="search"
+                        label="Search by email, phone or username"
+                        variant="outlined"
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        style={{ width: "75vw" }}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="search"
+                                onClick={handleSearch}
+                              ></IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </div>
+                    <TableContainer
+                      component={Paper}
+                      style={{ marginLeft: "10px", width: "75vw" }}
+                    >
+                      <Table aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              No
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Profile
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              User
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Email
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Phone
+                            </TableCell>
+
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Location
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Actions
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {
+                            // no slice will be here. you will show the data comiNg from backend
+                            users.map((user, index) => (
+                              <TableRow key={user._id}>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {index + 1 + page * rowsPerPage}
+                                </TableCell>
+                                <TableCell
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  <img
+                                    className="rounded-full border border-black "
+                                    src={user.profilePic}
+                                    alt="user Image"
+                                    style={{
+                                      maxWidth: "50px",
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {capitalize(user.username)}
+                                </TableCell>
+
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {user.email}
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {user.phone ? user.phone : "NA"}
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {`${
+                                    user.address[0]
+                                      ? user.address[0].town + ","
+                                      : "NA"
+                                  } ${
+                                    user.address[0] ? user.address[0].state : ""
+                                  }`}
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  <IconButton
+                                    aria-label="delete"
+                                    onClick={() => handleDelete(user._id, user)}
+                                  >
+                                    <RiDeleteBinLine />
+                                  </IconButton>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          }
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={totalCount}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={(event, newPage) =>
+                        handleChangePage(event, newPage)
+                      }
+                      onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                   </div>
-                  <TableContainer
-                    component={Paper}
-                    style={{ marginLeft: "10px", width: "80vw" }}
-                  >
-                    <Table aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
-                            No
-                          </TableCell>
-                          <TableCell
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
-                            Profile
-                          </TableCell>
-                          <TableCell
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
-                            User
-                          </TableCell>
-                          <TableCell
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
-                            Email
-                          </TableCell>
-                          <TableCell
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
-                            Phone
-                          </TableCell>
-
-                          <TableCell
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
-                            Location
-                          </TableCell>
-                          <TableCell
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
-                            Actions
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {
-                          // no slice will be here. you will show the data comiNg from backend
-                          users.map((user, index) => (
-                            <TableRow key={user._id}>
-                              <TableCell style={{ textAlign: "center" }}>
-                                {index + 1 + page * rowsPerPage}
-                              </TableCell>
-                              <TableCell
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <img
-                                  className="rounded-full border border-black "
-                                  src={user.profilePic}
-                                  alt="user Image"
-                                  style={{
-                                    maxWidth: "50px",
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                {capitalize(user.username)}
-                              </TableCell>
-
-                              <TableCell style={{ textAlign: "center" }}>
-                                {user.email}
-                              </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                {user.phone ? user.phone : "NA"}
-                              </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                {`${
-                                  user.address[0]
-                                    ? user.address[0].town + ","
-                                    : "NA"
-                                } ${
-                                  user.address[0] ? user.address[0].state : ""
-                                }`}
-                              </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                <IconButton
-                                  aria-label="delete"
-                                  onClick={() => handleDelete(user._id, user)}
-                                >
-                                  <RiDeleteBinLine />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        }
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={totalCount}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={(event, newPage) =>
-                      handleChangePage(event, newPage)
-                    }
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
                 </div>
 
-                <div>
-                  <h1 className="font-bold  text-2xl">Deleted Users</h1>
-                  <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
-                    <TextField
-                      id="search"
-                      label="Search by email, phone or username"
-                      variant="outlined"
-                      value={searchQueryDeleted}
-                      onChange={handleDeletedSearch}
-                      style={{ width: "80vw" }}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="search"
-                              onClick={handleDeletedSearch}
-                            ></IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                  {deletedUsers.length > 0 ? (
+                <div className="w-[80vw] flex flex-col">
+                  <div className="flex justify-center items-center">
                     <div>
-                      <TableContainer
-                        component={Paper}
-                        style={{ marginLeft: "10px", width: "80vw" }}
-                      >
-                        <Table aria-label="simple table">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell
-                                style={{
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                No
-                              </TableCell>
-                              <TableCell
-                                style={{
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                Profile
-                              </TableCell>
-                              <TableCell
-                                style={{
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                User
-                              </TableCell>
-                              <TableCell
-                                style={{
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                Email
-                              </TableCell>
-                              <TableCell
-                                style={{
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                Phone
-                              </TableCell>
-
-                              <TableCell
-                                style={{
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                Location
-                              </TableCell>
-                              <TableCell
-                                style={{
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {
-                              // no slice will be here. you will show the data comiNg from backend
-                              deletedUsers.map((user, index) => (
-                                <TableRow key={user._id}>
-                                  <TableCell style={{ textAlign: "center" }}>
-                                    {index + 1 + page * rowsPerPage}
+                      <h1 className="font-bold  text-2xl">Deleted Users</h1>
+                      <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
+                        <TextField
+                          id="search"
+                          label="Search by email, phone or username"
+                          variant="outlined"
+                          value={searchQueryDeleted}
+                          onChange={handleDeletedSearch}
+                          style={{ width: "75vw" }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="search"
+                                  onClick={handleDeletedSearch}
+                                ></IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                      {deletedUsers.length > 0 ? (
+                        <div>
+                          <TableContainer
+                            component={Paper}
+                            style={{ marginLeft: "10px", width: "75vw" }}
+                          >
+                            <Table aria-label="simple table">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell
+                                    style={{
+                                      fontWeight: "600",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    No
                                   </TableCell>
                                   <TableCell
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
+                                      fontWeight: "600",
+                                      textAlign: "center",
                                     }}
                                   >
-                                    <img
-                                      className="rounded-full border border-black "
-                                      src={user.profilePic}
-                                      alt="user Image"
-                                      style={{
-                                        maxWidth: "50px",
-                                      }}
-                                    />
+                                    Profile
                                   </TableCell>
-                                  <TableCell style={{ textAlign: "center" }}>
-                                    {capitalize(user.username)}
+                                  <TableCell
+                                    style={{
+                                      fontWeight: "600",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    User
+                                  </TableCell>
+                                  <TableCell
+                                    style={{
+                                      fontWeight: "600",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    Email
+                                  </TableCell>
+                                  <TableCell
+                                    style={{
+                                      fontWeight: "600",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    Phone
                                   </TableCell>
 
-                                  <TableCell style={{ textAlign: "center" }}>
-                                    {user.email}
+                                  <TableCell
+                                    style={{
+                                      fontWeight: "600",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    Location
                                   </TableCell>
-                                  <TableCell style={{ textAlign: "center" }}>
-                                    {user.phone ? user.phone : "NA"}
-                                  </TableCell>
-                                  <TableCell style={{ textAlign: "center" }}>
-                                    {`${
-                                      user.address[0]
-                                        ? user.address[0].town + ","
-                                        : "NA"
-                                    } ${
-                                      user.address[0]
-                                        ? user.address[0].state
-                                        : ""
-                                    }`}
-                                  </TableCell>
-                                  <TableCell style={{ textAlign: "center" }}>
-                                    <IconButton
-                                      aria-label="delete"
-                                      onClick={() =>
-                                        handleRestoreUser(user._id, user)
-                                      }
-                                    >
-                                      <TbRestore />
-                                    </IconButton>
+                                  <TableCell
+                                    style={{
+                                      fontWeight: "600",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    Actions
                                   </TableCell>
                                 </TableRow>
-                              ))
+                              </TableHead>
+                              <TableBody>
+                                {
+                                  // no slice will be here. you will show the data comiNg from backend
+                                  deletedUsers.map((user, index) => (
+                                    <TableRow key={user._id}>
+                                      <TableCell
+                                        style={{ textAlign: "center" }}
+                                      >
+                                        {index + 1 + page * rowsPerPage}
+                                      </TableCell>
+                                      <TableCell
+                                        style={{
+                                          display: "flex",
+                                          justifyContent: "center",
+                                        }}
+                                      >
+                                        <img
+                                          className="rounded-full border border-black "
+                                          src={user.profilePic}
+                                          alt="user Image"
+                                          style={{
+                                            maxWidth: "50px",
+                                          }}
+                                        />
+                                      </TableCell>
+                                      <TableCell
+                                        style={{ textAlign: "center" }}
+                                      >
+                                        {capitalize(user.username)}
+                                      </TableCell>
+
+                                      <TableCell
+                                        style={{ textAlign: "center" }}
+                                      >
+                                        {user.email}
+                                      </TableCell>
+                                      <TableCell
+                                        style={{ textAlign: "center" }}
+                                      >
+                                        {user.phone ? user.phone : "NA"}
+                                      </TableCell>
+                                      <TableCell
+                                        style={{ textAlign: "center" }}
+                                      >
+                                        {`${
+                                          user.address[0]
+                                            ? user.address[0].town + ","
+                                            : "NA"
+                                        } ${
+                                          user.address[0]
+                                            ? user.address[0].state
+                                            : ""
+                                        }`}
+                                      </TableCell>
+                                      <TableCell
+                                        style={{ textAlign: "center" }}
+                                      >
+                                        <IconButton
+                                          aria-label="delete"
+                                          onClick={() =>
+                                            handleRestoreUser(user._id, user)
+                                          }
+                                        >
+                                          <TbRestore />
+                                        </IconButton>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))
+                                }
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                          <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={totalDeletedCount}
+                            rowsPerPage={rowsPerPageForDeleted}
+                            page={pageForDeleted}
+                            onPageChange={(event, newPage) =>
+                              handleChangePageForDeleted(event, newPage)
                             }
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={totalDeletedCount}
-                        rowsPerPage={rowsPerPageForDeleted}
-                        page={pageForDeleted}
-                        onPageChange={(event, newPage) =>
-                          handleChangePageForDeleted(event, newPage)
-                        }
-                        onRowsPerPageChange={handleChangeRowsPerPageForDeleted}
-                      />
+                            onRowsPerPageChange={
+                              handleChangeRowsPerPageForDeleted
+                            }
+                          />
+                        </div>
+                      ) : (
+                        <h2 className="font-bold m-6">Nothing to Show</h2>
+                      )}
                     </div>
-                  ) : (
-                    <h2 className="font-bold m-6">Nothing to Show</h2>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>

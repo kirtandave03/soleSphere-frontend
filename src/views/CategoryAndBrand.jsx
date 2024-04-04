@@ -309,7 +309,7 @@ function AddCategoriesAndBrands() {
 
   return (
     <div className="flex flex-col h-screen bg-main-bg bg-cover">
-      <TopBar />
+      {/* <TopBar /> */}
       <div className="flex flex-grow">
         <Navbar />
         <div className="flex-grow flex flex-col justify-center">

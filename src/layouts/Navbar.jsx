@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BsList, BsX } from "react-icons/bs";
 import { useNavigate, useLocation } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -49,7 +48,10 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex min-w-[10vw]">
+    <div
+      className=" fixed top-0 left-0 h-full w-[10vw] flex min-w-[10vw] "
+      style={{ position: "sticky", top: 0 }}
+    >
       <div className="flex flex-col bg-white text-black ">
         {bigScreen ? (
           ""
@@ -63,6 +65,7 @@ const Navbar = () => {
         <nav
           className={`flex flex-col justify-between ${isOpen ? "" : "hidden"}`}
         >
+          <div className="p-4 font-bold text-xl text-[#4880FF]">SoleSphere</div>
           <div className="flex flex-col">
             <button
               className={`p-4 rounded-r-xl ${
