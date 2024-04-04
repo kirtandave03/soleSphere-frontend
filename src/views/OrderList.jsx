@@ -125,10 +125,12 @@ function OrderList() {
         </div>
       ) : (
         <div className="flex flex-col h-screen  bg-main-bg bg-cover bg-red-100">
-          <TopBar />
+          {/* <TopBar /> */}
           <div className="flex flex-grow">
-            <Navbar />
-            <div className="w-full flex-col">
+            <div className="fixed">
+              <Navbar />
+            </div>
+            <div className="ml-[21vh] w-full flex-col">
               <div
                 className={`p-4 w-full ${
                   details

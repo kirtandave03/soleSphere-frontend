@@ -218,10 +218,12 @@ function Products() {
         </div>
       ) : (
         <div className="flex flex-col h-screen bg-main-bg bg-cover">
-          <TopBar />
+          {/* <TopBar /> */}
           <div className="flex flex-grow">
-            <Navbar />
-            <div className="w-[90vw] flex-col">
+            <div className="fixed">
+              <Navbar />
+            </div>
+            <div className="ml-[20vh] w-[90vw] flex-col">
               <div className="p-4 w-full">
                 <h1 className="font-bold text-lg my-2 ml-4">Products</h1>
                 <div className="relative">
