@@ -341,7 +341,7 @@ function AddCategoriesAndBrands() {
         </div>
       ) : (
         <div className="flex flex-col h-screen bg-main-bg bg-cover">
-          <TopBar />
+          {/* <TopBar /> */}
           <div className="flex flex-grow">
             <Navbar />
             <div className="flex-grow flex flex-col justify-center">
@@ -623,6 +623,10 @@ function AddCategoriesAndBrands() {
                                 },
                               })}
                             />
+                            <div className="font-light text-sm text-center">
+                              (At least 3 characters & at most 50 character are
+                              allowed)*
+                            </div>
                             {errorsCategory.newCategory2 && (
                               <div className="text-red-600 text-sm text-center">
                                 {errorsCategory.newCategory2.message}
@@ -787,6 +791,10 @@ function AddCategoriesAndBrands() {
                                 },
                               })}
                             />
+                            <div className="font-light text-sm text-center">
+                              (At least 3 characters & at most 50 character are
+                              allowed)*
+                            </div>
                             {errorsBrand.newBrandIcon1 && (
                               <div className="text-red-600 text-sm text-center">
                                 {errorsBrand.newBrandIcon1.message}
@@ -889,6 +897,10 @@ function AddCategoriesAndBrands() {
                                 {errorsBrand.newBrandIcon2.message}
                               </div>
                             )}
+                            <div className="font-light text-sm text-center">
+                              (At least 3 characters & at most 50 character are
+                              allowed)*
+                            </div>
                             <button
                               type="button"
                               disabled={isSubmittingBrand}

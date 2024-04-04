@@ -337,11 +337,11 @@ const AddVariants = () => {
               Internal Server Error!
             </Alert>
           )}
-          <TopBar />
+          {/* <TopBar /> */}
           <div className="flex gap-4 ">
             <Navbar />
             <form action="" onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex ">
+              <div className="flex mt-[6vh]">
                 <div className="flex flex-col">
                   <h2 className="text-xl font-bold">Add Variant</h2>
                   <h2 className="font-semibold my-3 mx-6">
@@ -450,7 +450,7 @@ const AddVariants = () => {
 
               <div className="variants ">
                 <p className="font-bold text-xl my-2">
-                  Add Variant
+                  Add More Sizes
                   <span className="my-2 font-extralight text-sm">
                     - Add Size, Actual Price, Discounted Price, Stock
                   </span>
