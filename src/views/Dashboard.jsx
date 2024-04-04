@@ -78,7 +78,7 @@ function Dashboard() {
   const chartSetting = {
     yAxis: [
       {
-        label: "Revenue(Rs.)",
+        label: "",
       },
     ],
     width: 500,
