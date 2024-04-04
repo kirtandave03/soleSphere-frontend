@@ -15,6 +15,8 @@ import {
   updateBrand,
 } from "../services/brand.service";
 import Alert from "@mui/material/Alert";
+import Lottie from "lottie-react-web";
+import animationData from "../utils/loading.json";
 
 function AddCategoriesAndBrands() {
   const {
@@ -50,6 +52,8 @@ function AddCategoriesAndBrands() {
   const [brandAdd, setBrandAdd] = useState(false);
   const [brandUpd, setBrandUpd] = useState(false);
   const [brandDel, setBrandDel] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [firstTime, setFirstTime] = useState(true);
 
   const fetchCategories = async () => {
     try {
@@ -63,9 +67,15 @@ function AddCategoriesAndBrands() {
 
   const fetchBrands = async () => {
     try {
+      if (firstTime) {
+        setLoading(true);
+        setFirstTime(false);
+      }
       const responseBrandData = await getBrands();
       setBrands(responseBrandData.data.data.brands);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       setNoBrands(true);
       console.error(error);
     }
@@ -308,621 +318,651 @@ function AddCategoriesAndBrands() {
   ]);
 
   return (
-    <div className="flex flex-col h-screen bg-main-bg bg-cover">
-      <TopBar />
-      <div className="flex flex-grow">
-        <Navbar />
-        <div className="flex-grow flex flex-col justify-center">
-          <div className="w-full flex justify-center items-center">
-            {noCategories && (
-              <Alert
-                severity="error"
-                className="w-full"
-                onClose={() => {
-                  setNoCategories(false);
-                }}
-              >
-                Error fetching categories!
-              </Alert>
-            )}
-            {noBrands && (
-              <Alert
-                severity="error"
-                className="w-full"
-                onClose={() => {
-                  setNoBrands(false);
-                }}
-              >
-                Error fetching brands!
-              </Alert>
-            )}
-            {catExists && (
-              <Alert
-                severity="error"
-                className="w-full"
-                onClose={() => {
-                  setCatExists(false);
-                }}
-              >
-                Category entered alredy exists!
-              </Alert>
-            )}
-            {brandExists && (
-              <Alert
-                severity="error"
-                className="w-full"
-                onClose={() => {
-                  setBrandExists(false);
-                }}
-              >
-                Brand name entered alredy exists!
-              </Alert>
-            )}
-            {ISR && (
-              <Alert
-                severity="error"
-                className="w-full"
-                onClose={() => {
-                  setISR(false);
-                }}
-              >
-                Internal Server Error or error while uploading file!
-              </Alert>
-            )}
-            {catAdd && (
-              <Alert
-                severity="success"
-                className="w-full"
-                onClose={() => {
-                  setCatAdd(false);
-                }}
-              >
-                Category Added successfully :)
-              </Alert>
-            )}
-            {catUpd && (
-              <Alert
-                severity="success"
-                className="w-full"
-                onClose={() => {
-                  setCatUpd(false);
-                }}
-              >
-                Category updated successfully :)
-              </Alert>
-            )}
-            {catDel && (
-              <Alert
-                severity="success"
-                className="w-full"
-                onClose={() => {
-                  setCatDel(false);
-                }}
-              >
-                Category Deleted successfully :)
-              </Alert>
-            )}
-            {brandAdd && (
-              <Alert
-                severity="success"
-                className="w-full"
-                onClose={() => {
-                  setBrandAdd(false);
-                }}
-              >
-                Brand Added successfully :)
-              </Alert>
-            )}
-            {brandUpd && (
-              <Alert
-                severity="success"
-                className="w-full"
-                onClose={() => {
-                  setBrandUpd(false);
-                }}
-              >
-                Brand updated successfully :)
-              </Alert>
-            )}
-            {brandDel && (
-              <Alert
-                severity="success"
-                className="w-full"
-                onClose={() => {
-                  setBrandDel(false);
-                }}
-              >
-                Brand Deleted successfully :)
-              </Alert>
-            )}
-          </div>
-          <div className="p-4">
-            <h1 className="font-bold mb-4 text-lg text-center">
-              Categories and Brands
-            </h1>
-            <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
-              <div className="flex justify-between p-4">
-                <div className="div1 w-1/2 mr-auto ml-auto">
-                  <h2 className="text-lg mb-2 text-center font-semibold">
-                    Category Fields
-                  </h2>
-                  <div className="tabs flex justify-center gap-3">
-                    <button
-                      className={`tab-button ${
-                        selectedCategoryTab === "add"
-                          ? "active border-b-2 border-[#4880ff]"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedCategoryTab("add")}
-                    >
-                      <span>Add</span>
-                    </button>
-                    <button
-                      className={`tab-button ${
-                        selectedCategoryTab === "update"
-                          ? "active border-b-2 border-[#4880ff]"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedCategoryTab("update")}
-                    >
-                      <span>Update</span>
-                    </button>
-                    <button
-                      className={`tab-button ${
-                        selectedCategoryTab === "delete"
-                          ? "active border-b-2 border-[#4880ff]"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedCategoryTab("delete")}
-                    >
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                  <div className="mt-4 mx-auto w-full max-w-sm">
-                    {selectedCategoryTab === "add" && (
-                      <form
-                        onSubmit={handleSubmitCategory(onAddCatSubmit)}
-                        className="flex flex-col gap-3"
-                      >
-                        <input
-                          type="text"
-                          placeholder="Category Name"
-                          value={watchCategory("newCategory1")}
-                          className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...registerCategory("newCategory1", {
-                            required: {
-                              value: true,
-                              message: "This field is required ",
-                            },
-                            minLength: {
-                              value: 3,
-                              message:
-                                "Category name must be at least 3 characters long",
-                            },
-                            maxLength: {
-                              value: 50,
-                              message:
-                                "Category name cannot exceed 50 characters",
-                            },
-                            pattern: {
-                              value: /^[a-zA-Z0-9\s]+$/,
-                              message:
-                                "Category name must contain only letters, numbers, and spaces",
-                            },
-                          })}
-                        />
-                        {errorsCategory.newCategory1 && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsCategory.newCategory1.message}
-                          </div>
-                        )}
+    <>
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100vw",
+            height: "100vh",
+          }}
+        >
+          <Lottie
+            options={{
+              animationData: animationData,
+              loop: true,
+              autoplay: true,
+            }}
+            width={200}
+            height={200}
+          />
+        </div>
+      ) : (
+        <div className="flex flex-col h-screen bg-main-bg bg-cover">
+          <TopBar />
+          <div className="flex flex-grow">
+            <Navbar />
+            <div className="flex-grow flex flex-col justify-center">
+              <div className="w-full flex justify-center items-center">
+                {noCategories && (
+                  <Alert
+                    severity="error"
+                    className="w-full"
+                    onClose={() => {
+                      setNoCategories(false);
+                    }}
+                  >
+                    Error fetching categories!
+                  </Alert>
+                )}
+                {noBrands && (
+                  <Alert
+                    severity="error"
+                    className="w-full"
+                    onClose={() => {
+                      setNoBrands(false);
+                    }}
+                  >
+                    Error fetching brands!
+                  </Alert>
+                )}
+                {catExists && (
+                  <Alert
+                    severity="error"
+                    className="w-full"
+                    onClose={() => {
+                      setCatExists(false);
+                    }}
+                  >
+                    Category entered alredy exists!
+                  </Alert>
+                )}
+                {brandExists && (
+                  <Alert
+                    severity="error"
+                    className="w-full"
+                    onClose={() => {
+                      setBrandExists(false);
+                    }}
+                  >
+                    Brand name entered alredy exists!
+                  </Alert>
+                )}
+                {ISR && (
+                  <Alert
+                    severity="error"
+                    className="w-full"
+                    onClose={() => {
+                      setISR(false);
+                    }}
+                  >
+                    Internal Server Error or error while uploading file!
+                  </Alert>
+                )}
+                {catAdd && (
+                  <Alert
+                    severity="success"
+                    className="w-full"
+                    onClose={() => {
+                      setCatAdd(false);
+                    }}
+                  >
+                    Category Added successfully :)
+                  </Alert>
+                )}
+                {catUpd && (
+                  <Alert
+                    severity="success"
+                    className="w-full"
+                    onClose={() => {
+                      setCatUpd(false);
+                    }}
+                  >
+                    Category updated successfully :)
+                  </Alert>
+                )}
+                {catDel && (
+                  <Alert
+                    severity="success"
+                    className="w-full"
+                    onClose={() => {
+                      setCatDel(false);
+                    }}
+                  >
+                    Category Deleted successfully :)
+                  </Alert>
+                )}
+                {brandAdd && (
+                  <Alert
+                    severity="success"
+                    className="w-full"
+                    onClose={() => {
+                      setBrandAdd(false);
+                    }}
+                  >
+                    Brand Added successfully :)
+                  </Alert>
+                )}
+                {brandUpd && (
+                  <Alert
+                    severity="success"
+                    className="w-full"
+                    onClose={() => {
+                      setBrandUpd(false);
+                    }}
+                  >
+                    Brand updated successfully :)
+                  </Alert>
+                )}
+                {brandDel && (
+                  <Alert
+                    severity="success"
+                    className="w-full"
+                    onClose={() => {
+                      setBrandDel(false);
+                    }}
+                  >
+                    Brand Deleted successfully :)
+                  </Alert>
+                )}
+              </div>
+              <div className="p-4">
+                <h1 className="font-bold mb-4 text-lg text-center">
+                  Categories and Brands
+                </h1>
+                <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
+                  <div className="flex justify-between p-4">
+                    <div className="div1 w-1/2 mr-auto ml-auto">
+                      <h2 className="text-lg mb-2 text-center font-semibold">
+                        Category Fields
+                      </h2>
+                      <div className="tabs flex justify-center gap-3">
                         <button
-                          onClick={handleSubmitCategory(onAddCatSubmit)}
-                          disabled={isSubmittingCategory}
-                          type="button"
-                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                          className={`tab-button ${
+                            selectedCategoryTab === "add"
+                              ? "active border-b-2 border-[#4880ff]"
+                              : ""
+                          }`}
+                          onClick={() => setSelectedCategoryTab("add")}
                         >
-                          Add Category
+                          <span>Add</span>
                         </button>
-                        {errorsCategory.noCat && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsCategory.noCat.message}
-                          </div>
-                        )}
-                      </form>
-                    )}
-                    {selectedCategoryTab === "update" && (
-                      <form
-                        onSubmit={handleSubmitCategory(onUpdCatSubmit)}
-                        className="flex flex-col gap-3"
-                      >
-                        {categories.length > 0 && (
-                          <select
-                            name="category"
-                            id="category"
-                            className="bg-input-bg border-input-bg placeholder:text-center"
-                            {...registerCategory("category2", {
-                              required: {
-                                value: true,
-                                message: "This field is required ",
-                              },
-                            })}
+                        <button
+                          className={`tab-button ${
+                            selectedCategoryTab === "update"
+                              ? "active border-b-2 border-[#4880ff]"
+                              : ""
+                          }`}
+                          onClick={() => setSelectedCategoryTab("update")}
+                        >
+                          <span>Update</span>
+                        </button>
+                        <button
+                          className={`tab-button ${
+                            selectedCategoryTab === "delete"
+                              ? "active border-b-2 border-[#4880ff]"
+                              : ""
+                          }`}
+                          onClick={() => setSelectedCategoryTab("delete")}
+                        >
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                      <div className="mt-4 mx-auto w-full max-w-sm">
+                        {selectedCategoryTab === "add" && (
+                          <form
+                            onSubmit={handleSubmitCategory(onAddCatSubmit)}
+                            className="flex flex-col gap-3"
                           >
-                            {categories.map((category) => (
-                              <option
-                                key={category._id}
-                                value={category.category}
-                              >
-                                {category.category}
-                              </option>
-                            ))}
-                          </select>
+                            <input
+                              type="text"
+                              placeholder="Category Name"
+                              value={watchCategory("newCategory1")}
+                              className="bg-input-bg border-input-bg placeholder:text-center"
+                              {...registerCategory("newCategory1", {
+                                required: {
+                                  value: true,
+                                  message: "This field is required ",
+                                },
+                                minLength: {
+                                  value: 3,
+                                  message:
+                                    "Category name must be at least 3 characters long",
+                                },
+                                maxLength: {
+                                  value: 50,
+                                  message:
+                                    "Category name cannot exceed 50 characters",
+                                },
+                                pattern: {
+                                  value: /^[a-zA-Z0-9\s]+$/,
+                                  message:
+                                    "Category name must contain only letters, numbers, and spaces",
+                                },
+                              })}
+                            />
+                            <div className="font-light text-sm text-center">
+                              (At least 3 characters & at most 50 characters are
+                              allowed)*
+                            </div>
+                            {errorsCategory.newCategory1 && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsCategory.newCategory1.message}
+                              </div>
+                            )}
+                            <button
+                              onClick={handleSubmitCategory(onAddCatSubmit)}
+                              disabled={isSubmittingCategory}
+                              type="button"
+                              className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                            >
+                              Add Category
+                            </button>
+                            {errorsCategory.noCat && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsCategory.noCat.message}
+                              </div>
+                            )}
+                          </form>
                         )}
-                        <input
-                          type="text"
-                          name="updatedCat"
-                          id="updatedCat"
-                          value={watchCategory("newCategory2")}
-                          placeholder="Updated Category"
-                          className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...registerCategory("newCategory2", {
-                            required: {
-                              value: true,
-                              message: "This field is required ",
-                            },
-                            minLength: {
-                              value: 3,
-                              message:
-                                "Category name must be at least 3 characters long",
-                            },
-                            maxLength: {
-                              value: 50,
-                              message:
-                                "Category name cannot exceed 50 characters",
-                            },
-                            pattern: {
-                              value: /^[a-zA-Z0-9\s]+$/,
-                              message:
-                                "Category name must contain only letters, numbers, and spaces",
-                            },
-                          })}
-                        />
-                        {errorsCategory.newCategory2 && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsCategory.newCategory2.message}
-                          </div>
-                        )}
-                        <button
-                          disabled={isSubmittingCategory}
-                          onClick={handleSubmitCategory(onUpdCatSubmit)}
-                          type="button"
-                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        >
-                          Update Category
-                        </button>
-                        {errorsCategory.CatNF && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsCategory.CatNF.message}
-                          </div>
-                        )}
-                        {errorsCategory.catExists && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsCategory.catExists.message}
-                          </div>
-                        )}
-                      </form>
-                    )}
-                    {selectedCategoryTab === "delete" && (
-                      <form
-                        onSubmit={handleSubmitCategory(onDelCatSubmit)}
-                        className="flex flex-col gap-3"
-                      >
-                        {categories.length > 0 && (
-                          <select
-                            className="bg-input-bg border-input-bg placeholder:text-center"
-                            name="category"
-                            id="category"
-                            {...registerCategory("category3", {
-                              required: {
-                                value: true,
-                                message: "This field is required ",
-                              },
-                            })}
+                        {selectedCategoryTab === "update" && (
+                          <form
+                            onSubmit={handleSubmitCategory(onUpdCatSubmit)}
+                            className="flex flex-col gap-3"
                           >
-                            {categories.map((category) => (
-                              <option
-                                key={category._id}
-                                value={category.category}
+                            {categories.length > 0 && (
+                              <select
+                                name="category"
+                                id="category"
+                                className="bg-input-bg border-input-bg placeholder:text-center"
+                                {...registerCategory("category2", {
+                                  required: {
+                                    value: true,
+                                    message: "This field is required ",
+                                  },
+                                })}
                               >
-                                {category.category}
-                              </option>
-                            ))}
-                          </select>
+                                {categories.map((category) => (
+                                  <option
+                                    key={category._id}
+                                    value={category.category}
+                                  >
+                                    {category.category}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                            <input
+                              type="text"
+                              name="updatedCat"
+                              id="updatedCat"
+                              value={watchCategory("newCategory2")}
+                              placeholder="Updated Category"
+                              className="bg-input-bg border-input-bg placeholder:text-center"
+                              {...registerCategory("newCategory2", {
+                                required: {
+                                  value: true,
+                                  message: "This field is required ",
+                                },
+                                minLength: {
+                                  value: 3,
+                                  message:
+                                    "Category name must be at least 3 characters long",
+                                },
+                                maxLength: {
+                                  value: 50,
+                                  message:
+                                    "Category name cannot exceed 50 characters",
+                                },
+                                pattern: {
+                                  value: /^[a-zA-Z0-9\s]+$/,
+                                  message:
+                                    "Category name must contain only letters, numbers, and spaces",
+                                },
+                              })}
+                            />
+                            {errorsCategory.newCategory2 && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsCategory.newCategory2.message}
+                              </div>
+                            )}
+                            <button
+                              disabled={isSubmittingCategory}
+                              onClick={handleSubmitCategory(onUpdCatSubmit)}
+                              type="button"
+                              className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                            >
+                              Update Category
+                            </button>
+                            {errorsCategory.CatNF && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsCategory.CatNF.message}
+                              </div>
+                            )}
+                            {errorsCategory.catExists && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsCategory.catExists.message}
+                              </div>
+                            )}
+                          </form>
                         )}
-                        <button
-                          disabled={isSubmittingCategory}
-                          onClick={handleSubmitCategory(onDelCatSubmit)}
-                          type="button"
-                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        >
-                          Delete Category
-                        </button>
-                        {errorsCategory.delCat && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsCategory.delCat.message}
-                          </div>
+                        {selectedCategoryTab === "delete" && (
+                          <form
+                            onSubmit={handleSubmitCategory(onDelCatSubmit)}
+                            className="flex flex-col gap-3"
+                          >
+                            {categories.length > 0 && (
+                              <select
+                                className="bg-input-bg border-input-bg placeholder:text-center"
+                                name="category"
+                                id="category"
+                                {...registerCategory("category3", {
+                                  required: {
+                                    value: true,
+                                    message: "This field is required ",
+                                  },
+                                })}
+                              >
+                                {categories.map((category) => (
+                                  <option
+                                    key={category._id}
+                                    value={category.category}
+                                  >
+                                    {category.category}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                            <button
+                              disabled={isSubmittingCategory}
+                              onClick={handleSubmitCategory(onDelCatSubmit)}
+                              type="button"
+                              className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                            >
+                              Delete Category
+                            </button>
+                            {errorsCategory.delCat && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsCategory.delCat.message}
+                              </div>
+                            )}
+                          </form>
                         )}
-                      </form>
-                    )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="p-4">
-            <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
-              <div className="flex justify-between p-4">
-                <div className="div2 w-1/2 mr-auto ml-auto">
-                  <h2 className="text-lg mb-2 text-center font-semibold">
-                    Brand Fields
-                  </h2>
-                  <div className="mb-4 tabs flex justify-center gap-3">
-                    <button
-                      className={`tab-button ${
-                        selectedBrandTab === "add"
-                          ? "active border-b-2 border-[#4880ff]"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedBrandTab("add")}
-                    >
-                      <span>Add</span>
-                    </button>
-                    <button
-                      className={`tab-button ${
-                        selectedBrandTab === "update"
-                          ? "active border-b-2 border-[#4880ff]"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedBrandTab("update")}
-                    >
-                      <span>Update</span>
-                    </button>
-                    <button
-                      className={`tab-button ${
-                        selectedBrandTab === "delete"
-                          ? "active border-b-2 border-[#4880ff]"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedBrandTab("delete")}
-                    >
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                  <div className="mt-4 mx-auto w-full max-w-sm">
-                    {selectedBrandTab === "add" && (
-                      <form
-                        onSubmit={handleSubmitBrand(onAddBrandSubmit)}
-                        className="flex flex-col gap-3"
-                      >
-                        <input
-                          type="text"
-                          placeholder="Brand Name"
-                          value={watchBrand("newBrand1")}
-                          className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...registerBrand("newBrand1", {
-                            required: {
-                              value: true,
-                              message: "This field is required ",
-                            },
-                            minLength: {
-                              value: 3,
-                              message:
-                                "Brand name must be at least 3 characters long",
-                            },
-                            maxLength: {
-                              value: 50,
-                              message: "Brand name cannot exceed 50 characters",
-                            },
-                            pattern: {
-                              value: /^[\p{L}\d\s\-&'()]+$/u,
-                              message:
-                                "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
-                            },
-                          })}
-                        />
-                        {errorsBrand.newBrand1 && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.newBrand1.message}
-                          </div>
-                        )}
-                        <input
-                          type="file"
-                          name="brandLogo"
-                          id="brandLogo"
-                          accept="image/*"
-                          multiple={false}
-                          onChange={handleAddFileChange}
-                          className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...registerBrand("newBrandIcon1", {
-                            required: {
-                              value: true,
-                              message: "This field is required",
-                            },
-                          })}
-                        />
-                        {errorsBrand.newBrandIcon1 && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.newBrandIcon1.message}
-                          </div>
-                        )}
+              <div className="p-4">
+                <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
+                  <div className="flex justify-between p-4">
+                    <div className="div2 w-1/2 mr-auto ml-auto">
+                      <h2 className="text-lg mb-2 text-center font-semibold">
+                        Brand Fields
+                      </h2>
+                      <div className="mb-4 tabs flex justify-center gap-3">
                         <button
-                          type="button"
-                          disabled={isSubmittingBrand}
-                          onClick={handleSubmitBrand(onAddBrandSubmit)}
-                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                          className={`tab-button ${
+                            selectedBrandTab === "add"
+                              ? "active border-b-2 border-[#4880ff]"
+                              : ""
+                          }`}
+                          onClick={() => setSelectedBrandTab("add")}
                         >
-                          Add Brand
+                          <span>Add</span>
                         </button>
-                        {errorsBrand.addBrand && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.addBrand.message}
-                          </div>
-                        )}
-                        {errorsBrand.ISE && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.ISE.message}
-                          </div>
-                        )}
-                      </form>
-                    )}
-                    {selectedBrandTab === "update" && (
-                      <form
-                        onSubmit={handleSubmitBrand(onUpdBrandSubmit)}
-                        className="flex flex-col gap-3"
-                      >
-                        {brands.length > 0 && (
-                          <select
-                            name="brand"
-                            id="brand"
-                            className="bg-input-bg border-input-bg placeholder:text-center"
-                            {...registerBrand("brand2", {
-                              required: {
-                                value: true,
-                                message: "This field is required ",
-                              },
-                            })}
+                        <button
+                          className={`tab-button ${
+                            selectedBrandTab === "update"
+                              ? "active border-b-2 border-[#4880ff]"
+                              : ""
+                          }`}
+                          onClick={() => setSelectedBrandTab("update")}
+                        >
+                          <span>Update</span>
+                        </button>
+                        <button
+                          className={`tab-button ${
+                            selectedBrandTab === "delete"
+                              ? "active border-b-2 border-[#4880ff]"
+                              : ""
+                          }`}
+                          onClick={() => setSelectedBrandTab("delete")}
+                        >
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                      <div className="mt-4 mx-auto w-full max-w-sm">
+                        {selectedBrandTab === "add" && (
+                          <form
+                            onSubmit={handleSubmitBrand(onAddBrandSubmit)}
+                            className="flex flex-col gap-3"
                           >
-                            {brands.map((brand) => (
-                              <option key={brand._id} value={brand.brand}>
-                                {brand.brand}
-                              </option>
-                            ))}
-                          </select>
+                            <input
+                              type="text"
+                              placeholder="Brand Name"
+                              value={watchBrand("newBrand1")}
+                              className="bg-input-bg border-input-bg placeholder:text-center"
+                              {...registerBrand("newBrand1", {
+                                required: {
+                                  value: true,
+                                  message: "This field is required ",
+                                },
+                                minLength: {
+                                  value: 3,
+                                  message:
+                                    "Brand name must be at least 3 characters long",
+                                },
+                                maxLength: {
+                                  value: 50,
+                                  message:
+                                    "Brand name cannot exceed 50 characters",
+                                },
+                                pattern: {
+                                  value: /^[\p{L}\d\s\-&'()]+$/u,
+                                  message:
+                                    "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
+                                },
+                              })}
+                            />
+                            {errorsBrand.newBrand1 && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.newBrand1.message}
+                              </div>
+                            )}
+                            <input
+                              type="file"
+                              name="brandLogo"
+                              id="brandLogo"
+                              accept="image/*"
+                              multiple={false}
+                              onChange={handleAddFileChange}
+                              className="bg-input-bg border-input-bg placeholder:text-center"
+                              {...registerBrand("newBrandIcon1", {
+                                required: {
+                                  value: true,
+                                  message: "This field is required",
+                                },
+                              })}
+                            />
+                            {errorsBrand.newBrandIcon1 && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.newBrandIcon1.message}
+                              </div>
+                            )}
+                            <button
+                              type="button"
+                              disabled={isSubmittingBrand}
+                              onClick={handleSubmitBrand(onAddBrandSubmit)}
+                              className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                            >
+                              Add Brand
+                            </button>
+                            {errorsBrand.addBrand && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.addBrand.message}
+                              </div>
+                            )}
+                            {errorsBrand.ISE && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.ISE.message}
+                              </div>
+                            )}
+                          </form>
                         )}
-                        <input
-                          type="text"
-                          name="updatedBrand"
-                          id="updatedBrand"
-                          placeholder="Updated Brand"
-                          className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...registerBrand("newBrand2", {
-                            required: {
-                              value: true,
-                              message: "This field is required ",
-                            },
-                            minLength: {
-                              value: 3,
-                              message:
-                                "Brand name must be at least 3 characters long",
-                            },
-                            maxLength: {
-                              value: 50,
-                              message: "Brand name cannot exceed 50 characters",
-                            },
-                            pattern: {
-                              value: /^[\p{L}\d\s\-&'()]+$/u,
-                              message:
-                                "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
-                            },
-                          })}
-                        />
-                        {errorsBrand.newBrand2 && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.newBrand2.message}
-                          </div>
-                        )}
-                        <input
-                          type="file"
-                          name="updatedBrandLogo"
-                          id="updatedBrandLogo"
-                          accept="image/*"
-                          multiple={false}
-                          onChange={handleUpdFileChange}
-                          className="bg-input-bg border-input-bg placeholder:text-center"
-                          {...registerBrand("newBrandIcon2", {
-                            required: {
-                              value: true,
-                              message: "This field is required",
-                            },
-                          })}
-                        />
-                        {errorsBrand.newBrandIcon2 && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.newBrandIcon2.message}
-                          </div>
-                        )}
-                        <button
-                          type="button"
-                          disabled={isSubmittingBrand}
-                          onClick={handleSubmitBrand(onUpdBrandSubmit)}
-                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        >
-                          Update Brand
-                        </button>
-                        {errorsBrand.noBrand && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.noBrand.message}
-                          </div>
-                        )}
-                        {errorsBrand.ser && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.ser.message}
-                          </div>
-                        )}
-                        {errorsBrand.brandExists && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.brandExists.message}
-                          </div>
-                        )}
-                      </form>
-                    )}
-                    {selectedBrandTab === "delete" && (
-                      <form
-                        onSubmit={handleSubmitBrand(onDelBrandSubmit)}
-                        className="flex flex-col gap-3"
-                      >
-                        {brands.length > 0 && (
-                          <select
-                            name="brand"
-                            id="brand"
-                            className="bg-input-bg border-input-bg placeholder:text-center"
-                            {...registerBrand("brand3", {
-                              required: {
-                                value: true,
-                                message: "This field is required ",
-                              },
-                            })}
+                        {selectedBrandTab === "update" && (
+                          <form
+                            onSubmit={handleSubmitBrand(onUpdBrandSubmit)}
+                            className="flex flex-col gap-3"
                           >
-                            {brands.map((brand) => (
-                              <option key={brand._id} value={brand.brand}>
-                                {brand.brand}
-                              </option>
-                            ))}
-                          </select>
+                            {brands.length > 0 && (
+                              <select
+                                name="brand"
+                                id="brand"
+                                className="bg-input-bg border-input-bg placeholder:text-center"
+                                {...registerBrand("brand2", {
+                                  required: {
+                                    value: true,
+                                    message: "This field is required ",
+                                  },
+                                })}
+                              >
+                                {brands.map((brand) => (
+                                  <option key={brand._id} value={brand.brand}>
+                                    {brand.brand}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                            <input
+                              type="text"
+                              name="updatedBrand"
+                              id="updatedBrand"
+                              placeholder="Updated Brand"
+                              className="bg-input-bg border-input-bg placeholder:text-center"
+                              {...registerBrand("newBrand2", {
+                                required: {
+                                  value: true,
+                                  message: "This field is required ",
+                                },
+                                minLength: {
+                                  value: 3,
+                                  message:
+                                    "Brand name must be at least 3 characters long",
+                                },
+                                maxLength: {
+                                  value: 50,
+                                  message:
+                                    "Brand name cannot exceed 50 characters",
+                                },
+                                pattern: {
+                                  value: /^[\p{L}\d\s\-&'()]+$/u,
+                                  message:
+                                    "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
+                                },
+                              })}
+                            />
+                            {errorsBrand.newBrand2 && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.newBrand2.message}
+                              </div>
+                            )}
+                            <input
+                              type="file"
+                              name="updatedBrandLogo"
+                              id="updatedBrandLogo"
+                              accept="image/*"
+                              multiple={false}
+                              onChange={handleUpdFileChange}
+                              className="bg-input-bg border-input-bg placeholder:text-center"
+                              {...registerBrand("newBrandIcon2", {
+                                required: {
+                                  value: true,
+                                  message: "This field is required",
+                                },
+                              })}
+                            />
+                            {errorsBrand.newBrandIcon2 && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.newBrandIcon2.message}
+                              </div>
+                            )}
+                            <button
+                              type="button"
+                              disabled={isSubmittingBrand}
+                              onClick={handleSubmitBrand(onUpdBrandSubmit)}
+                              className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                            >
+                              Update Brand
+                            </button>
+                            {errorsBrand.noBrand && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.noBrand.message}
+                              </div>
+                            )}
+                            {errorsBrand.ser && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.ser.message}
+                              </div>
+                            )}
+                            {errorsBrand.brandExists && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.brandExists.message}
+                              </div>
+                            )}
+                          </form>
                         )}
-                        <button
-                          type="button"
-                          disabled={isSubmittingBrand}
-                          onClick={handleSubmitBrand(onDelBrandSubmit)}
-                          className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
-                        >
-                          Delete Brand
-                        </button>
-                        {errorsBrand.BrandNF && (
-                          <div className="text-red-600 text-sm text-center">
-                            {errorsBrand.BrandNF.message}
-                          </div>
+                        {selectedBrandTab === "delete" && (
+                          <form
+                            onSubmit={handleSubmitBrand(onDelBrandSubmit)}
+                            className="flex flex-col gap-3"
+                          >
+                            {brands.length > 0 && (
+                              <select
+                                name="brand"
+                                id="brand"
+                                className="bg-input-bg border-input-bg placeholder:text-center"
+                                {...registerBrand("brand3", {
+                                  required: {
+                                    value: true,
+                                    message: "This field is required ",
+                                  },
+                                })}
+                              >
+                                {brands.map((brand) => (
+                                  <option key={brand._id} value={brand.brand}>
+                                    {brand.brand}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                            <button
+                              type="button"
+                              disabled={isSubmittingBrand}
+                              onClick={handleSubmitBrand(onDelBrandSubmit)}
+                              className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg"
+                            >
+                              Delete Brand
+                            </button>
+                            {errorsBrand.BrandNF && (
+                              <div className="text-red-600 text-sm text-center">
+                                {errorsBrand.BrandNF.message}
+                              </div>
+                            )}
+                          </form>
                         )}
-                      </form>
-                    )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

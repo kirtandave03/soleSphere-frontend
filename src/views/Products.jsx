@@ -26,6 +26,8 @@ import {
   restoreProduct,
 } from "../services/product.service";
 import Alert from "@mui/material/Alert";
+import Lottie from "lottie-react-web";
+import animationData from "../utils/loading.json";
 
 function Products() {
   const navigate = useNavigate();
@@ -40,13 +42,15 @@ function Products() {
   const [totalProducts, setTotalProducts] = useState();
   const [totalDeletedProducts, setTotalDeletedProducts] = useState();
   const [productNotFound, setProductNotFound] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [firstTime, setFirstTime] = useState(true);
 
   const fetchProducts = async () => {
     try {
       const response = await getProducts(page, rowsPerPage, searchQuery);
       const responseData = response.data;
 
-      console.log(response.data.data.responseData);
+      // console.log(response.data.data.responseData);
 
       setRows(responseData.data.responseData);
       setTotalProducts(responseData.data.totalProducts);
@@ -57,6 +61,10 @@ function Products() {
 
   const fetchDeletedProducts = async () => {
     try {
+      if (firstTime) {
+        setLoading(true);
+        setFirstTime(false);
+      }
       const response = await getDeletedProducts(
         pageForDeleted,
         rowsPerPageForDeleted,
@@ -64,10 +72,12 @@ function Products() {
       );
       const responseData = response.data;
 
-      console.log(responseData.data.deletedProducts);
+      // console.log(responseData.data.deletedProducts);
       setDeletedRows(responseData.data.deletedProducts);
       setTotalDeletedProducts(responseData.data.totalCount);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching deleted products:", error);
     }
   };
@@ -185,319 +195,354 @@ function Products() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-main-bg bg-cover">
-      <TopBar />
-      <div className="flex flex-grow">
-        <Navbar />
-        <div className="w-[90vw] flex-col">
-          <div className="p-4 w-full">
-            <h1 className="font-bold text-lg my-2 ml-4">Products</h1>
-            <div className="relative">
-              <div className="w-full absolute flex justify-center items-center">
-                {productNotFound && (
-                  <Alert
-                    severity="error"
-                    className="w-full"
-                    onClose={() => {
-                      setProductNotFound(false);
+    <>
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100vw",
+            height: "100vh",
+          }}
+        >
+          <Lottie
+            options={{
+              animationData: animationData,
+              loop: true,
+              autoplay: true,
+            }}
+            width={200}
+            height={200}
+          />
+        </div>
+      ) : (
+        <div className="flex flex-col h-screen bg-main-bg bg-cover">
+          <TopBar />
+          <div className="flex flex-grow">
+            <Navbar />
+            <div className="w-[90vw] flex-col">
+              <div className="p-4 w-full">
+                <h1 className="font-bold text-lg my-2 ml-4">Products</h1>
+                <div className="relative">
+                  <div className="w-full absolute flex justify-center items-center">
+                    {productNotFound && (
+                      <Alert
+                        severity="error"
+                        className="w-full"
+                        onClose={() => {
+                          setProductNotFound(false);
+                        }}
+                      >
+                        Product not found!
+                      </Alert>
+                    )}
+                  </div>
+                </div>
+                <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
+                  <TextField
+                    id="search"
+                    label="Search"
+                    variant="outlined"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="search"
+                            onClick={handleSearch}
+                          ></IconButton>
+                        </InputAdornment>
+                      ),
                     }}
-                  >
-                    Product not found!
-                  </Alert>
-                )}
-              </div>
-            </div>
-            <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
-              <TextField
-                id="search"
-                label="Search"
-                variant="outlined"
-                value={searchQuery}
-                onChange={handleSearch}
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="search"
-                        onClick={handleSearch}
-                      ></IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </div>
-            <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
-              <div className="w-full">
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Image
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Product Name
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Category
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Brand
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Size
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Price
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Total Available Colors
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Average Rating
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows &&
-                        rows.map((row) => (
-                          <TableRow key={row._id}>
-                            <TableCell>
-                              <img
-                                src={row.image}
-                                alt="Product Image"
-                                style={{
-                                  maxWidth: "100px",
-                                  maxHeight: "100px",
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>{capitalize(row.productName)}</TableCell>
-                            <TableCell>{capitalize(row.category)}</TableCell>
-                            <TableCell>{capitalize(row.brand)}</TableCell>
-                            <TableCell>{row.size}</TableCell>
-                            <TableCell>{row.discounted_price}</TableCell>
-                            <TableCell style={{ textAlign: "center" }}>
-                              {row.colors}
-                            </TableCell>
-
-                            <TableCell style={{ textAlign: "center" }}>
-                              {row.avgRating !== null
-                                ? row.avgRating.toFixed(2)
-                                : "No Reviews"}
-                            </TableCell>
-
+                  />
+                </div>
+                <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
+                  <div className="w-full">
+                    <TableContainer component={Paper}>
+                      <Table aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
                             <TableCell
-                              style={{
-                                textAlign: "center",
-                              }}
+                              style={{ fontWeight: "600", textAlign: "center" }}
                             >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <IconButton
-                                  aria-label="edit"
-                                  onClick={() => onEdit(row._id)}
-                                >
-                                  <FaRegEdit />
-                                </IconButton>
-                                <IconButton
-                                  aria-label="delete"
-                                  onClick={() => onDelete(row.productName, row)}
-                                >
-                                  <RiDeleteBinLine />
-                                </IconButton>
-                              </div>
+                              Image
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Product Name
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Category
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Brand
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Size
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Price
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Total Available Colors
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Average Rating
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Actions
                             </TableCell>
                           </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={totalProducts}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={(event, newPage) =>
-                    handleChangePage(event, newPage)
-                  }
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                        </TableHead>
+                        <TableBody>
+                          {rows &&
+                            rows.map((row) => (
+                              <TableRow key={row._id}>
+                                <TableCell>
+                                  <img
+                                    src={row.image}
+                                    alt="Product Image"
+                                    style={{
+                                      maxWidth: "100px",
+                                      maxHeight: "100px",
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  {capitalize(row.productName)}
+                                </TableCell>
+                                <TableCell>
+                                  {capitalize(row.category)}
+                                </TableCell>
+                                <TableCell>{capitalize(row.brand)}</TableCell>
+                                <TableCell>{row.size}</TableCell>
+                                <TableCell>{row.discounted_price}</TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {row.colors}
+                                </TableCell>
+
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {row.avgRating !== null
+                                    ? row.avgRating.toFixed(2)
+                                    : "No Reviews"}
+                                </TableCell>
+
+                                <TableCell
+                                  style={{
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <IconButton
+                                      aria-label="edit"
+                                      onClick={() => onEdit(row._id)}
+                                    >
+                                      <FaRegEdit />
+                                    </IconButton>
+                                    <IconButton
+                                      aria-label="delete"
+                                      onClick={() =>
+                                        onDelete(row.productName, row)
+                                      }
+                                    >
+                                      <RiDeleteBinLine />
+                                    </IconButton>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={totalProducts}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={(event, newPage) =>
+                        handleChangePage(event, newPage)
+                      }
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="p-4 w-full">
-            <h1 className="font-bold text-lg my-2 ml-4">Deleted Products</h1>
+              <div className="p-4 w-full">
+                <h1 className="font-bold text-lg my-2 ml-4">
+                  Deleted Products
+                </h1>
 
-            <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
-              <TextField
-                id="search"
-                label="Search"
-                variant="outlined"
-                value={searchDeletedQuery}
-                onChange={handleDeletedSearch}
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="search"
-                        onClick={handleDeletedSearch}
-                      ></IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </div>
-            <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
-              <div className="w-full">
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Image
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Product Name
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Category
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Brand
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Size
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Price
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Total Available Colors
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Average Rating
-                        </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "600", textAlign: "center" }}
-                        >
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {deletedRows.map((deletedRow) => (
-                        <TableRow key={deletedRow._id}>
-                          <TableCell>
-                            <img
-                              src={deletedRow.variants[0].image_urls[0]}
-                              alt="Product Image"
-                              style={{
-                                maxWidth: "100px",
-                                maxHeight: "100px",
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(deletedRow.productName)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(deletedRow.category.category)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(deletedRow.brand.brand)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {deletedRow.variants[0].sizes[0].size}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {deletedRow.variants[0].sizes[0].discounted_price}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {deletedRow.variants.length}
-                          </TableCell>
-
-                          <TableCell style={{ textAlign: "center" }}>
-                            {deletedRow.averageRating !== null
-                              ? deletedRow.averageRating.toFixed(2)
-                              : "No Reviews"}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            <IconButton
-                              aria-label="delete"
-                              onClick={() =>
-                                onRestore(deletedRow._id, deletedRow)
-                              }
+                <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
+                  <TextField
+                    id="search"
+                    label="Search"
+                    variant="outlined"
+                    value={searchDeletedQuery}
+                    onChange={handleDeletedSearch}
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="search"
+                            onClick={handleDeletedSearch}
+                          ></IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </div>
+                <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
+                  <div className="w-full">
+                    <TableContainer component={Paper}>
+                      <Table aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
                             >
-                              <TbRestore />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={totalDeletedProducts || deletedRows.length}
-                  rowsPerPage={rowsPerPageForDeleted}
-                  page={pageForDeleted}
-                  onPageChange={(event, newPage) =>
-                    handleChangePageForDeleted(event, newPage)
-                  }
-                  onRowsPerPageChange={handleChangeRowsPerPageForDeleted}
-                />
+                              Image
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Product Name
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Category
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Brand
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Size
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Price
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Total Available Colors
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Average Rating
+                            </TableCell>
+                            <TableCell
+                              style={{ fontWeight: "600", textAlign: "center" }}
+                            >
+                              Actions
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {deletedRows.map((deletedRow) => (
+                            <TableRow key={deletedRow._id}>
+                              <TableCell>
+                                <img
+                                  src={deletedRow.variants[0].image_urls[0]}
+                                  alt="Product Image"
+                                  style={{
+                                    maxWidth: "100px",
+                                    maxHeight: "100px",
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell style={{ textAlign: "center" }}>
+                                {capitalize(deletedRow.productName)}
+                              </TableCell>
+                              <TableCell style={{ textAlign: "center" }}>
+                                {capitalize(deletedRow.category.category)}
+                              </TableCell>
+                              <TableCell style={{ textAlign: "center" }}>
+                                {capitalize(deletedRow.brand.brand)}
+                              </TableCell>
+                              <TableCell style={{ textAlign: "center" }}>
+                                {deletedRow.variants[0].sizes[0].size}
+                              </TableCell>
+                              <TableCell style={{ textAlign: "center" }}>
+                                {
+                                  deletedRow.variants[0].sizes[0]
+                                    .discounted_price
+                                }
+                              </TableCell>
+                              <TableCell style={{ textAlign: "center" }}>
+                                {deletedRow.variants.length}
+                              </TableCell>
+
+                              <TableCell style={{ textAlign: "center" }}>
+                                {deletedRow.averageRating !== null
+                                  ? deletedRow.averageRating.toFixed(2)
+                                  : "No Reviews"}
+                              </TableCell>
+                              <TableCell style={{ textAlign: "center" }}>
+                                <IconButton
+                                  aria-label="delete"
+                                  onClick={() =>
+                                    onRestore(deletedRow._id, deletedRow)
+                                  }
+                                >
+                                  <TbRestore />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={totalDeletedProducts || deletedRows.length}
+                      rowsPerPage={rowsPerPageForDeleted}
+                      page={pageForDeleted}
+                      onPageChange={(event, newPage) =>
+                        handleChangePageForDeleted(event, newPage)
+                      }
+                      onRowsPerPageChange={handleChangeRowsPerPageForDeleted}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 
