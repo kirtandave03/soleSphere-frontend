@@ -78,7 +78,7 @@ function Dashboard() {
   const chartSetting = {
     yAxis: [
       {
-        label: "Revenue(Rs.)",
+        label: "",
       },
     ],
     width: 500,
@@ -163,11 +163,13 @@ function Dashboard() {
         </div>
       ) : (
         <div className="flex flex-col h-screen bg-main-bg bg-cover">
-          <TopBar />
+          {/* <TopBar /> */}
           <div className="flex flex-grow">
-            <Navbar />
-            <div className="flex-grow flex flex-col">
-              <h1 className="font-bold mx-2 mb-2 text-lg">Dashboard</h1>
+            <div className="fixed">
+              <Navbar />
+            </div>
+            <div className="ml-[21vh] mt-8 flex-grow flex flex-col">
+              {/* <h1 className="font-bold mx-2 mb-2 text-lg">Dashboard</h1> */}
               <div className="flex flex-col justify-center items-center">
                 <div className="w-11/12 flex justify-between gap-8 text-lg">
                   <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
@@ -190,7 +192,7 @@ function Dashboard() {
                   </div>
                   <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
                     <div>
-                      <p className="">Total Sales</p>
+                      <p className="">Total Revenue</p>
                       <p className="font-semibold">₹{totalSales}</p>
                     </div>
                     <div className="bg-[#beffdf] p-2 rounded-xl">
@@ -215,7 +217,7 @@ function Dashboard() {
                 {totalRevenue.length > 0 && (
                   <>
                     <div className="absolute top-2 left-2 font-semibold text-lg">
-                      Total Revenue: ₹{yearlyRevenue}
+                      Total Sales: ₹{yearlyRevenue}
                     </div>
                     <select
                       className="absolute top-2 right-2 bg-white border border-gray-300 px-3 py-1 rounded-md"
