@@ -52,3 +52,14 @@ export const updatePassword = async (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const getNewOtp = async (email) => {
+  const url = `/auth/get-otp`;
+
+  return new Promise((resolve, reject) => {
+    jsonAxiosInstance
+      .post(url, email)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

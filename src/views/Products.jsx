@@ -44,6 +44,8 @@ function Products() {
   const [productNotFound, setProductNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
   const [firstTime, setFirstTime] = useState(true);
+  const [restoreClicked, setRestoreClicked] = useState(false);
+  const [deleteClicked, setDeleteClicked] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -84,6 +86,7 @@ function Products() {
 
   const onDelete = async (productName, product) => {
     try {
+      setDeleteClicked(true);
       const response = await deleteProduct(productName);
 
       // console.log(product);
@@ -92,11 +95,17 @@ function Products() {
         setRows(rows.filter((row) => row.productName !== productName));
 
         const toAddProduct = {
+          _id: product._id,
           productName: product.productName,
           variants: [
             {
               image_urls: [product.image],
-              sizes: [{ discounted_price: product.discounted_price }],
+              sizes: [
+                {
+                  discounted_price: product.discounted_price,
+                  size: product.size,
+                },
+              ],
             },
           ],
           category: { category: product.category },
@@ -107,8 +116,10 @@ function Products() {
         // console.log(toAddProduct);
 
         setDeletedRows([...deletedRows, toAddProduct]);
+        setDeleteClicked(false);
       }
     } catch (error) {
+      setDeleteClicked(false);
       console.error("Error deleting product:", error);
       if (error.response.status === 404) {
         setProductNotFound(true);
@@ -118,6 +129,7 @@ function Products() {
 
   const onRestore = async (productId, product) => {
     try {
+      setRestoreClicked(true);
       const response = await restoreProduct(productId);
 
       // console.log(response.status);
@@ -135,10 +147,14 @@ function Products() {
           discounted_price: product.variants[0].sizes[0].discounted_price,
           colors: product.variants.length,
           avgRating: product.averageRating,
+          size: product.variants[0].sizes[0].size,
+          _id: product._id,
         };
         setRows([...rows, toAddProduct]);
+        setRestoreClicked(false);
       }
     } catch (error) {
+      setRestoreClicked(false);
       console.error("Error deleting product:", error);
       if (error.response.status === 404) {
         setProductNotFound(true);
@@ -272,19 +288,13 @@ function Products() {
                             >
                               Image
                             </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
+                            <TableCell style={{ fontWeight: "600" }}>
                               Product Name
                             </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
+                            <TableCell style={{ fontWeight: "600" }}>
                               Category
                             </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
+                            <TableCell style={{ fontWeight: "600" }}>
                               Brand
                             </TableCell>
                             <TableCell
@@ -335,8 +345,12 @@ function Products() {
                                   {capitalize(row.category)}
                                 </TableCell>
                                 <TableCell>{capitalize(row.brand)}</TableCell>
-                                <TableCell>{row.size}</TableCell>
-                                <TableCell>{row.discounted_price}</TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {row.size}
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {row.discounted_price}
+                                </TableCell>
                                 <TableCell style={{ textAlign: "center" }}>
                                   {row.colors}
                                 </TableCell>
@@ -369,6 +383,11 @@ function Products() {
                                       onClick={() =>
                                         onDelete(row.productName, row)
                                       }
+                                      className={`${
+                                        deleteClicked
+                                          ? "pointer-events-none"
+                                          : ""
+                                      }`}
                                     >
                                       <RiDeleteBinLine />
                                     </IconButton>
@@ -382,7 +401,7 @@ function Products() {
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25]}
                       component="div"
-                      count={totalProducts}
+                      count={totalProducts || 0}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={(event, newPage) =>
@@ -429,19 +448,13 @@ function Products() {
                             >
                               Image
                             </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
+                            <TableCell style={{ fontWeight: "600" }}>
                               Product Name
                             </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
+                            <TableCell style={{ fontWeight: "600" }}>
                               Category
                             </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
+                            <TableCell style={{ fontWeight: "600" }}>
                               Brand
                             </TableCell>
                             <TableCell
@@ -484,13 +497,13 @@ function Products() {
                                   }}
                                 />
                               </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
+                              <TableCell>
                                 {capitalize(deletedRow.productName)}
                               </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
+                              <TableCell>
                                 {capitalize(deletedRow.category.category)}
                               </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
+                              <TableCell>
                                 {capitalize(deletedRow.brand.brand)}
                               </TableCell>
                               <TableCell style={{ textAlign: "center" }}>
@@ -517,6 +530,9 @@ function Products() {
                                   onClick={() =>
                                     onRestore(deletedRow._id, deletedRow)
                                   }
+                                  className={`${
+                                    restoreClicked ? "pointer-events-none" : ""
+                                  }`}
                                 >
                                   <TbRestore />
                                 </IconButton>
