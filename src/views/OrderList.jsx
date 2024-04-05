@@ -50,11 +50,13 @@ function OrderList() {
           orderStatus,
         } = order;
 
+        const userName = user ? user.email : "Deleted User";
+
         const productNames = products.map((product) => product.productName);
 
         return {
           orderId,
-          userName: user.email,
+          userName,
           productName: capitalize(productNames.join(", ")),
           transactionId,
           date: date.slice(0, 10),
@@ -68,7 +70,7 @@ function OrderList() {
       // console.log(orderDetails);
     } catch (error) {
       setLoading(false);
-      console.error("error fetching orders");
+      console.error("error fetching orders", error);
     }
   };
 

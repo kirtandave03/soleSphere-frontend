@@ -233,10 +233,12 @@ function EditProductPage() {
             </Alert>
           )}
           <div className="flex flex-col h-screen bg-main-bg bg-cover">
-            <TopBar />
+            {/* <TopBar /> */}
             <div className="flex flex-grow">
-              <Navbar />
-              <div className="p-4 pt-0 w-full">
+              <div className="fixed">
+                <Navbar />
+              </div>
+              <div className="ml-[20vh] p-4 pt-0 w-full">
                 <h1 className="font-bold text-lg ml-4 mb-4">Edit Product</h1>
                 <div className="pl-6 bg-white shadow pr-3 py-3">
                   <form onSubmit={handleSubmit(onSubmit)}>

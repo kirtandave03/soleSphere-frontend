@@ -6,8 +6,8 @@ import { loginOtp } from "../services/auth.service";
 const VerifyOTP = () => {
   const email = useSelector((state) => state.email);
   const password = useSelector((state) => state.password);
-  console.log(email);
-  console.log(password);
+  // console.log(email);
+  // console.log(password);
   return (
     <Otp
       email={email}

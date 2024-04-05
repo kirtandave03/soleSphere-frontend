@@ -1,7 +1,7 @@
 import { jsonAxiosInstance } from "./common/axiosInstances";
 
-export const getStats = async () => {
-  const url = "/admin/dashboard/";
+export const getStats = async (rowsPerPage, page) => {
+  const url = `/admin/dashboard/?limit=${rowsPerPage}&page=${page}`;
 
   return new Promise((resolve, reject) => {
     jsonAxiosInstance

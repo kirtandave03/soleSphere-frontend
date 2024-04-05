@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../layouts/Navbar";
 import TopBar from "../layouts/TopBar";
 import { HiMiniUsers } from "react-icons/hi2";
@@ -22,6 +23,7 @@ import {
 } from "@mui/material";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalSales, setTotalSales] = useState(0);
@@ -32,6 +34,8 @@ function Dashboard() {
   const [dataset, setDataset] = useState([]);
   const [selectedYear, setSelectedYear] = useState("");
   const [loading, setLoading] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState(0);
   const [columns, setColumns] = useState([
     "Image",
     "Product ID",
@@ -45,8 +49,8 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await getStats();
-        console.log(response.data.data.mostSoldProducts);
+        const response = await getStats(rowsPerPage, page);
+        // console.log(response.data.data.mostSoldProducts);
 
         if (response.status === 200) {
           setTotalUsers(response.data.data.totalActiveUsers);
@@ -73,7 +77,7 @@ function Dashboard() {
     };
 
     fetchData();
-  }, []);
+  }, [rowsPerPage, page]);
 
   const chartSetting = {
     yAxis: [
@@ -89,6 +93,24 @@ function Dashboard() {
       },
     },
   };
+
+  function getMonthName(monthNumber) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    return months[monthNumber - 1];
+  }
 
   useEffect(() => {
     const selectedYearData = totalRevenue.find(
@@ -119,25 +141,17 @@ function Dashboard() {
     setDataset(dataset);
   }, [selectedYear, totalRevenue]);
 
-  function getMonthName(monthNumber) {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    return months[monthNumber - 1];
-  }
-
   const valueFormatter = (value) => `${value}Rs.`;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage);
+    setPage(page);
+  };
 
   return (
     <>
@@ -172,21 +186,27 @@ function Dashboard() {
               {/* <h1 className="font-bold mx-2 mb-2 text-lg">Dashboard</h1> */}
               <div className="flex flex-col justify-center items-center">
                 <div className="w-11/12 flex justify-between gap-8 text-lg">
-                  <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
+                  <div
+                    className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7 cursor-pointer hover:shadow-lg"
+                    onClick={() => navigate("/users")}
+                  >
                     <div>
                       <p className="">Total Users</p>
                       <p className="font-semibold">{totalUsers}</p>
                     </div>
-                    <div className="bg-[#b8b7fc] p-2 rounded-xl">
+                    <div className="bg-[#b8b7fc] p-2 rounded-xl shadow-md">
                       <HiMiniUsers className="w-7 h-7 text-[#8280ff] rounded-lg" />
                     </div>
                   </div>
-                  <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
+                  <div
+                    className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7 cursor-pointer hover:shadow-lg"
+                    onClick={() => navigate("/orders")}
+                  >
                     <div>
                       <p className="">Total Orders</p>
                       <p className="font-semibold">{totalOrders}</p>
                     </div>
-                    <div className="bg-[#ffe098] p-2 rounded-xl">
+                    <div className="bg-[#ffe098] p-2 rounded-xl shadow-md">
                       <IoCube className="w-7 h-7 text-[#fec53d] rounded-lg" />
                     </div>
                   </div>
@@ -195,11 +215,14 @@ function Dashboard() {
                       <p className="">Total Revenue</p>
                       <p className="font-semibold">₹{totalSales}</p>
                     </div>
-                    <div className="bg-[#beffdf] p-2 rounded-xl">
+                    <div className="bg-[#beffdf] p-2 rounded-xl shadow-md">
                       <FaChartLine className="w-7 h-7 text-[#4ad991] rounded-lg" />
                     </div>
                   </div>
-                  <div className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7">
+                  <div
+                    className="bg-white py-5 px-7 flex justify-center items-center rounded-md shadow-md gap-7 cursor-pointer hover:shadow-lg"
+                    onClick={() => navigate("/orders")}
+                  >
                     <div>
                       <p className="">
                         Total Pending
@@ -207,7 +230,7 @@ function Dashboard() {
                       </p>
                       <p className="font-semibold">{totalPendingOrders}</p>
                     </div>
-                    <div className="bg-[#ffbca4] p-2 rounded-xl">
+                    <div className="bg-[#ffbca4] p-2 rounded-xl shadow-md">
                       <FaClockRotateLeft className="w-7 h-7 text-[#ff9066] rounded-lg" />
                     </div>
                   </div>
@@ -220,13 +243,13 @@ function Dashboard() {
                       Total Sales: ₹{yearlyRevenue}
                     </div>
                     <select
-                      className="absolute top-2 right-2 bg-white border border-gray-300 px-3 py-1 rounded-md"
+                      className="absolute top-2 right-2 bg-white border border-gray-300 px-3 py-1 rounded-md z-30"
                       onChange={(e) =>
                         setSelectedYear(parseInt(e.target.value))
                       }
                       value={selectedYear}
                     >
-                      <option value="">Select Year</option>
+                      {/* <option value={selectedYear}>{selectedYear}</option> */}
                       {totalRevenue.map((yearData) => (
                         <option key={yearData._id} value={yearData._id}>
                           {yearData._id}
@@ -312,15 +335,17 @@ function Dashboard() {
                       ))}
                     </TableBody>
                   </Table>
-                  {/* <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={orderDetails.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={(event, newPage) => handleChangePage(newPage)}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              /> */}
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10]}
+                    component="div"
+                    count={10}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={(event, newPage) =>
+                      handleChangePage(event, newPage)
+                    }
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
                 </TableContainer>
               </div>
             </div>
