@@ -311,6 +311,8 @@ const Users = () => {
                                     alt="user Image"
                                     style={{
                                       maxWidth: "50px",
+                                      width: "50px", // Ensure the width is fixed to maintain a circular shape
+                                      height: "50px", // Ensure the height is fixed to maintain a circular shape
                                     }}
                                   />
                                 </TableCell>
