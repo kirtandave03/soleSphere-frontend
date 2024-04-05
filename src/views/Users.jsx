@@ -41,6 +41,7 @@ const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchQueryDeleted, setSearchQueryDeleted] = useState("");
   const [loading, setLoading] = useState(false);
+  const [firstTime, setFirstTime] = useState(true);
 
   const [restoreSuccess, setRestoreSuccess] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
@@ -77,6 +78,10 @@ const Users = () => {
 
   const fetchDeletedUsers = async () => {
     try {
+      if (firstTime) {
+        setLoading(true);
+        setFirstTime(false);
+      }
       const response = await getDeletedUsers(
         searchQueryDeleted,
         rowsPerPageForDeleted,
@@ -84,7 +89,9 @@ const Users = () => {
       );
       setTotalDeletedCount(response.data.data.totalDeletedCount);
       setDeletedUsers(response.data.data.deletedUsers);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       alert("Error while fetching Deleted Users");
     }
   };

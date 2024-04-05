@@ -49,7 +49,7 @@ const Navbar = () => {
 
   return (
     <div
-      className=" top-0 left-0 h-full w-[10vw] flex min-w-[10vw] "
+      className="left-0 h-full w-[10vw] flex min-w-[10vw] "
       style={{ position: "sticky", top: 0 }}
     >
       <div className="flex flex-col bg-white text-black ">
