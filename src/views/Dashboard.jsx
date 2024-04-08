@@ -335,7 +335,7 @@ function Dashboard() {
                   <TablePagination
                     rowsPerPageOptions={[5, 10]}
                     component="div"
-                    count={10}
+                    count={products.length >= 10 ? 10 : products.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={(event, newPage) =>
