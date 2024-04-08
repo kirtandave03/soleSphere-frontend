@@ -93,19 +93,19 @@ function Login() {
     }
   };
 
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.key === "Enter") {
-        onSubmit();
-      }
-    };
+  // useEffect(() => {
+  //   const handleKeyPress = (event) => {
+  //     if (event.key === "Enter") {
+  //       onSubmit();
+  //     }
+  //   };
 
-    document.addEventListener("keydown", handleKeyPress);
+  //   document.addEventListener("keydown", handleKeyPress);
 
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [onSubmit]);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyPress);
+  //   };
+  // }, [onSubmit]);
 
   useEffect(() => {
     let timer;
