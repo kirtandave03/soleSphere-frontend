@@ -7,7 +7,9 @@ import { fileUpload } from "../services/fileupload.service";
 import { addVariant, getAllProducts } from "../services/product.service";
 import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
 import Alert from "@mui/material/Alert";
+import { TbListSearch } from "react-icons/tb";
 import animationData from "../utils/loading.json";
+import capitalize from "../utils/capitalize";
 const AddVariants = () => {
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
@@ -34,6 +36,7 @@ const AddVariants = () => {
     handleSubmit,
     setError,
     clearErrors,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -48,8 +51,10 @@ const AddVariants = () => {
   };
 
   const GetAllProducts = async () => {
-    const response = await getAllProducts(0, 0, query);
-    setFilteredProducts(response.data.data.products);
+    const response = await getAllProducts(query);
+    console.log(query);
+    setFilteredProducts(response.data.data);
+    console.log(filteredProducts);
   };
 
   useEffect(() => {
@@ -136,8 +141,13 @@ const AddVariants = () => {
     try {
       var response = await addVariant(variant);
       if (response.status === 200) {
+        reset();
         setSubmitSuccess(true);
         setLoading(false);
+        setIsUploaded(false);
+        setUploadSuccess(false);
+        setisDisabled(true);
+        setSelectedProduct("");
       }
     } catch (error) {
       setLoading(false);
@@ -229,6 +239,12 @@ const AddVariants = () => {
     serverError,
     wentWrong,
   ]);
+
+  // const handleClick = (e) => {
+  //   setSelectedProduct(e.target.value);
+  //   setQuery(selectedProduct);
+  //   setProducts(filteredProducts);
+  // };
   return (
     <>
       {loading ? (
@@ -359,6 +375,7 @@ const AddVariants = () => {
                           >
                             Product Name
                           </label>
+
                           <input
                             className="mx-2 border w-[30vw] border-black rounded-lg"
                             type="text"
@@ -366,7 +383,7 @@ const AddVariants = () => {
                             {...register("productName", {
                               required: {
                                 value: true,
-                                message: "This field is required ",
+                                message: "Product Name is required ",
                               },
                             })}
                             value={selectedProduct}
@@ -374,6 +391,16 @@ const AddVariants = () => {
                               handleInputChange(e);
                             }}
                           />
+                          {/* <div className="flex justify-center items-center">
+                              <button
+                                type="button"
+                                className="py-3"
+                                onClick={handleClick}
+                              >
+                                <TbListSearch className="text-2xl " />
+                              </button>
+                            </div> */}
+
                           <div className="font-light text-base mt-1 mb-1">
                             (At least 3 characters)*
                           </div>
@@ -386,7 +413,7 @@ const AddVariants = () => {
                                   handleOptionClick(item.productName)
                                 }
                               >
-                                {item.productName}
+                                {capitalize(item.productName)}
                               </li>
                             ))}
                           </ul>
@@ -506,6 +533,11 @@ const AddVariants = () => {
                               value: /^[0-9]\d*\.?\d+$/,
                               message: "Please enter a positive number",
                             },
+                            validate: {
+                              min: (value) =>
+                                parseInt(value) >= 1 ||
+                                "Value must be at least 1",
+                            },
                           })} // Adding required validation rule
                           type="text"
                           onSubmit={(e) =>
@@ -527,6 +559,11 @@ const AddVariants = () => {
                             pattern: {
                               value: /^[0-9]\d*\.?\d+$/,
                               message: "Please enter a positive number",
+                            },
+                            validate: {
+                              min: (value) =>
+                                parseInt(value) >= 1 ||
+                                "Value must be at least 1",
                             },
                           })} // Adding required validation rule
                           onSubmit={(e) =>

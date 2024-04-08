@@ -95,6 +95,7 @@ const AddProducts = () => {
     register,
     handleSubmit,
     control,
+    reset,
     setError,
     clearErrors,
     watch,
@@ -148,6 +149,9 @@ const AddProducts = () => {
       if (response.status === 200) {
         setSubmitSuccess(true);
         setLoading(false);
+        setisDisabled(true);
+        setIsUploaded(false);
+        reset();
       }
     } catch (error) {
       setLoading(false);
@@ -268,7 +272,7 @@ const AddProducts = () => {
         <div>
           {uploadSuccess && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 40 }}
               severity="success"
               className="w-full"
               onClose={() => {
@@ -280,7 +284,7 @@ const AddProducts = () => {
           )}
           {submitSuccess && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 40 }}
               severity="success"
               className="w-full"
               onClose={() => {
@@ -292,7 +296,7 @@ const AddProducts = () => {
           )}
           {uploadFail && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 40 }}
               severity="error"
               className="w-full"
               onClose={() => {
@@ -304,7 +308,7 @@ const AddProducts = () => {
           )}
           {wentWrong && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 40 }}
               severity="error"
               className="w-full"
               onClose={() => {
@@ -316,7 +320,7 @@ const AddProducts = () => {
           )}
           {productExists && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 40 }}
               severity="error"
               className="w-full"
               onClose={() => {
@@ -328,7 +332,7 @@ const AddProducts = () => {
           )}
           {notFound && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 40 }}
               severity="error"
               className="w-full"
               onClose={() => {
@@ -340,7 +344,7 @@ const AddProducts = () => {
           )}
           {serverError && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 40 }}
               severity="error"
               className="w-full"
               onClose={() => {
@@ -383,6 +387,11 @@ const AddProducts = () => {
                                     value: true,
                                     message: "This field is required ",
                                   },
+                                  pattern: {
+                                    value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
+                                    message:
+                                      "Only one space is allowed between words, and no leading or trailing spaces are permitted.",
+                                  },
                                   minLength: {
                                     value: 3,
                                     message:
@@ -407,9 +416,8 @@ const AddProducts = () => {
                               )}
 
                               <label className="font-light" htmlFor="shortDesc">
-                                Short Description{" "}
+                                Short Description
                                 <span>
-                                  {" "}
                                   (
                                   {shortDescription
                                     ? shortDescription.length
@@ -426,6 +434,11 @@ const AddProducts = () => {
                                   required: {
                                     value: true,
                                     message: "This field is required ",
+                                  },
+                                  pattern: {
+                                    value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
+                                    message:
+                                      "Only one space is allowed between words, and no leading or trailing spaces are permitted.",
                                   },
                                   minLength: {
                                     value: 75,
@@ -636,7 +649,6 @@ const AddProducts = () => {
                             >
                               Long Description
                               <span>
-                                {" "}
                                 ({longDescription ? longDescription.length : 0}
                                 /600)
                               </span>
@@ -650,6 +662,11 @@ const AddProducts = () => {
                                 required: {
                                   value: true,
                                   message: "This field is required ",
+                                },
+                                pattern: {
+                                  value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
+                                  message:
+                                    "Only one space is allowed between words, and no leading or trailing spaces are permitted.",
                                 },
                                 minLength: {
                                   value: 75,
@@ -791,7 +808,7 @@ const AddProducts = () => {
                               message: "these fields are required",
                             },
                             pattern: {
-                              value: /^[1-9]\d*$/,
+                              value: /^[0-9]\d*$/,
                               message: "Validation violated ",
                             },
                             validate: {
@@ -909,7 +926,7 @@ const AddProducts = () => {
                   </button>
 
                   <input
-                    disabled={isDisabled || isSubmitting}
+                    disabled={isSubmitting}
                     type="submit"
                     value="Add Product"
                     className="cursor-pointer disabled:opacity-50 m-2 rounded-lg button bg-blue-500 p-2 text-white w-full"

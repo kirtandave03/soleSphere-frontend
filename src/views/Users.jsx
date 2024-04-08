@@ -196,7 +196,7 @@ const Users = () => {
         <div>
           {deleteSuccess && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 20 }}
               severity="success"
               className="w-full"
               onClose={() => {
@@ -208,7 +208,7 @@ const Users = () => {
           )}
           {restoreSuccess && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", zIndex: 20 }}
               severity="success"
               className="w-full"
               onClose={() => {
@@ -222,7 +222,7 @@ const Users = () => {
             {/* <TopBar /> */}
             <div className="flex">
               <Navbar />
-              <div className="w-[80vw] flex flex-col mt-[6vh]">
+              <div className="w-[88vw] flex flex-col mt-[6vh]">
                 <div className="flex justify-center items-center">
                   <div>
                     <h1 className="p-1 font-bold text-2xl">Users</h1>
@@ -363,7 +363,7 @@ const Users = () => {
                   </div>
                 </div>
 
-                <div className="w-[80vw] flex flex-col">
+                <div className="w-[88vw] flex flex-col">
                   <div className="flex justify-center items-center">
                     <div>
                       <h1 className="font-bold  text-2xl">Deleted Users</h1>
@@ -463,7 +463,10 @@ const Users = () => {
                                       <TableCell
                                         style={{ textAlign: "center" }}
                                       >
-                                        {index + 1 + page * rowsPerPage}
+                                        {index +
+                                          1 +
+                                          pageForDeleted *
+                                            rowsPerPageForDeleted}
                                       </TableCell>
                                       <TableCell
                                         style={{
