@@ -49,7 +49,7 @@ export const getDeletedProducts = async (
   rowsPerPageForDeleted,
   searchDeletedQuery
 ) => {
-  const url = `/products/all-products?deleted=true&page=${pageForDeleted}&limit=${rowsPerPageForDeleted}&q=${searchDeletedQuery}`;
+  const url = `products/all-deleted-products?page=${pageForDeleted}&limit=${rowsPerPageForDeleted}&search=${searchDeletedQuery}`;
 
   return new Promise((resolve, reject) => {
     jsonAxiosInstance

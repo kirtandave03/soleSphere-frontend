@@ -46,36 +46,45 @@ function Dashboard() {
   ]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getStats(rowsPerPage, page);
-        // console.log(response.data.data.mostSoldProducts);
+    // Check if auth-token exists in localStorage
+    const authToken = localStorage.getItem("auth-token");
+    if (!authToken) {
+      // Redirect to login page if auth-token does not exist
+      navigate("/login"); // Adjust the route based on your application
+    }
+  }, []);
 
-        if (response.status === 200) {
-          setTotalUsers(response.data.data.totalActiveUsers);
-          setTotalOrders(response.data.data.totalOrders);
-          setTotalSales(response.data.data.totalSales);
-          setTotalPendingOrders(response.data.data.totalPendingOrders);
-          setTotalRevenue(response.data.data.totalRevenue);
-          setProducts(response.data.data.mostSoldProducts);
-          setLoading(false);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await getStats(rowsPerPage, page);
+      // console.log(response.data.data.mostSoldProducts);
 
-          if (response.data.data.totalRevenue.length > 0) {
-            setSelectedYear(response.data.data.totalRevenue[0]._id);
-            setYearlyRevenue(
-              response.data.data.totalRevenue[0].totalYearlyRevenue
-            );
-          }
-        }
-      } catch (error) {
+      if (response.status === 200) {
+        setTotalUsers(response.data.data.totalActiveUsers);
+        setTotalOrders(response.data.data.totalOrders);
+        setTotalSales(response.data.data.totalSales);
+        setTotalPendingOrders(response.data.data.totalPendingOrders);
+        setTotalRevenue(response.data.data.totalRevenue);
+        setProducts(response.data.data.mostSoldProducts);
         setLoading(false);
-        if (error?.response) {
-          alert("Something went wrong while fetching stats");
+
+        if (response.data.data.totalRevenue.length > 0) {
+          setSelectedYear(response.data.data.totalRevenue[0]._id);
+          setYearlyRevenue(
+            response.data.data.totalRevenue[0].totalYearlyRevenue
+          );
         }
       }
-    };
+    } catch (error) {
+      setLoading(false);
+      if (error?.response) {
+        alert("Something went wrong while fetching stats");
+      }
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [rowsPerPage, page]);
 
@@ -150,7 +159,11 @@ function Dashboard() {
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
-    setPage(page);
+    setPage(0);
+  };
+
+  const handleClick = (productId) => {
+    navigate(`/edit-product/${productId}`);
   };
 
   return (
@@ -286,10 +299,7 @@ function Dashboard() {
                     <TableHead>
                       <TableRow>
                         {columns.map((column, index) => (
-                          <TableCell
-                            key={index}
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
+                          <TableCell key={index} style={{ fontWeight: "600" }}>
                             {column}
                           </TableCell>
                         ))}
@@ -300,9 +310,10 @@ function Dashboard() {
                       {products.map((row, rowIndex) => (
                         <TableRow
                           key={rowIndex}
-                          onClick={() => handleClick(row.orderId)}
+                          onClick={() => handleClick(row._id)}
+                          className="cursor-pointer"
                         >
-                          <TableCell style={{ textAlign: "center" }}>
+                          <TableCell>
                             <img
                               src={row.image_url[0][0]}
                               alt="Product Image"
@@ -312,25 +323,11 @@ function Dashboard() {
                               }}
                             />
                           </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {row._id}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.productName)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.category[0])}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.brand[0])}
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              textAlign: "center",
-                            }}
-                          >
-                            {row.totalQuantity}
-                          </TableCell>
+                          <TableCell>{row._id}</TableCell>
+                          <TableCell>{capitalize(row.productName)}</TableCell>
+                          <TableCell>{capitalize(row.category[0])}</TableCell>
+                          <TableCell>{capitalize(row.brand[0])}</TableCell>
+                          <TableCell>{row.totalQuantity}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

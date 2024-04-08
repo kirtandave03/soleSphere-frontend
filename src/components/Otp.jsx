@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,7 +26,7 @@ const Otp = ({
   const [resendFailure, setResendFailure] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [timerInterval, setTimerInterval] = useState(null); // State variable to hold the reference of the timer interval
+  const [timerInterval, setTimerInterval] = useState(null);
 
   const handleOTPchange = (event) => {
     setOTP(event.target.value);
@@ -47,7 +46,11 @@ const Otp = ({
 
       if (response.status === status) {
         setLoading(false);
-        localStorage.setItem("auth-token", response.data.data.accessToken);
+        status === 201 &&
+          (await localStorage.setItem(
+            "auth-token",
+            response.data.data.accessToken
+          ));
         await navigate(`${navigation}`);
       }
     } catch (error) {
