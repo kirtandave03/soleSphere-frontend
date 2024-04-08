@@ -162,6 +162,10 @@ function Dashboard() {
     setPage(0);
   };
 
+  const handleClick = (productId) => {
+    navigate(`/edit-product/${productId}`);
+  };
+
   return (
     <>
       {loading ? (
@@ -295,10 +299,7 @@ function Dashboard() {
                     <TableHead>
                       <TableRow>
                         {columns.map((column, index) => (
-                          <TableCell
-                            key={index}
-                            style={{ fontWeight: "600", textAlign: "center" }}
-                          >
+                          <TableCell key={index} style={{ fontWeight: "600" }}>
                             {column}
                           </TableCell>
                         ))}
@@ -309,9 +310,10 @@ function Dashboard() {
                       {products.map((row, rowIndex) => (
                         <TableRow
                           key={rowIndex}
-                          onClick={() => handleClick(row.orderId)}
+                          onClick={() => handleClick(row._id)}
+                          className="cursor-pointer"
                         >
-                          <TableCell style={{ textAlign: "center" }}>
+                          <TableCell>
                             <img
                               src={row.image_url[0][0]}
                               alt="Product Image"
@@ -321,25 +323,11 @@ function Dashboard() {
                               }}
                             />
                           </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {row._id}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.productName)}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.category[0])}
-                          </TableCell>
-                          <TableCell style={{ textAlign: "center" }}>
-                            {capitalize(row.brand[0])}
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              textAlign: "center",
-                            }}
-                          >
-                            {row.totalQuantity}
-                          </TableCell>
+                          <TableCell>{row._id}</TableCell>
+                          <TableCell>{capitalize(row.productName)}</TableCell>
+                          <TableCell>{capitalize(row.category[0])}</TableCell>
+                          <TableCell>{capitalize(row.brand[0])}</TableCell>
+                          <TableCell>{row.totalQuantity}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
