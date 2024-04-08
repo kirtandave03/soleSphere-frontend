@@ -66,6 +66,7 @@ function EditProductPage() {
     category: "",
     brand: "",
     variant: [],
+    review: [],
   });
 
   const fetchData = async () => {
@@ -92,6 +93,7 @@ function EditProductPage() {
         category: product.category.category,
         brand: product.brand.brand,
         variant: product.variants,
+        review: product.review,
       });
 
       setValue("productName", capitalize(product.productName));
@@ -104,6 +106,7 @@ function EditProductPage() {
       setValue("category", product.category.category);
       setValue("brand", product.brand.brand);
       setValue("variants", product.variants);
+      setValue("review", product.review);
 
       setCategories(categories);
       setBrands(brands);
@@ -222,7 +225,7 @@ function EditProductPage() {
         <div>
           {showAlert && (
             <Alert
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", width: "87.7vw", right: "0" }}
               severity="success"
               className="w-full"
               onClose={() => {
@@ -256,6 +259,11 @@ function EditProductPage() {
                           type="text"
                           {...register("productName", {
                             required: "Product name is required",
+                            pattern: {
+                              value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
+                              message:
+                                "Only one space is allowed between words, and no leading or trailing spaces are permitted.",
+                            },
                             minLength: {
                               value: 3,
                               message:
@@ -493,6 +501,35 @@ function EditProductPage() {
                         </select>
                       </div>
                     </div>
+                    {productData.review.length > 0 && (
+                      <div>
+                        <h2 className="font-semibold text-center mb-2">
+                          Reviews
+                        </h2>
+                        <div className="flex flex-col mt-2">
+                          {productData.review.map((review, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-row items-center mb-4"
+                            >
+                              <div className="w-10 h-10 rounded-full overflow-hidden">
+                                <img
+                                  src={review.user.profilePic}
+                                  alt="profilePic"
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div className="ml-4">
+                                <p className="font-semibold">
+                                  {capitalize(review.user.username)}
+                                </p>
+                                <p>{review.review}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     <div className="flex flex-col flex-wrap mb-4 mt-4">
                       <div className="">
                         <h2 className="font-semibold text-center mb-2">
