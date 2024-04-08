@@ -10,8 +10,10 @@ export const getProducts = async (page, rowsPerPage, searchQuery) => {
       .catch((err) => reject(err));
   });
 };
-export const getAllProducts = async (page, rowsPerPage, searchQuery) => {
-  const url = `/products/all-products?page=${page}&limit=${rowsPerPage}&search=${searchQuery}`;
+
+export const getAllProducts = async (searchQuery) => {
+  // const url = `/products/all-products?page=${page}&limit=${rowsPerPage}&q=${searchQuery}`;
+  const url = `/products/all-products?search=${searchQuery}`;
 
   return new Promise((resolve, reject) => {
     jsonAxiosInstance
