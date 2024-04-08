@@ -159,7 +159,7 @@ function Dashboard() {
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
-    setPage(page);
+    setPage(0);
   };
 
   return (

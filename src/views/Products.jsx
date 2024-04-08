@@ -185,13 +185,13 @@ function Products() {
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
-    setPage(page);
+    setPage(0);
   };
 
   const handleChangeRowsPerPageForDeleted = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPageForDeleted(newRowsPerPage);
-    setPageForDeleted(pageForDeleted);
+    setPageForDeleted(0);
   };
 
   const onEdit = (productId) => {
