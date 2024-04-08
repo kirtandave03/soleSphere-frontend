@@ -46,36 +46,45 @@ function Dashboard() {
   ]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getStats(rowsPerPage, page);
-        // console.log(response.data.data.mostSoldProducts);
+    // Check if auth-token exists in localStorage
+    const authToken = localStorage.getItem("auth-token");
+    if (!authToken) {
+      // Redirect to login page if auth-token does not exist
+      navigate("/login"); // Adjust the route based on your application
+    }
+  }, []);
 
-        if (response.status === 200) {
-          setTotalUsers(response.data.data.totalActiveUsers);
-          setTotalOrders(response.data.data.totalOrders);
-          setTotalSales(response.data.data.totalSales);
-          setTotalPendingOrders(response.data.data.totalPendingOrders);
-          setTotalRevenue(response.data.data.totalRevenue);
-          setProducts(response.data.data.mostSoldProducts);
-          setLoading(false);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await getStats(rowsPerPage, page);
+      // console.log(response.data.data.mostSoldProducts);
 
-          if (response.data.data.totalRevenue.length > 0) {
-            setSelectedYear(response.data.data.totalRevenue[0]._id);
-            setYearlyRevenue(
-              response.data.data.totalRevenue[0].totalYearlyRevenue
-            );
-          }
-        }
-      } catch (error) {
+      if (response.status === 200) {
+        setTotalUsers(response.data.data.totalActiveUsers);
+        setTotalOrders(response.data.data.totalOrders);
+        setTotalSales(response.data.data.totalSales);
+        setTotalPendingOrders(response.data.data.totalPendingOrders);
+        setTotalRevenue(response.data.data.totalRevenue);
+        setProducts(response.data.data.mostSoldProducts);
         setLoading(false);
-        if (error?.response) {
-          alert("Something went wrong while fetching stats");
+
+        if (response.data.data.totalRevenue.length > 0) {
+          setSelectedYear(response.data.data.totalRevenue[0]._id);
+          setYearlyRevenue(
+            response.data.data.totalRevenue[0].totalYearlyRevenue
+          );
         }
       }
-    };
+    } catch (error) {
+      setLoading(false);
+      if (error?.response) {
+        alert("Something went wrong while fetching stats");
+      }
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [rowsPerPage, page]);
 
