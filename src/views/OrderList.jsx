@@ -186,8 +186,8 @@ function OrderList() {
                                 textAlign: "center",
                                 borderRadius: "1rem",
                                 color:
-                                  row.orderStatus === "Completed"
-                                    ? "rgb(22 163 74)"
+                                  row.orderStatus === "Delivered"
+                                    ? "#16A34A"
                                     : row.orderStatus === "Pending"
                                     ? "#F89A00"
                                     : "#F00010",
