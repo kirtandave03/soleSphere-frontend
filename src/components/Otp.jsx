@@ -27,6 +27,7 @@ const Otp = ({
   const [resendFailure, setResendFailure] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [timerInterval, setTimerInterval] = useState(null); // State variable to hold the reference of the timer interval
 
   const handleOTPchange = (event) => {
     setOTP(event.target.value);
@@ -41,28 +42,19 @@ const Otp = ({
     const data = { email, otp: OTP };
 
     try {
-      // console.log(OTP);
-      // console.log(email);
       setLoading(true);
       const response = await service(data);
 
-      // console.log(response.status);
-      // console.log(response);
-
       if (response.status === status) {
         setLoading(false);
-        status === 201 &&
-          localStorage.setItem("auth-token", response.data.data.accessToken);
-        // console.log(response.data.data.accessToken);
+        localStorage.setItem("auth-token", response.data.data.accessToken);
         await navigate(`${navigation}`);
-        // console.log("it worked");
       }
     } catch (error) {
       setLoading(false);
       if (error) {
         setIncorrectOTP(true);
         setIsSubmitted(false);
-        console.log(incorrectOTP, isSubmitted);
       }
       console.error(error);
     }
@@ -73,22 +65,29 @@ const Otp = ({
       setLoading(true);
       const response = await getNewOtp({ email });
 
-      // console.log(response);
-
       if (response.status === 201) {
         setLoading(false);
         setResendSuccess(true);
         navigate(`${resendNavigation}`);
         setTimer(90);
         setDisabled(true);
+
+        // Clear the previous interval before starting a new one
+        clearInterval(timerInterval);
+
         const countdown = setInterval(() => {
-          setTimer((prevTimer) => prevTimer - 1);
+          setTimer((prevTimer) => {
+            if (prevTimer > 0) {
+              return prevTimer - 1;
+            } else {
+              clearInterval(countdown); // Clear the interval when timer reaches 0
+              setDisabled(false);
+              return 0;
+            }
+          });
         }, 1000);
 
-        setTimeout(() => {
-          clearInterval(countdown);
-          setDisabled(false);
-        }, 90000);
+        setTimerInterval(countdown); // Save the new interval reference
       }
     } catch (error) {
       setLoading(false);
@@ -120,7 +119,7 @@ const Otp = ({
     setDisabled(true);
     const countdown = setInterval(() => {
       setTimer((prevTimer) => {
-        if (prevTimer >= 0) {
+        if (prevTimer > 0) {
           return prevTimer - 1;
         } else {
           clearInterval(countdown);
