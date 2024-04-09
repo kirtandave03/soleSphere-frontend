@@ -195,7 +195,7 @@ function Dashboard() {
             <div className="fixed">
               <Navbar />
             </div>
-            <div className="ml-[21vh] mt-8 flex-grow flex flex-col">
+            <div className="ml-[24vh] mt-8 flex-grow flex flex-col">
               {/* <h1 className="font-bold mx-2 mb-2 text-lg">Dashboard</h1> */}
               <div className="flex flex-col justify-center items-center">
                 <div className="w-11/12 flex justify-between gap-8 text-lg">

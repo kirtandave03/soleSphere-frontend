@@ -6,15 +6,7 @@ import { getNewOtp } from "../services/auth.service";
 import Lottie from "lottie-react-web";
 import animationData from "../utils/loading.json";
 
-const Otp = ({
-  email,
-  password,
-  text,
-  service,
-  navigation,
-  status,
-  resendNavigation,
-}) => {
+const Otp = ({ email, password, text, service, navigation, status }) => {
   const [OTP, setOTP] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [incorrectOTP, setIncorrectOTP] = useState(false);
@@ -71,11 +63,10 @@ const Otp = ({
       if (response.status === 201) {
         setLoading(false);
         setResendSuccess(true);
-        navigate(`${resendNavigation}`);
+        navigate(window.location.pathname);
         setTimer(90);
         setDisabled(true);
 
-        // Clear the previous interval before starting a new one
         clearInterval(timerInterval);
 
         const countdown = setInterval(() => {
@@ -83,14 +74,14 @@ const Otp = ({
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
-              clearInterval(countdown); // Clear the interval when timer reaches 0
+              clearInterval(countdown);
               setDisabled(false);
               return 0;
             }
           });
         }, 1000);
 
-        setTimerInterval(countdown); // Save the new interval reference
+        setTimerInterval(countdown);
       }
     } catch (error) {
       setLoading(false);

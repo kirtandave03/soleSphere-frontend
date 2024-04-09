@@ -514,7 +514,7 @@ function AddCategoriesAndBrands() {
               <div className="fixed">
                 <Navbar />
               </div>
-              <div className="ml-[10vw] flex-grow flex flex-col justify-center">
+              <div className="ml-[12vw] flex-grow flex flex-col justify-center">
                 <div className="p-4">
                   <h1 className="font-bold mb-4 text-lg text-center">
                     Categories and Brands

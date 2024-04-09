@@ -16,7 +16,6 @@ const ForgetPassword = () => {
         service={forgetPasswordOtp}
         navigation="/update-password"
         status={200}
-        resendNavigation="/forget-password"
       />
     </div>
   );

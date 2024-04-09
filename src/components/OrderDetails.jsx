@@ -25,11 +25,35 @@ function OrderDetails({ order, setDetails }) {
         </div>
         <div>
           <h4 className="font-semibold">Payment</h4>
-          <p>{order.paymentStatus}</p>
+          <p
+            className={`${
+              order.paymentStatus === "Captured"
+                ? "text-[#16A34A]"
+                : order.paymentStatus === "Pending"
+                ? "text-[#F89A00]"
+                : order.paymentStatus === "Failed"
+                ? "text-[#F00010]"
+                : "text-[#6fd4f3]"
+            }`}
+          >
+            {order.paymentStatus}
+          </p>
         </div>
         <div>
           <h4 className="font-semibold">Status</h4>
-          <p>{order.orderStatus}</p>
+          <p
+            className={`
+              ${
+                order.orderStatus === "Delivered"
+                  ? "text-[#16A34A]"
+                  : order.orderStatus === "Pending"
+                  ? "text-[#F89A00]"
+                  : "text-[#F00010]"
+              }
+            `}
+          >
+            {order.orderStatus}
+          </p>
         </div>
       </div>
       <hr className="my-2" />
