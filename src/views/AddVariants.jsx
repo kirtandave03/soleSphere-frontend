@@ -52,9 +52,9 @@ const AddVariants = () => {
 
   const GetAllProducts = async () => {
     const response = await getAllProducts(query);
-    console.log(query);
+    // console.log(query);
     setFilteredProducts(response.data.data);
-    console.log(filteredProducts);
+    // console.log(filteredProducts);
   };
 
   useEffect(() => {
@@ -356,7 +356,7 @@ const AddVariants = () => {
           {/* <TopBar /> */}
           <div className="flex gap-4 ">
             <Navbar />
-            <div className="w-[83vw] flex justify-center items-center">
+            <div className="w-[90vw] flex justify-center items-center">
               <div className="flex flex-col">
                 <form action="" onSubmit={handleSubmit(onSubmit)}>
                   <div className="flex mt-[6vh]">
@@ -481,155 +481,162 @@ const AddVariants = () => {
                       </div>
                     </div>
                   </div>
-
-                  <div className="variants ">
-                    <p className="font-bold text-xl my-2">
-                      Add More Sizes
-                      <span className="my-2 font-extralight text-sm">
-                        - Add Size, Actual Price, Discounted Price, Stock
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap">
-                    {inputFields.map((field, index) => (
-                      <div key={field.id} className="flex flex-row mx-2">
-                        <input
-                          {...register(`variants[${index}].size`, {
-                            required: {
-                              value: true,
-                              message: "This field is required",
-                            },
-                            pattern: {
-                              value: /^[0-9]\d*$/,
-                              message: "Validation violated ",
-                            },
-                            validate: {
-                              min: (value) =>
-                                parseInt(value) >= 1 ||
-                                "Value must be at least 1",
-                              max: (value) =>
-                                parseInt(value) <= 48 ||
-                                "Value must be at most 48",
-                            },
-                          })} // Adding required validation rule
-                          type="text"
-                          onSubmit={(e) =>
-                            handleDynamicFieldValidation(
-                              e.target.value,
-                              index,
-                              `size`
-                            )
-                          }
-                          className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                          placeholder="Size"
-                        />
-                        <input
-                          {...register(`variants[${index}].actual_price`, {
-                            required: {
-                              value: true,
-                              message: "This field is required",
-                            },
-                            pattern: {
-                              value: /^[0-9]\d*\.?\d+$/,
-                              message: "Please enter a positive number",
-                            },
-                            validate: {
-                              min: (value) =>
-                                parseInt(value) >= 1 ||
-                                "Value must be at least 1",
-                            },
-                          })} // Adding required validation rule
-                          type="text"
-                          onSubmit={(e) =>
-                            handleDynamicFieldValidation(
-                              e.target.value,
-                              index,
-                              `actual_price`
-                            )
-                          }
-                          className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                          placeholder="Actual Price"
-                        />
-                        <input
-                          {...register(`variants[${index}].discounted_price`, {
-                            required: {
-                              value: true,
-                              message: "This field is required",
-                            },
-                            pattern: {
-                              value: /^[0-9]\d*\.?\d+$/,
-                              message: "Please enter a positive number",
-                            },
-                            validate: {
-                              min: (value) =>
-                                parseInt(value) >= 1 ||
-                                "Value must be at least 1",
-                            },
-                          })} // Adding required validation rule
-                          onSubmit={(e) =>
-                            handleDynamicFieldValidation(
-                              e.target.value,
-                              index,
-                              `discounted_price`
-                            )
-                          }
-                          type="text"
-                          className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                          placeholder="Discounted Price"
-                        />
-                        <input
-                          {...register(`variants[${index}].stock`, {
-                            required: {
-                              value: true,
-                              message: "This field is required",
-                            },
-                            pattern: {
-                              value: /^[0-9]\d*$/,
-                              message:
-                                "Please enter a positive number without decimal points",
-                            },
-                          })} // Adding required validation rule
-                          type="text"
-                          onSubmit={(e) =>
-                            handleDynamicFieldValidation(
-                              e.target.value,
-                              index,
-                              `stock`
-                            )
-                          }
-                          className="border m-2 border-black w-[18vw] p-2 rounded-lg"
-                          placeholder="Stock"
-                        />
-                        {errors.variants &&
-                          errors.variants[index] &&
-                          errors.variants[index].size && (
-                            <div className="text-red-600 text-sm mt-4">
-                              {errors.variants[index].size.message}
-                            </div>
-                          )}
-                      </div>
-                    ))}
-                  </div>
-                  {hasDynamicFieldErrors() && (
-                    <div className="text-red-500 block mx-3">
-                      There are errors in the above dynamic fields. Please fix
-                      them.it can only contain positive numeric values
+                  <div className="w-full">
+                    <div className="variants w-full">
+                      <p className="font-bold text-xl my-2">
+                        Add More Sizes
+                        <span className="my-2 font-extralight text-sm">
+                          - Add Size, Actual Price, Discounted Price, Stock
+                        </span>
+                      </p>
                     </div>
-                  )}
-                  <button
-                    className="button float-right bg-blue-500 p-1 px-2 rounded-md text-white"
-                    type="button"
-                    onClick={addInputFields}
-                  >
-                    Add More Sizes
-                  </button>
+                    <div className="flex flex-wrap justify-between my-3 w-[80vw]">
+                      {inputFields.map((field, index) => (
+                        <div
+                          key={field.id}
+                          className="flex flex-row w-full justify-between"
+                        >
+                          <input
+                            {...register(`variants[${index}].size`, {
+                              required: {
+                                value: true,
+                                message: "This field is required",
+                              },
+                              pattern: {
+                                value: /^[0-9]\d*$/,
+                                message: "Validation violated ",
+                              },
+                              validate: {
+                                min: (value) =>
+                                  parseInt(value) >= 1 ||
+                                  "Value must be at least 1",
+                                max: (value) =>
+                                  parseInt(value) <= 48 ||
+                                  "Value must be at most 48",
+                              },
+                            })} // Adding required validation rule
+                            type="text"
+                            onSubmit={(e) =>
+                              handleDynamicFieldValidation(
+                                e.target.value,
+                                index,
+                                `size`
+                              )
+                            }
+                            className="border border-black w-1/5 my-2 p-2 rounded-lg"
+                            placeholder="Size"
+                          />
+                          <input
+                            {...register(`variants[${index}].actual_price`, {
+                              required: {
+                                value: true,
+                                message: "This field is required",
+                              },
+                              pattern: {
+                                value: /^[0-9]\d*\.?\d+$/,
+                                message: "Please enter a positive number",
+                              },
+                              validate: {
+                                min: (value) =>
+                                  parseInt(value) >= 1 ||
+                                  "Value must be at least 1",
+                              },
+                            })} // Adding required validation rule
+                            type="text"
+                            onSubmit={(e) =>
+                              handleDynamicFieldValidation(
+                                e.target.value,
+                                index,
+                                `actual_price`
+                              )
+                            }
+                            className="border  border-black w-1/5 my-2 p-2 rounded-lg"
+                            placeholder="Actual Price"
+                          />
+                          <input
+                            {...register(
+                              `variants[${index}].discounted_price`,
+                              {
+                                required: {
+                                  value: true,
+                                  message: "This field is required",
+                                },
+                                pattern: {
+                                  value: /^[0-9]\d*\.?\d+$/,
+                                  message: "Please enter a positive number",
+                                },
+                                validate: {
+                                  min: (value) =>
+                                    parseInt(value) >= 1 ||
+                                    "Value must be at least 1",
+                                },
+                              }
+                            )} // Adding required validation rule
+                            onSubmit={(e) =>
+                              handleDynamicFieldValidation(
+                                e.target.value,
+                                index,
+                                `discounted_price`
+                              )
+                            }
+                            type="text"
+                            className="border  border-black w-1/5 my-2 p-2 rounded-lg"
+                            placeholder="Discounted Price"
+                          />
+                          <input
+                            {...register(`variants[${index}].stock`, {
+                              required: {
+                                value: true,
+                                message: "This field is required",
+                              },
+                              pattern: {
+                                value: /^[0-9]\d*$/,
+                                message:
+                                  "Please enter a positive number without decimal points",
+                              },
+                            })} // Adding required validation rule
+                            type="text"
+                            onSubmit={(e) =>
+                              handleDynamicFieldValidation(
+                                e.target.value,
+                                index,
+                                `stock`
+                              )
+                            }
+                            className="border  border-black w-1/5 p-2 my-2 rounded-lg"
+                            placeholder="Stock"
+                          />
+                          {errors.variants &&
+                            errors.variants[index] &&
+                            errors.variants[index].size && (
+                              <div className="text-red-600 text-sm mt-4">
+                                {errors.variants[index].size.message}
+                              </div>
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                    {hasDynamicFieldErrors() && (
+                      <div className="text-red-500 block mx-3">
+                        There are errors in the above dynamic fields. Please fix
+                        them.it can only contain positive numeric values
+                      </div>
+                    )}
+                    <button
+                      className="button float-end bg-blue-500 p-1 px-2 rounded-md text-white"
+                      type="button"
+                      onClick={addInputFields}
+                    >
+                      Add More Sizes
+                    </button>
 
-                  <input
-                    disabled={isDisabled || isSubmitting}
-                    type="submit"
-                    value="Add Variant"
-                    className="cursor-pointer disabled:opacity-50 m-2 rounded-lg button bg-blue-500 p-2 text-white w-full"
-                  />
+                    <input
+                      disabled={isSubmitting}
+                      type="submit"
+                      value="Add Variant"
+                      className="cursor-pointer disabled:opacity-50 my-2 rounded-lg button bg-blue-500 text-white w-full"
+                    />
+                  </div>
                 </form>
               </div>
             </div>
