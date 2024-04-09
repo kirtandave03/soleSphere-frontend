@@ -16,7 +16,6 @@ const VerifyOTP = () => {
       service={loginOtp}
       navigation="/"
       status={201}
-      resendNavigation="/otp"
     />
   );
 };
