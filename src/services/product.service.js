@@ -1,7 +1,7 @@
 import { jsonAxiosInstance } from "./common/axiosInstances";
 
 export const getProducts = async (page, rowsPerPage, searchQuery) => {
-  const url = `/products/search?q=${searchQuery}&page=${page}&limit=${rowsPerPage}`;
+  const url = `/products/search?search=${searchQuery}&page=${page}&limit=${rowsPerPage}`;
 
   return new Promise((resolve, reject) => {
     jsonAxiosInstance
@@ -10,6 +10,7 @@ export const getProducts = async (page, rowsPerPage, searchQuery) => {
       .catch((err) => reject(err));
   });
 };
+
 export const getAllProducts = async (searchQuery) => {
   // const url = `/products/all-products?page=${page}&limit=${rowsPerPage}&q=${searchQuery}`;
   const url = `/products/all-products?search=${searchQuery}`;

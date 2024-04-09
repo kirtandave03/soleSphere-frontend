@@ -201,7 +201,6 @@ function Products() {
   const handleSearch = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    setPage(0);
   };
 
   const handleDeletedSearch = (event) => {
