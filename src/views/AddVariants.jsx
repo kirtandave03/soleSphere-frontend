@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import debounce from "lodash.debounce";
 import TopBar from "../layouts/TopBar";
 import Lottie from "lottie-react-web";
 import Navbar from "../layouts/Navbar";
@@ -12,7 +13,7 @@ import animationData from "../utils/loading.json";
 import capitalize from "../utils/capitalize";
 const AddVariants = () => {
   const [query, setQuery] = useState("");
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -52,20 +53,23 @@ const AddVariants = () => {
 
   const GetAllProducts = async () => {
     const response = await getAllProducts(query);
-    // console.log(query);
     setFilteredProducts(response.data.data);
-    // console.log(filteredProducts);
   };
 
   useEffect(() => {
-    GetAllProducts();
+    if (query.length > 0) {
+      GetAllProducts();
+    } else {
+      setFilteredProducts([]);
+    }
   }, [query]);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
     setSelectedProduct(e.target.value);
-    setProducts(filteredProducts);
   };
+
+  const debouncedInputChange = debounce(handleInputChange, 500);
 
   const handleImages = (e) => {
     setSelectedFiles(e.target.files);
@@ -118,7 +122,8 @@ const AddVariants = () => {
   const handleOptionClick = (productName, productId) => {
     setSelectedProduct(productName);
     setProduct_id(productId);
-    setProducts([]);
+    // setProducts([]);
+    setFilteredProducts([]);
   };
 
   const onSubmit = async (data) => {
@@ -388,7 +393,9 @@ const AddVariants = () => {
                             })}
                             value={selectedProduct}
                             onChange={(e) => {
-                              handleInputChange(e);
+                              // setQuery(e.target.value);
+                              setSelectedProduct(e.target.value);
+                              debouncedInputChange(e);
                             }}
                           />
                           {/* <div className="flex justify-center items-center">
@@ -405,7 +412,7 @@ const AddVariants = () => {
                             (At least 3 characters)*
                           </div>
                           <ul>
-                            {products.map((item, index) => (
+                            {filteredProducts.map((item, index) => (
                               <li
                                 key={index}
                                 className="my-2 border border-b-4 p-2 cursor-pointer"
