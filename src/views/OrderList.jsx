@@ -132,7 +132,7 @@ function OrderList() {
             <div className="fixed">
               <Navbar />
             </div>
-            <div className="ml-[21vh] w-full flex-col">
+            <div className="ml-[24vh] w-full flex-col">
               <div
                 className={`p-4 w-full ${
                   details

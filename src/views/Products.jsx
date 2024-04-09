@@ -238,7 +238,7 @@ function Products() {
             <div className="fixed">
               <Navbar />
             </div>
-            <div className="ml-[20vh] w-[90vw] flex-col">
+            <div className="ml-[24vh] w-[90vw] flex-col">
               <div className="p-4 w-full">
                 <h1 className="font-bold text-lg my-2 ml-4">Products</h1>
                 <div className="relative">

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { BsList, BsX } from "react-icons/bs";
 import { useNavigate, useLocation } from "react-router-dom";
+import { FaClipboardList, FaHome, FaUsers } from "react-icons/fa";
+import { GiConverseShoe } from "react-icons/gi";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { FaPalette, FaTags } from "react-icons/fa6";
+import { TbLogout2 } from "react-icons/tb";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -49,10 +54,10 @@ const Navbar = () => {
 
   return (
     <div
-      className="left-0 h-full w-[10vw] flex min-w-[10vw] "
+      className="left-0 h-screen w-[10vw] flex min-w-[10vw] "
       style={{ position: "sticky", top: 0 }}
     >
-      <div className="flex flex-col bg-white text-black ">
+      <div className="flex flex-col flex-grow bg-blue-400 text-white ">
         {bigScreen ? (
           ""
         ) : (
@@ -65,94 +70,105 @@ const Navbar = () => {
         <nav
           className={`flex flex-col justify-between ${isOpen ? "" : "hidden"}`}
         >
-          <div className="p-4 font-bold text-xl text-[#4880FF]">SoleSphere</div>
+          <div className="px-3 py-4 font-bold text-2xl text-left text-white">
+            SoleSphere
+          </div>
           <div className="flex flex-col">
             <button
-              className={`p-4 rounded-r-xl ${
+              className={`p-4 rounded-r-2xl left-0 ${
                 selectedButton === ""
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("")}
             >
-              Dashboard
+              <FaHome className="absolute mt-[0.15rem] w-5 h-5" />
+              <div className="ml-7 text-left">Dashboard</div>
             </button>
             <button
-              className={`p-4 rounded-r-xl ${
+              className={`p-4 rounded-r-2xl left-0 ${
                 selectedButton === "products"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("products")}
             >
-              Products
+              <GiConverseShoe className="absolute mt-[0.15rem] w-5 h-5" />
+              <div className="ml-7 text-left">Products</div>
             </button>
             <button
-              className={`p-4 rounded-r-xl ${
+              className={`p-4 rounded-r-2xl left-0 ${
                 selectedButton === "orders"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("orders")}
             >
-              Order List
+              <FaClipboardList className="absolute mt-[0.15rem] w-5 h-5" />
+              <div className="ml-7 text-left">Order List</div>
             </button>
             {/* <button
               className={`p-4 rounded-r-xl ${
                 selectedButton === "membership"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("membership")}
             >
               Membership
             </button> */}
             <button
-              className={`p-4 rounded-r-xl ${
+              className={`p-4 rounded-r-2xl left-0 ${
                 selectedButton === "add-product"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("add-product")}
             >
-              Add Product
+              <AiOutlinePlusCircle className="absolute mt-[0.15rem] w-5 h-5" />
+              <div className="ml-7 text-left">Add Product</div>
             </button>
             <button
-              className={`p-4 rounded-r-xl ${
+              className={`p-4 rounded-r-2xl left-0 ${
                 selectedButton === "add-variant"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("add-variant")}
             >
-              Add Variant
+              <FaPalette className="absolute mt-[0.15rem] w-5 h-5" />
+              <div className="ml-7 text-left">Add Variant</div>
             </button>
             <button
-              className={`p-4 rounded-r-xl ${
+              className={`p-4 rounded-r-2xl left-0 ${
                 selectedButton === "category-and-brand"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("category-and-brand")}
             >
-              Categories
-              <br />& Brand
+              <FaTags className="absolute mt-4 w-5 h-5" />
+              <div className="ml-7 text-left">
+                Categories
+                <br />& Brand
+              </div>
             </button>
             <button
-              className={`p-4 rounded-r-xl ${
+              className={`p-4 rounded-r-2xl left-0 text-left ${
                 selectedButton === "users"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("users")}
             >
-              Users
+              <FaUsers className="absolute mt-[0.15rem] w-5 h-5" />
+              <div className="ml-8">Users</div>
             </button>
             {/* <button
               className={`p-4 rounded-r-xl ${
                 selectedButton === "team"
-                  ? "bg-blue-500 text-white"
-                  : "hover:bg-gray-200"
+                  ? "bg-white text-blue-400"
+                  : "hover:bg-slate-100 hover:text-blue-400 text-white"
               }`}
               onClick={() => handleSelect("team")}
             >
@@ -160,14 +176,15 @@ const Navbar = () => {
             </button> */}
           </div>
           <button
-            className={`p-4 rounded-r-xl ${
+            className={`p-4 rounded-r-2xl left-0 ${
               selectedButton === "logout"
-                ? "bg-blue-500 text-white"
-                : "hover:bg-gray-200"
+                ? "bg-white text-blue-400"
+                : "hover:bg-slate-100 hover:text-blue-400 text-white"
             }`}
             onClick={() => handleSelect("logout")}
           >
-            Logout
+            <TbLogout2 className="absolute mt-[0.15rem] w-5 h-5" />
+            <div className="ml-8 text-left">Logout</div>
           </button>
         </nav>
       </div>
