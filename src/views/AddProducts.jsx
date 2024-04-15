@@ -1010,7 +1010,10 @@ const AddProducts = () => {
                       </Button>
                     </div>
 
-                    <div className="mt-2" style={{ marginTop: "65px" }}>
+                    <div
+                      className="mt-2"
+                      style={{ marginTop: "65px", marginBottom: "5px" }}
+                    >
                       <Button
                         disabled={isSubmitting}
                         type="submit"
