@@ -10,6 +10,15 @@ import convertHexToFlutterFormat from "../utils/convertHexToFlutterFormat";
 import Alert from "@mui/material/Alert";
 import Lottie from "lottie-react-web";
 import animationData from "../utils/loading.json";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextareaAutosize,
+  TextField,
+} from "@mui/material";
 
 const AddProducts = () => {
   const [category, setCategory] = useState([]);
@@ -151,6 +160,7 @@ const AddProducts = () => {
         setLoading(false);
         setisDisabled(true);
         setIsUploaded(false);
+        setInputFields([{ id: 0 }]);
         reset();
       }
     } catch (error) {
@@ -180,10 +190,10 @@ const AddProducts = () => {
     const isRequired = true; // Change to false if not required
     const isValid = /^[0-9]\d*\.?\d+$/.test(value); // Floating-point number pattern
 
-    if (isRequired && !value.trim()) {
+    if (value.trim() === "") {
       setError(`variants[${index}].${fieldName}`, {
         type: "required",
-        message: "This field is required",
+        message: "All fields are required",
       });
     } else if (!isValid) {
       setError(`variants[${index}].${fieldName}`, {
@@ -357,7 +367,7 @@ const AddProducts = () => {
 
           <div className="flex gap-4">
             <Navbar />
-            <div className="w-[87vw] flex justify-center items-center">
+            <div className="w-[90vw] flex justify-center items-center">
               <div className="flex flex-col">
                 <form action="" onSubmit={handleSubmit(onSubmit)}>
                   <div className="flex mt-[6vh] shadow-lg">
@@ -366,9 +376,9 @@ const AddProducts = () => {
                       <div className="flex flex-col m-2 mx-10">
                         <div>
                           <h3 className="font-semibold">Description</h3>
-                          <div className="  p-5 rounded-md">
+                          <div className="p-5 rounded-md">
                             <div className="flex flex-col">
-                              <label
+                              {/* <label
                                 htmlFor="productName"
                                 className="font-light "
                               >
@@ -376,21 +386,21 @@ const AddProducts = () => {
                                 <span>
                                   ({productName ? productName.length : 0}/30)
                                 </span>
-                              </label>
-
-                              <input
+                              </label> */}
+                              <TextField
                                 type="text"
                                 id="productName"
+                                label="Product Name"
                                 className="border border-black rounded-md"
                                 {...register("productName", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Product Name is required ",
                                   },
                                   pattern: {
                                     value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
                                     message:
-                                      "Only one space is allowed between words, and no leading or trailing spaces are permitted.",
+                                      "Only one space is allowed between words",
                                   },
                                   minLength: {
                                     value: 3,
@@ -406,34 +416,32 @@ const AddProducts = () => {
                                 maxLength={30}
                                 minLength={3}
                               />
-                              <div className="font-light text-base mb-1">
-                                (At least 3 characters)*
-                              </div>
                               {errors.productName && (
                                 <div className="text-red-600 text-sm">
                                   {errors.productName.message}
                                 </div>
                               )}
+                              <span className="my-1">
+                                ({productName ? productName.length : 0}/30))
+                              </span>
+                              <div className="font-light text-base mb-1">
+                                (At least 3 characters)*
+                              </div>
 
                               <label className="font-light" htmlFor="shortDesc">
                                 Short Description
-                                <span>
-                                  (
-                                  {shortDescription
-                                    ? shortDescription.length
-                                    : 0}
-                                  /200)
-                                </span>
                               </label>
-                              <textarea
-                                rows="4"
-                                cols="40"
+                              <TextareaAutosize
+                                aria-label="Short Description"
+                                minRows={4}
+                                style={{ minWidth: "30vw" }}
+                                placeholder="Short Description"
                                 className="border p-2 border-black rounded-md"
                                 id="shortDesc"
                                 {...register("shortDesc", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Short Description is required ",
                                   },
                                   pattern: {
                                     value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
@@ -454,42 +462,50 @@ const AddProducts = () => {
                                 maxLength={200}
                                 minLength={75}
                               />
-                              <div className="font-light text-base">
-                                (At least 75 characters)*
-                              </div>
                               {errors.shortDesc && (
                                 <div className="text-red-600 text-sm">
                                   {errors.shortDesc.message}
                                 </div>
                               )}
+                              <span className="my-1">
+                                (
+                                {shortDescription ? shortDescription.length : 0}
+                                /200)
+                              </span>
+                              <div className="font-light text-base">
+                                (At least 75 characters)*
+                              </div>
                             </div>
                           </div>
 
-                          <div className="category flex flex-col m-2">
-                            <h3 className="font-semibold">Category</h3>
-                            <div className="  p-5 rounded-md flex flex-col">
+                          <div className="category flex flex-col ">
+                            {/* <h3 className="font-semibold">Category</h3> */}
+                            <div className="rounded-md flex flex-col p-3">
                               <label htmlFor="category" className="font-light ">
                                 Category
                               </label>
-                              <select
+
+                              <Select
                                 id="category"
+                                displayEmpty
                                 className="border border-black rounded-md"
                                 {...register("category", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Category is required ",
                                   },
                                 })}
+                                defaultValue=""
                               >
-                                <option value="">Select Category</option>
+                                <MenuItem value="">Select Category</MenuItem>
                                 {category.map((item) => {
                                   return (
-                                    <option key={item._id} value={item._id}>
+                                    <MenuItem key={item._id} value={item._id}>
                                       {item.category}
-                                    </option>
+                                    </MenuItem>
                                   );
                                 })}
-                              </select>
+                              </Select>
                               {errors.category && (
                                 <div className="text-red-600 text-sm">
                                   {errors.category.message}
@@ -498,31 +514,33 @@ const AddProducts = () => {
                             </div>
                           </div>
 
-                          <div className="brand flex flex-col m-2">
-                            <h3 className="font-semibold">Brand</h3>
-                            <div className="  p-5 rounded-md flex flex-col">
+                          <div className="brand flex flex-col">
+                            {/* <h3 className="font-semibold">Brand</h3> */}
+                            <div className=" rounded-md p-3 flex flex-col">
                               <label htmlFor="brand" className="font-light">
                                 Brand
                               </label>
-                              <select
+                              <Select
                                 id="brand"
                                 className="border border-black rounded-md"
+                                displayEmpty
                                 {...register("brand", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Brand is required ",
                                   },
                                 })}
+                                defaultValue=""
                               >
-                                <option value="">Select Brand</option>
+                                <MenuItem value="">Select Brand</MenuItem>
                                 {brand.map((item) => {
                                   return (
-                                    <option key={item._id} value={item._id}>
+                                    <MenuItem key={item._id} value={item._id}>
                                       {item.brand}
-                                    </option>
+                                    </MenuItem>
                                   );
                                 })}
-                              </select>
+                              </Select>
                               {errors.brand && (
                                 <div className="text-red-600 text-sm">
                                   {errors.brand.message}
@@ -531,27 +549,29 @@ const AddProducts = () => {
                             </div>
                           </div>
 
-                          <div className="sizeType flex flex-col m-2">
-                            <h3 className="font-semibold">Size Type</h3>
-                            <div className="  p-5 rounded-md flex flex-col">
+                          <div className="sizeType flex flex-col ">
+                            {/* <h3 className="font-semibold">Size Type</h3> */}
+                            <div className="   rounded-md flex p-3 flex-col">
                               <label htmlFor="sizeType" className="font-light ">
                                 Size Type
                               </label>
-                              <select
+                              <Select
                                 id="sizeType"
+                                displayEmpty
+                                defaultValue=""
                                 className="border border-black rounded-md"
                                 {...register("sizeType", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Size Type is required ",
                                   },
                                 })}
                               >
-                                <option value="">Select Size Type</option>
-                                <option value="UK">UK</option>
-                                <option value="US">US</option>
-                                <option value="EU">EU</option>
-                              </select>
+                                <MenuItem value="">Select Size Type</MenuItem>
+                                <MenuItem value="UK">UK</MenuItem>
+                                <MenuItem value="US">US</MenuItem>
+                                <MenuItem value="EU">EU</MenuItem>
+                              </Select>
                               {errors.sizeType && (
                                 <div className="text-red-600 text-sm">
                                   {errors.sizeType.message}
@@ -560,35 +580,39 @@ const AddProducts = () => {
                             </div>
                           </div>
 
-                          <div className="closureType   flex flex-col m-2">
-                            <h3 className="font-semibold">Closure Type</h3>
-                            <div className="  p-5 rounded-md flex flex-col">
+                          <div className="closureType flex flex-col ">
+                            {/* <h3 className="font-semibold">Closure Type</h3> */}
+                            <div className="rounded-md flex p-3 flex-col">
                               <label
                                 htmlFor="closureType"
                                 className="font-light "
                               >
                                 Closure Type
                               </label>
-                              <select
+                              <Select
+                                displayEmpty
+                                defaultValue=""
                                 id="closureType"
                                 className="border border-black rounded-md"
                                 {...register("closureType", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Closure Type is required ",
                                   },
                                 })}
                               >
-                                <option value="">Select Closure Type</option>
-                                <option value="zipper">Zipper</option>
-                                <option value="button">Button</option>
-                                <option value="hook and loop">
+                                <MenuItem value="">
+                                  Select Closure Type
+                                </MenuItem>
+                                <MenuItem value="zipper">Zipper</MenuItem>
+                                <MenuItem value="button">Button</MenuItem>
+                                <MenuItem value="hook and loop">
                                   Hook and Loop
-                                </option>
-                                <option value="lace-up">Lace-up</option>
-                                <option value="buckle">Buckle</option>
-                                <option value="velcro">Velcro</option>
-                              </select>
+                                </MenuItem>
+                                <MenuItem value="lace-up">Lace-up</MenuItem>
+                                <MenuItem value="buckle">Buckle</MenuItem>
+                                <MenuItem value="velcro">Velcro</MenuItem>
+                              </Select>
                               {errors.closureType && (
                                 <div className="text-red-600 text-sm">
                                   {errors.closureType.message}
@@ -600,41 +624,45 @@ const AddProducts = () => {
                       </div>
                     </div>
 
-                    <div className="right my-5">
-                      <div className="flex flex-col m-2">
-                        <div className="   flex flex-col m-2">
+                    <div className="right my-10">
+                      <div className="flex flex-col">
+                        <div className="   flex flex-col ">
                           <h3 className="font-semibold">
                             Material & Long Description
                           </h3>
 
-                          <div className="material   p-5 rounded-md flex flex-col">
+                          <div className="material p-3 rounded-md flex flex-col">
                             <label htmlFor="material" className="font-light ">
                               Material
                             </label>
-                            <select
+                            <Select
                               id="material"
+                              displayEmpty
+                              defaultValue=""
                               className="border border-black rounded-md"
                               {...register("material", {
                                 required: {
                                   value: true,
-                                  message: "This field is required ",
+                                  message: "Material is required ",
                                 },
                               })}
                             >
-                              <option value="">Select Material</option>
-                              <option value="leather">Leather</option>
-                              <option value="suede">Suede</option>
-                              <option value="canvas">Canvas</option>
-                              <option value="mesh">Mesh</option>
-                              <option value="rubber">Rubber</option>
-                              <option value="synthetic">Synthetic</option>
-                              <option value="textile">Textile</option>
-                              <option value="knit">Knit</option>
-                              <option value="velvet">Velvet</option>
-                              <option value="denim">Denim</option>
-                              <option value="cork">Cork</option>
-                              <option value="faux leather">Faux Leather</option>
-                            </select>
+                              <MenuItem value="">Select Material</MenuItem>
+                              <MenuItem value="leather">Leather</MenuItem>
+                              <MenuItem value="suede">Suede</MenuItem>
+                              <MenuItem value="canvas">Canvas</MenuItem>
+                              <MenuItem value="mesh">Mesh</MenuItem>
+                              <MenuItem value="rubber">Rubber</MenuItem>
+                              <MenuItem value="synthetic">Synthetic</MenuItem>
+                              <MenuItem value="textile">Textile</MenuItem>
+                              <MenuItem value="knit">Knit</MenuItem>
+                              <MenuItem value="velvet">Velvet</MenuItem>
+                              <MenuItem value="denim">Denim</MenuItem>
+                              <MenuItem value="cork">Cork</MenuItem>
+                              <MenuItem value="faux leather">
+                                Faux Leather
+                              </MenuItem>
+                            </Select>
                             {errors.material && (
                               <div className="text-red-600 text-sm">
                                 {errors.material.message}
@@ -642,26 +670,24 @@ const AddProducts = () => {
                             )}
                           </div>
 
-                          <div className="longDescription   p-5 rounded-md flex flex-col">
+                          <div className="longDescription  p-3 rounded-md flex flex-col">
                             <label
                               htmlFor="longDescription"
                               className="font-light "
                             >
                               Long Description
-                              <span>
-                                ({longDescription ? longDescription.length : 0}
-                                /600)
-                              </span>
                             </label>
-                            <textarea
+                            <TextareaAutosize
+                              aria-label="Description"
+                              placeholder="Enter Long description here..."
                               className="rounded-md border p-2 border-black"
                               id="longDescription"
-                              rows="6"
+                              minRows={6}
                               cols="60"
                               {...register("longDescription", {
                                 required: {
                                   value: true,
-                                  message: "This field is required ",
+                                  message: "Long Description is required ",
                                 },
                                 pattern: {
                                   value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
@@ -682,37 +708,43 @@ const AddProducts = () => {
                               maxLength={600}
                               minLength={75}
                             />
-                            <div className="font-light text-base">
-                              (At least 75 characters)*
-                            </div>
                             {errors.longDescription && (
                               <div className="text-red-600 text-sm">
                                 {errors.longDescription.message}
                               </div>
                             )}
+                            <span>
+                              ({longDescription ? longDescription.length : 0}
+                              /600)
+                            </span>
+                            <div className="font-light text-base">
+                              (At least 75 characters)*
+                            </div>
                           </div>
 
-                          <div className="gender flex flex-col m-2">
-                            <h3 className="font-semibold">Gender</h3>
-                            <div className="  p-5 rounded-md flex flex-col">
+                          <div className="gender flex flex-col">
+                            {/* <h3 className="font-semibold">Gender</h3> */}
+                            <div className="  p-3 rounded-md flex flex-col">
                               <label htmlFor="gender" className="font-light ">
                                 Gender
                               </label>
-                              <select
+                              <Select
                                 id="gender"
                                 className="border border-black rounded-md"
+                                displayEmpty
+                                defaultValue=""
                                 {...register("gender", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Gender is required ",
                                   },
                                 })}
                               >
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="female">Unisex</option>
-                              </select>
+                                <MenuItem value="">Select Gender</MenuItem>
+                                <MenuItem value="male">Male</MenuItem>
+                                <MenuItem value="female">Female</MenuItem>
+                                <MenuItem value="female">Unisex</MenuItem>
+                              </Select>
                               {errors.gender && (
                                 <div className="text-red-600 text-sm">
                                   {errors.gender.message}
@@ -721,15 +753,17 @@ const AddProducts = () => {
                             </div>
                           </div>
 
-                          <div className="color flex flex-col m-2">
-                            <h3 className="font-semibold">Color</h3>
-                            <div className="  p-5 rounded-md flex flex-col">
-                              <label htmlFor="color" className="font-light ">
+                          <div className="color flex flex-col ">
+                            {/* <h3 className="font-semibold">Color</h3> */}
+                            <div className="  p-3 rounded-md flex flex-col">
+                              {/* <label htmlFor="color" className="font-light ">
                                 Color
-                              </label>
-                              <input
+                              </label> */}
+                              <TextField
+                                label="Select Color"
                                 type="color"
                                 id="color"
+                                defaultValue="#000000"
                                 className="border border-black rounded-md w-full"
                                 {...register("color", {
                                   required: {
@@ -760,9 +794,19 @@ const AddProducts = () => {
                                 multiple
                                 accept="image/*"
                                 className="border border-black rounded-md w-full"
-                                {...register("images")}
+                                {...register("images", {
+                                  required: {
+                                    value: true,
+                                    message: "Images are required",
+                                  },
+                                })}
                                 onChange={(e) => handleImages(e)}
                               />
+                              {errors.images && (
+                                <div className="text-red-600 text-sm">
+                                  {errors.images.message}
+                                </div>
+                              )}
                               {errors.required && (
                                 <div className="text-red-600 text-sm">
                                   {errors.required.message}
@@ -777,7 +821,8 @@ const AddProducts = () => {
                               <button
                                 disabled={isUploaded || isUploading}
                                 type="button"
-                                className="disabled:opacity-50 bg-blue-500 my-2 p-1 px-2 rounded-md text-white"
+                                style={{ marginTop: "3px" }}
+                                className="disabled:opacity-50 bg-blue-500 my-3 p-1 px-2 rounded-md text-white"
                                 onClick={(e) => handleUploadImages(e)}
                               >
                                 Upload Images
@@ -804,12 +849,9 @@ const AddProducts = () => {
                           key={field.id}
                           className="flex flex-row w-full justify-between"
                         >
-                          <input
+                          <TextField
+                            label="Size"
                             {...register(`variants[${index}].size`, {
-                              required: {
-                                value: true,
-                                message: "This field is required",
-                              },
                               pattern: {
                                 value: /^[0-9]\d*$/,
                                 message: "Validation violated ",
@@ -828,18 +870,14 @@ const AddProducts = () => {
                               handleDynamicFieldValidation(
                                 e.target.value,
                                 index,
-                                `size`
+                                "size"
                               )
                             }
                             className="border border-black w-1/5 my-2 p-2 rounded-lg"
-                            placeholder="Size"
                           />
-                          <input
+                          <TextField
+                            label="Actual Price"
                             {...register(`variants[${index}].actual_price`, {
-                              required: {
-                                value: true,
-                                message: "This field is required",
-                              },
                               pattern: {
                                 value: /^[0-9]\d*\.?\d+$/,
                                 message: "Please enter a positive number",
@@ -859,16 +897,12 @@ const AddProducts = () => {
                               )
                             }
                             className="border  border-black w-1/5 my-2 p-2 rounded-lg"
-                            placeholder="Actual Price"
                           />
-                          <input
+                          <TextField
+                            label="Discounted Price"
                             {...register(
                               `variants[${index}].discounted_price`,
                               {
-                                required: {
-                                  value: true,
-                                  message: "This field is required",
-                                },
                                 pattern: {
                                   value: /^[0-9]\d*\.?\d+$/,
                                   message: "Please enter a positive number",
@@ -889,14 +923,10 @@ const AddProducts = () => {
                             }
                             type="text"
                             className="border  border-black w-1/5 my-2 p-2 rounded-lg"
-                            placeholder="Discounted Price"
                           />
-                          <input
+                          <TextField
+                            label="Stock"
                             {...register(`variants[${index}].stock`, {
-                              required: {
-                                value: true,
-                                message: "This field is required",
-                              },
                               pattern: {
                                 value: /^[0-9]\d*$/,
                                 message:
@@ -912,7 +942,6 @@ const AddProducts = () => {
                               )
                             }
                             className="border  border-black w-1/5 my-2 p-2 rounded-lg"
-                            placeholder="Stock"
                           />
                           {errors.variants &&
                             errors.variants[index] &&
@@ -927,23 +956,30 @@ const AddProducts = () => {
                     {hasDynamicFieldErrors() && (
                       <div className="text-red-500 block mx-3">
                         There are errors in the above dynamic fields. Please fix
-                        them.it can only contain positive numeric values
+                        them. It can only contain positive numeric values
                       </div>
                     )}
-                    <button
-                      className="button float-end bg-blue-500 p-1 px-2 rounded-md text-white"
-                      type="button"
-                      onClick={addInputFields}
-                    >
-                      Add More Sizes
-                    </button>
+                    <div className="block">
+                      <Button
+                        variant="outlined"
+                        className="button float-end bg-blue-500 p-1 px-2 rounded-md text-white"
+                        type="button"
+                        onClick={addInputFields}
+                      >
+                        Add More Sizes
+                      </Button>
+                    </div>
 
-                    <input
-                      disabled={isSubmitting}
-                      type="submit"
-                      value="Add Variant"
-                      className="cursor-pointer disabled:opacity-50 my-2 rounded-lg button bg-blue-500 text-white w-full"
-                    />
+                    <div className="mt-2" style={{ marginTop: "65px" }}>
+                      <Button
+                        disabled={isSubmitting}
+                        type="submit"
+                        variant="contained"
+                        className="cursor-pointer disabled:opacity-50 my-2 rounded-lg button bg-blue-500 text-white w-full"
+                      >
+                        Add Variant
+                      </Button>
+                    </div>
                   </div>
                 </form>
               </div>

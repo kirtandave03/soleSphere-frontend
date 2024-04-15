@@ -11,6 +11,7 @@ import Alert from "@mui/material/Alert";
 import { TbListSearch } from "react-icons/tb";
 import animationData from "../utils/loading.json";
 import capitalize from "../utils/capitalize";
+import { Button, TextField } from "@mui/material";
 const AddVariants = () => {
   const [query, setQuery] = useState("");
   // const [products, setProducts] = useState([]);
@@ -57,7 +58,7 @@ const AddVariants = () => {
   };
 
   useEffect(() => {
-    if (query.length > 0) {
+    if (query && query.length > 0) {
       GetAllProducts();
     } else {
       setFilteredProducts([]);
@@ -182,7 +183,7 @@ const AddVariants = () => {
     if (isRequired && !value.trim()) {
       setError(`variants[${index}].${fieldName}`, {
         type: "required",
-        message: "This field is required",
+        message: "All fields are required",
       });
     } else if (!isValid) {
       setError(`variants[${index}].${fieldName}`, {
@@ -374,15 +375,16 @@ const AddVariants = () => {
                     <div className="my-6 flex justify-center ">
                       <div className="flex flex-col my-6">
                         <div className="p-4 shadow-lg my-2">
-                          <label
+                          {/* <label
                             htmlFor="product_id"
                             className="font-extralight"
                           >
                             Product Name
-                          </label>
+                          </label> */}
 
-                          <input
-                            className="mx-2 border w-[30vw] border-black rounded-lg"
+                          <TextField
+                            label="Search By Product Name"
+                            className="mx-2 border w-full border-black rounded-lg"
                             type="text"
                             id="product_id"
                             {...register("productName", {
@@ -395,18 +397,10 @@ const AddVariants = () => {
                             onChange={(e) => {
                               // setQuery(e.target.value);
                               setSelectedProduct(e.target.value);
+                              errors.productName = "";
                               debouncedInputChange(e);
                             }}
                           />
-                          {/* <div className="flex justify-center items-center">
-                              <button
-                                type="button"
-                                className="py-3"
-                                onClick={handleClick}
-                              >
-                                <TbListSearch className="text-2xl " />
-                              </button>
-                            </div> */}
 
                           <div className="font-light text-base mt-1 mb-1">
                             (At least 3 characters)*
@@ -432,12 +426,14 @@ const AddVariants = () => {
                         </div>
 
                         <div className="p-4 shadow-lg my-2 ">
-                          <label htmlFor="color" className="font-extralight">
+                          {/* <label htmlFor="color" className="font-extralight">
                             Choose Color
-                          </label>
-                          <input
-                            className="w-[30vw] border border-black rounded-lg m-4"
+                          </label> */}
+                          <TextField
+                            label="Select Color"
+                            className="w-full border border-black rounded-lg m-4"
                             type="color"
+                            defaultValue="#000000"
                             id="color"
                             {...register("color", {
                               required: {
@@ -503,7 +499,8 @@ const AddVariants = () => {
                           key={field.id}
                           className="flex flex-row w-full justify-between"
                         >
-                          <input
+                          <TextField
+                            label="Size"
                             {...register(`variants[${index}].size`, {
                               required: {
                                 value: true,
@@ -531,9 +528,10 @@ const AddVariants = () => {
                               )
                             }
                             className="border border-black w-1/5 my-2 p-2 rounded-lg"
-                            placeholder="Size"
+                            // placeholder="Size"
                           />
-                          <input
+                          <TextField
+                            label="Actual Price"
                             {...register(`variants[${index}].actual_price`, {
                               required: {
                                 value: true,
@@ -558,9 +556,10 @@ const AddVariants = () => {
                               )
                             }
                             className="border  border-black w-1/5 my-2 p-2 rounded-lg"
-                            placeholder="Actual Price"
+                            // placeholder="Actual Price"
                           />
-                          <input
+                          <TextField
+                            label="Discounted Price"
                             {...register(
                               `variants[${index}].discounted_price`,
                               {
@@ -588,9 +587,10 @@ const AddVariants = () => {
                             }
                             type="text"
                             className="border  border-black w-1/5 my-2 p-2 rounded-lg"
-                            placeholder="Discounted Price"
+                            // placeholder="Discounted Price"
                           />
-                          <input
+                          <TextField
+                            label="Stock"
                             {...register(`variants[${index}].stock`, {
                               required: {
                                 value: true,
@@ -611,7 +611,7 @@ const AddVariants = () => {
                               )
                             }
                             className="border  border-black w-1/5 p-2 my-2 rounded-lg"
-                            placeholder="Stock"
+                            // placeholder="Stock"
                           />
                           {errors.variants &&
                             errors.variants[index] &&
@@ -629,20 +629,25 @@ const AddVariants = () => {
                         them.it can only contain positive numeric values
                       </div>
                     )}
-                    <button
+                    <Button
+                      variant="outlined"
                       className="button float-end bg-blue-500 p-1 px-2 rounded-md text-white"
                       type="button"
                       onClick={addInputFields}
                     >
                       Add More Sizes
-                    </button>
-
-                    <input
-                      disabled={isSubmitting}
-                      type="submit"
-                      value="Add Variant"
-                      className="cursor-pointer disabled:opacity-50 my-2 rounded-lg button bg-blue-500 text-white w-full"
-                    />
+                    </Button>
+                    <div className="mt-2" style={{ marginTop: "65px" }}>
+                      <Button
+                        variant="contained"
+                        disabled={isSubmitting}
+                        type="submit"
+                        value="Add Variant"
+                        className="my-65 cursor-pointer disabled:opacity-50 rounded-lg button bg-blue-500 text-white w-full"
+                      >
+                        Add Variant
+                      </Button>
+                    </div>
                   </div>
                 </form>
               </div>
