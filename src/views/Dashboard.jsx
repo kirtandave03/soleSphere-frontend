@@ -57,7 +57,9 @@ function Dashboard() {
   const fetchData = async () => {
     try {
       setLoading(true);
+      console.log("1");
       const response = await getStats(rowsPerPage, page);
+      console.log("2");
       // console.log(response.data.data);
 
       if (response.status === 200) {

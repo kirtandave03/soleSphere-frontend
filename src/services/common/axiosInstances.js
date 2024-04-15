@@ -18,3 +18,16 @@ export const formDataAxiosInstance = axios.create({
 });
 
 export default { jsonAxiosInstance, formDataAxiosInstance };
+
+jsonAxiosInstance.interceptors.request.use(
+  (config) => {
+    const authToken = localStorage.getItem("auth-token");
+    if (authToken) {
+      config.headers["auth-token"] = authToken;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
