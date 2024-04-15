@@ -612,7 +612,7 @@ function EditProductPage() {
                                             pattern: {
                                               value: /^[1-9]\d*$/,
                                               message:
-                                                "Please enter a positive number without decimal pointsb",
+                                                "Please enter a positive number without decimal points",
                                             },
                                             validate: {
                                               min: (value) =>
@@ -642,7 +642,7 @@ function EditProductPage() {
                                               message: "This field is required",
                                             },
                                             pattern: {
-                                              value: /^[0-9]\d*\.?\d+$/,
+                                              value: /^\d*\.?\d+$/,
                                               message:
                                                 "Please enter a positive number",
                                             },
@@ -679,7 +679,7 @@ function EditProductPage() {
                                                   "This field is required",
                                               },
                                               pattern: {
-                                                value: /^[0-9]\d*\.?\d+$/,
+                                                value: /^\d*\.?\d+$/,
                                                 message:
                                                   "Please enter a positive number",
                                               },
