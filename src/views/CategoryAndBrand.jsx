@@ -584,9 +584,10 @@ function AddCategoriesAndBrands() {
                                       "Category name cannot exceed 50 characters",
                                   },
                                   pattern: {
-                                    value: /^[a-zA-Z0-9\s]+$/,
+                                    value:
+                                      /^(?!\s)(?!.*\s{2,})[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*(?<!\s)$/,
                                     message:
-                                      "Category name must contain only letters, numbers, and spaces",
+                                      "Category name must contain only letters and numbers without any leading and trailing spaces.",
                                   },
                                 })}
                               />
@@ -664,9 +665,10 @@ function AddCategoriesAndBrands() {
                                       "Category name cannot exceed 50 characters",
                                   },
                                   pattern: {
-                                    value: /^[a-zA-Z0-9\s]+$/,
+                                    value:
+                                      /^(?!\s)(?!.*\s{2,})[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*(?<!\s)$/,
                                     message:
-                                      "Category name must contain only letters, numbers, and spaces",
+                                      "Category name must contain only letters and numbers without any leading and trailing spaces.",
                                   },
                                 })}
                               />
@@ -812,9 +814,9 @@ function AddCategoriesAndBrands() {
                                       "Brand name cannot exceed 50 characters",
                                   },
                                   pattern: {
-                                    value: /^[\p{L}\d\s\-&'()]+$/u,
+                                    value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
                                     message:
-                                      "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
+                                      "Brand name must contain only letters, numbers, and special characters without any leading and trailing spaces.",
                                   },
                                 })}
                               />
@@ -913,9 +915,9 @@ function AddCategoriesAndBrands() {
                                       "Brand name cannot exceed 50 characters",
                                   },
                                   pattern: {
-                                    value: /^[\p{L}\d\s\-&'()]+$/u,
+                                    value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
                                     message:
-                                      "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses.",
+                                      "Brand name can only contain letters, numbers, spaces, hyphens, ampersands, apostrophes, and parentheses without any leading and trailing spaces.",
                                   },
                                 })}
                               />

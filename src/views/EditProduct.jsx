@@ -302,6 +302,11 @@ function EditProductPage() {
                           className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
                           {...register("shortDescription", {
                             required: "Short description is required",
+                            pattern: {
+                              value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
+                              message:
+                                "Only one space is allowed between words, and no leading or trailing spaces are permitted.",
+                            },
                             minLength: {
                               value: 75,
                               message:
@@ -339,6 +344,11 @@ function EditProductPage() {
                         className="bg-input-bg border border-gray-300 rounded-md p-2 w-full"
                         {...register("longDescription", {
                           required: "Long description is required",
+                          pattern: {
+                            value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
+                            message:
+                              "Only one space is allowed between words, and no leading or trailing spaces are permitted.",
+                          },
                           minLength: {
                             value: 75,
                             message:
@@ -488,7 +498,7 @@ function EditProductPage() {
                           className="bg-input-bg border-input-bg placeholder:text-center"
                           {...register("brand")}
                         >
-                          <option value="">Select Brand</option>
+                          {/* <option value="">Select Brand</option> */}
                           {brands.map((brand) => (
                             <option
                               key={brand._id}
@@ -602,7 +612,15 @@ function EditProductPage() {
                                             pattern: {
                                               value: /^[1-9]\d*$/,
                                               message:
-                                                "Please enter a positive number without decimal pointsb",
+                                                "Please enter a positive number without decimal points",
+                                            },
+                                            validate: {
+                                              min: (value) =>
+                                                parseInt(value) >= 1 ||
+                                                "Value must be at least 1",
+                                              max: (value) =>
+                                                parseInt(value) <= 48 ||
+                                                "Value must be at most 48",
                                             },
                                           })}
                                         />
@@ -624,9 +642,14 @@ function EditProductPage() {
                                               message: "This field is required",
                                             },
                                             pattern: {
-                                              value: /^[0-9]*\.?[0-9]+$/,
+                                              value: /^\d*\.?\d+$/,
                                               message:
                                                 "Please enter a positive number",
+                                            },
+                                            validate: {
+                                              min: (value) =>
+                                                parseInt(value) >= 1 ||
+                                                "Value must be at least 1",
                                             },
                                           })}
                                         />
@@ -656,9 +679,14 @@ function EditProductPage() {
                                                   "This field is required",
                                               },
                                               pattern: {
-                                                value: /^[0-9]*\.?[0-9]+$/,
+                                                value: /^\d*\.?\d+$/,
                                                 message:
                                                   "Please enter a positive number",
+                                              },
+                                              validate: {
+                                                min: (value) =>
+                                                  parseInt(value) >= 1 ||
+                                                  "Value must be at least 1",
                                               },
                                             }
                                           )}

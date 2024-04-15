@@ -7,7 +7,7 @@ function OrderDetails({ order, setDetails }) {
     <div className="w-2/5 absolute right-0 top-0 flex-col justify-between bg-white p-4 shadow-lg transition-all duration-500">
       <div>
         <div className="flex justify-between">
-          <h2 className="text-lg font-bold">#{order._id}</h2>
+          <h2 className="text-lg font-bold">Order ID: #{order._id}</h2>
           <button
             className="text-red-500 text-xl"
             onClick={() => setDetails(null)}
@@ -59,19 +59,31 @@ function OrderDetails({ order, setDetails }) {
       <hr className="my-2" />
       <div className="flex-col">
         <h4 className="font-semibold">Customer</h4>
-        <p>{order.user._id}</p>
-        <p>{order.user.email}</p>
+        <p>
+          <div className="font-medium inline">Customer ID:</div> #
+          {order.user._id}
+        </p>
+        <p>
+          <div className="font-medium inline">Customer Email:</div>{" "}
+          {order.user.email}
+        </p>
       </div>
       <hr className="my-2" />
       <div>
         <h4 className="font-semibold">Items</h4>
+        <div className="px-3 flex justify-between font-medium">
+          <div>Image</div>
+          <div className="ml-4">Product</div>
+          <div className="ml-6">Quantity</div>
+          <div className="mr-5">Price</div>
+        </div>
         {order.products.map((product, index) => (
           <div key={index} className="px-3 flex justify-between">
             <div className="flex gap-7">
               <img
                 src={product.image_url}
                 alt=""
-                className="max-w-20 max-h-14 object-cover"
+                className="w-20 h-16 object-cover"
               />
               <div className="ml-5 h-20 flex-col justify-between">
                 <div>{capitalize(product.productName)}</div>
@@ -86,14 +98,15 @@ function OrderDetails({ order, setDetails }) {
                       borderRadius: "50%",
                     }}
                   ></div>
-                  <div>{product.size}</div>
+                  <div>
+                    {product.product_id.sizeType} {product.size}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex gap-7">
-              <div>{product.quantity}</div>
-              <div>₹{product.discounted_price}</div>
-            </div>
+
+            <div>{product.quantity}</div>
+            <div>₹{product.discounted_price}</div>
           </div>
         ))}
       </div>
@@ -102,12 +115,7 @@ function OrderDetails({ order, setDetails }) {
         <h4 className="font-semibold">Payment</h4>
         <div className="flex justify-between">
           <div>Subtotal: </div>
-          <div>
-            ₹
-            {order.totalAmount > 539
-              ? order.totalAmount - 40
-              : order.totalAmount}
-          </div>
+          <div>₹{Number(order.totalAmount) + Number(order.totalDiscount)}</div>
         </div>
         <div className="flex justify-between">
           <div>Discount: </div>
@@ -115,19 +123,13 @@ function OrderDetails({ order, setDetails }) {
         </div>
         <div className="flex justify-between">
           <div>Shipping cost: </div>
-          <div>₹{order.totalDiscount >= 500 ? 0 : 40}</div>
+          <div>+ ₹{order.totalDiscount >= 500 ? 0 : 40}</div>
         </div>
         <div className="flex justify-between font-semibold">
-          <div>Total: </div>₹{order.totalAmount - order.totalDiscount}
+          <div>Total: </div>₹{order.totalAmount}
         </div>
       </div>
-      <div>
-        <div className="flex">
-          <div className="w-full flex justify-between"></div>
-          <div className="w-full flex-col"></div>
-        </div>
-        <hr className="my-2" />
-      </div>
+      <hr className="my-2" />
     </div>
   );
 }
