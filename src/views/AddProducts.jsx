@@ -188,7 +188,7 @@ const AddProducts = () => {
   // Function to handle dynamic field validation
   const handleDynamicFieldValidation = (value, index, fieldName) => {
     const isRequired = true; // Change to false if not required
-    const isValid = /^[0-9]\d*\.?\d+$/.test(value); // Floating-point number pattern
+    const isValid = /^\d*\.?\d+$/.test(value); // Floating-point number pattern
 
     if (value.trim() === "") {
       setError(`variants[${index}].${fieldName}`, {
@@ -370,72 +370,94 @@ const AddProducts = () => {
             <div className="w-[90vw] flex justify-center items-center">
               <div className="flex flex-col">
                 <form action="" onSubmit={handleSubmit(onSubmit)}>
-                  <div className="flex mt-[6vh] shadow-lg">
-                    <div className="left my-5 ">
-                      <h1 className="font-bold text-xl">Add New Product</h1>
-                      <div className="flex flex-col m-2 mx-10">
-                        <div>
+                  <div className="flex items-center justify-center">
+                    <div className="left ">
+                      <div>
+                        <div className="p-5 rounded-md">
+                          <h1 className="font-bold text-xl">Add New Product</h1>
                           <h3 className="font-semibold">Description</h3>
-                          <div className="p-5 rounded-md">
-                            <div className="flex flex-col">
-                              {/* <label
-                                htmlFor="productName"
-                                className="font-light "
-                              >
-                                Product Name
-                                <span>
-                                  ({productName ? productName.length : 0}/30)
-                                </span>
-                              </label> */}
-                              <TextField
-                                type="text"
-                                id="productName"
-                                label="Product Name"
-                                className="border border-black rounded-md"
-                                {...register("productName", {
-                                  required: {
-                                    value: true,
-                                    message: "Product Name is required ",
-                                  },
-                                  pattern: {
-                                    value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
-                                    message:
-                                      "Only one space is allowed between words",
-                                  },
-                                  minLength: {
-                                    value: 3,
-                                    message:
-                                      "Product name must be at least 3 characters long",
-                                  },
-                                  maxLength: {
-                                    value: 30,
-                                    message:
-                                      "Product name must be at most 30 characters long",
-                                  },
-                                })}
-                                maxLength={30}
-                                minLength={3}
-                              />
-                              {errors.productName && (
-                                <div className="text-red-600 text-sm">
-                                  {errors.productName.message}
-                                </div>
-                              )}
-                              <span className="my-1">
-                                ({productName ? productName.length : 0}/30))
+                          <div className="flex flex-col my-2">
+                            <label
+                              htmlFor="productName"
+                              className="font-medium"
+                            >
+                              Product Name &nbsp;
+                              <span>
+                                ({productName ? productName.length : 0}/30)
                               </span>
-                              <div className="font-light text-base mb-1">
-                                (At least 3 characters)*
+                            </label>
+                            <TextField
+                              type="text"
+                              id="outlined-basic"
+                              // label={
+                              //   <div style={{ lineHeight: "30px" }}>
+                              //     Product Name
+                              //   </div>
+                              // }
+                              size="small"
+                              style={{
+                                marginTop: "8px",
+                                width: "30vw",
+                              }}
+                              label="Product Name"
+                              className="border border-black rounded-md"
+                              {...register("productName", {
+                                required: {
+                                  value: true,
+                                  message: "Product Name is required ",
+                                },
+                                pattern: {
+                                  value: /^(?!.*\s{2,})\S(?:.*\S)?$/,
+                                  message:
+                                    "Only one space is allowed between words",
+                                },
+                                minLength: {
+                                  value: 3,
+                                  message:
+                                    "Product name must be at least 3 characters long",
+                                },
+                                maxLength: {
+                                  value: 30,
+                                  message:
+                                    "Product name must be at most 30 characters long",
+                                },
+                              })}
+                              maxLength={30}
+                              minLength={3}
+                            />
+                            {errors.productName && (
+                              <div className="text-red-600 text-sm">
+                                {errors.productName.message}
                               </div>
+                            )}
+                            {/* <span className="my-1">
+                              ({productName ? productName.length : 0}/30)
+                            </span> */}
+                            <div className="font-light text-base mt-1">
+                              (At least 3 characters)*
+                            </div>
 
-                              <label className="font-light" htmlFor="shortDesc">
-                                Short Description
-                              </label>
+                            <div className="my-2">
+                              <div>
+                                <label
+                                  className="font-medium"
+                                  htmlFor="shortDesc"
+                                >
+                                  Short Description &nbsp;
+                                </label>
+                                <span className="my-1 font-light">
+                                  (
+                                  {shortDescription
+                                    ? shortDescription.length
+                                    : 0}
+                                  /200)
+                                </span>
+                              </div>
                               <TextareaAutosize
                                 aria-label="Short Description"
                                 minRows={4}
-                                style={{ minWidth: "30vw" }}
-                                placeholder="Short Description"
+                                style={{ width: "30vw" }}
+                                placeholder="Enter short description here..."
                                 className="border p-2 border-black rounded-md"
                                 id="shortDesc"
                                 {...register("shortDesc", {
@@ -467,21 +489,19 @@ const AddProducts = () => {
                                   {errors.shortDesc.message}
                                 </div>
                               )}
-                              <span className="my-1">
-                                (
-                                {shortDescription ? shortDescription.length : 0}
-                                /200)
-                              </span>
+
                               <div className="font-light text-base">
                                 (At least 75 characters)*
                               </div>
                             </div>
                           </div>
-
-                          <div className="category flex flex-col ">
+                          <div className="category flex flex-col my-2">
                             {/* <h3 className="font-semibold">Category</h3> */}
-                            <div className="rounded-md flex flex-col p-3">
-                              <label htmlFor="category" className="font-light ">
+                            <div className="rounded-md flex flex-col">
+                              <label
+                                htmlFor="category"
+                                className="font-medium "
+                              >
                                 Category
                               </label>
 
@@ -496,6 +516,8 @@ const AddProducts = () => {
                                   },
                                 })}
                                 defaultValue=""
+                                size="small"
+                                style={{ width: "30vw" }}
                               >
                                 <MenuItem value="">Select Category</MenuItem>
                                 {category.map((item) => {
@@ -513,11 +535,10 @@ const AddProducts = () => {
                               )}
                             </div>
                           </div>
-
-                          <div className="brand flex flex-col">
+                          <div className="brand flex flex-col my-3">
                             {/* <h3 className="font-semibold">Brand</h3> */}
-                            <div className=" rounded-md p-3 flex flex-col">
-                              <label htmlFor="brand" className="font-light">
+                            <div className="rounded-md flex flex-col">
+                              <label htmlFor="brand" className="font-medium">
                                 Brand
                               </label>
                               <Select
@@ -530,7 +551,9 @@ const AddProducts = () => {
                                     message: "Brand is required ",
                                   },
                                 })}
+                                size="small"
                                 defaultValue=""
+                                style={{ width: "30vw" }}
                               >
                                 <MenuItem value="">Select Brand</MenuItem>
                                 {brand.map((item) => {
@@ -548,11 +571,13 @@ const AddProducts = () => {
                               )}
                             </div>
                           </div>
-
-                          <div className="sizeType flex flex-col ">
+                          <div className="sizeType flex flex-col my-3">
                             {/* <h3 className="font-semibold">Size Type</h3> */}
-                            <div className="   rounded-md flex p-3 flex-col">
-                              <label htmlFor="sizeType" className="font-light ">
+                            <div className="rounded-md flex flex-col">
+                              <label
+                                htmlFor="sizeType"
+                                className="font-medium "
+                              >
                                 Size Type
                               </label>
                               <Select
@@ -566,6 +591,8 @@ const AddProducts = () => {
                                     message: "Size Type is required ",
                                   },
                                 })}
+                                size="small"
+                                style={{ width: "30vw" }}
                               >
                                 <MenuItem value="">Select Size Type</MenuItem>
                                 <MenuItem value="UK">UK</MenuItem>
@@ -579,13 +606,12 @@ const AddProducts = () => {
                               )}
                             </div>
                           </div>
-
-                          <div className="closureType flex flex-col ">
+                          <div className="closureType flex flex-col my-3">
                             {/* <h3 className="font-semibold">Closure Type</h3> */}
-                            <div className="rounded-md flex p-3 flex-col">
+                            <div className="rounded-md flex flex-col">
                               <label
                                 htmlFor="closureType"
-                                className="font-light "
+                                className="font-medium "
                               >
                                 Closure Type
                               </label>
@@ -600,6 +626,8 @@ const AddProducts = () => {
                                     message: "Closure Type is required ",
                                   },
                                 })}
+                                size="small"
+                                style={{ width: "30vw" }}
                               >
                                 <MenuItem value="">
                                   Select Closure Type
@@ -624,15 +652,11 @@ const AddProducts = () => {
                       </div>
                     </div>
 
-                    <div className="right my-10">
+                    <div className="right ml-[55px] mt-[70px]">
                       <div className="flex flex-col">
-                        <div className="   flex flex-col ">
-                          <h3 className="font-semibold">
-                            Material & Long Description
-                          </h3>
-
-                          <div className="material p-3 rounded-md flex flex-col">
-                            <label htmlFor="material" className="font-light ">
+                        <div className="flex flex-col">
+                          <div className="material rounded-md flex flex-col p-2">
+                            <label htmlFor="material" className="font-medium">
                               Material
                             </label>
                             <Select
@@ -646,6 +670,11 @@ const AddProducts = () => {
                                   message: "Material is required ",
                                 },
                               })}
+                              size="small"
+                              style={{
+                                width: "30vw",
+                                marginTop: "7px",
+                              }}
                             >
                               <MenuItem value="">Select Material</MenuItem>
                               <MenuItem value="leather">Leather</MenuItem>
@@ -670,10 +699,10 @@ const AddProducts = () => {
                             )}
                           </div>
 
-                          <div className="longDescription  p-3 rounded-md flex flex-col">
+                          <div className="longDescription  p-2 rounded-md flex flex-col">
                             <label
                               htmlFor="longDescription"
-                              className="font-light "
+                              className="font-medium"
                             >
                               Long Description
                             </label>
@@ -707,6 +736,7 @@ const AddProducts = () => {
                               })}
                               maxLength={600}
                               minLength={75}
+                              style={{ width: "30vw" }}
                             />
                             {errors.longDescription && (
                               <div className="text-red-600 text-sm">
@@ -725,7 +755,7 @@ const AddProducts = () => {
                           <div className="gender flex flex-col">
                             {/* <h3 className="font-semibold">Gender</h3> */}
                             <div className="  p-3 rounded-md flex flex-col">
-                              <label htmlFor="gender" className="font-light ">
+                              <label htmlFor="gender" className="font-medium ">
                                 Gender
                               </label>
                               <Select
@@ -739,6 +769,8 @@ const AddProducts = () => {
                                     message: "Gender is required ",
                                   },
                                 })}
+                                size="small"
+                                style={{ width: "30vw" }}
                               >
                                 <MenuItem value="">Select Gender</MenuItem>
                                 <MenuItem value="male">Male</MenuItem>
@@ -755,7 +787,7 @@ const AddProducts = () => {
 
                           <div className="color flex flex-col ">
                             {/* <h3 className="font-semibold">Color</h3> */}
-                            <div className="  p-3 rounded-md flex flex-col">
+                            <div className="p-3 rounded-md flex flex-col">
                               {/* <label htmlFor="color" className="font-light ">
                                 Color
                               </label> */}
@@ -771,6 +803,8 @@ const AddProducts = () => {
                                     message: "This field is required ",
                                   },
                                 })}
+                                style={{ width: "30vw" }}
+                                size="small"
                               />
 
                               {errors.color && (
@@ -784,9 +818,9 @@ const AddProducts = () => {
                           <div className="images flex flex-col m-2">
                             <h3 className="font-semibold">Product Images</h3>
 
-                            <div className="  p-3 rounded-md flex flex-col">
+                            <div className="rounded-md flex mt-1 flex-col">
                               <label htmlFor="images" className="font-light ">
-                                Images - You can enter only 5 images
+                                Images - You can add upto 5 images
                               </label>
                               <input
                                 type="file"
@@ -821,8 +855,8 @@ const AddProducts = () => {
                               <button
                                 disabled={isUploaded || isUploading}
                                 type="button"
-                                style={{ marginTop: "3px" }}
-                                className="disabled:opacity-50 bg-blue-500 my-3 p-1 px-2 rounded-md text-white"
+                                style={{ marginTop: "8px" }}
+                                className="disabled:opacity-50 bg-blue-500 my-2 p-1 px-2 rounded-md text-white"
                                 onClick={(e) => handleUploadImages(e)}
                               >
                                 Upload Images
@@ -873,13 +907,14 @@ const AddProducts = () => {
                                 "size"
                               )
                             }
-                            className="border border-black w-1/5 my-2 p-2 rounded-lg"
+                            size="small"
+                            style={{ width: "253px" }}
                           />
                           <TextField
                             label="Actual Price"
                             {...register(`variants[${index}].actual_price`, {
                               pattern: {
-                                value: /^[0-9]\d*\.?\d+$/,
+                                value: /^\d*\.?\d+$/,
                                 message: "Please enter a positive number",
                               },
                               validate: {
@@ -896,7 +931,8 @@ const AddProducts = () => {
                                 `actual_price`
                               )
                             }
-                            className="border  border-black w-1/5 my-2 p-2 rounded-lg"
+                            size="small"
+                            style={{ width: "253px" }}
                           />
                           <TextField
                             label="Discounted Price"
@@ -904,7 +940,7 @@ const AddProducts = () => {
                               `variants[${index}].discounted_price`,
                               {
                                 pattern: {
-                                  value: /^[0-9]\d*\.?\d+$/,
+                                  value: /^\d*\.?\d+$/,
                                   message: "Please enter a positive number",
                                 },
                                 validate: {
@@ -922,7 +958,8 @@ const AddProducts = () => {
                               )
                             }
                             type="text"
-                            className="border  border-black w-1/5 my-2 p-2 rounded-lg"
+                            size="small"
+                            style={{ width: "253px" }}
                           />
                           <TextField
                             label="Stock"
@@ -941,15 +978,18 @@ const AddProducts = () => {
                                 `stock`
                               )
                             }
-                            className="border  border-black w-1/5 my-2 p-2 rounded-lg"
+                            size="small"
+                            style={{ width: "255px" }}
                           />
-                          {errors.variants &&
-                            errors.variants[index] &&
-                            errors.variants[index].size && (
-                              <div className="text-red-600 text-sm mt-4">
-                                {errors.variants[index].size.message}
-                              </div>
-                            )}
+                          <div>
+                            {errors.variants &&
+                              errors.variants[index] &&
+                              errors.variants[index].size && (
+                                <div className="text-red-600 text-sm mt-4">
+                                  {errors.variants[index].size.message}
+                                </div>
+                              )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -970,14 +1010,17 @@ const AddProducts = () => {
                       </Button>
                     </div>
 
-                    <div className="mt-2" style={{ marginTop: "65px" }}>
+                    <div
+                      className="mt-2"
+                      style={{ marginTop: "65px", marginBottom: "5px" }}
+                    >
                       <Button
                         disabled={isSubmitting}
                         type="submit"
                         variant="contained"
                         className="cursor-pointer disabled:opacity-50 my-2 rounded-lg button bg-blue-500 text-white w-full"
                       >
-                        Add Variant
+                        Add Product
                       </Button>
                     </div>
                   </div>
