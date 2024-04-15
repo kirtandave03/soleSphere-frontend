@@ -357,7 +357,7 @@ function Products() {
                                 <TableCell style={{ textAlign: "center" }}>
                                   {row.avgRating !== null
                                     ? row.avgRating.toFixed(2)
-                                    : "No Reviews"}
+                                    : "No Ratings"}
                                 </TableCell>
 
                                 <TableCell
@@ -521,7 +521,7 @@ function Products() {
                               <TableCell style={{ textAlign: "center" }}>
                                 {deletedRow.averageRating !== null
                                   ? deletedRow.averageRating.toFixed(2)
-                                  : "No Reviews"}
+                                  : "No Ratings"}
                               </TableCell>
                               <TableCell style={{ textAlign: "center" }}>
                                 <IconButton
