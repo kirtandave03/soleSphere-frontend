@@ -58,7 +58,7 @@ function Dashboard() {
     try {
       setLoading(true);
       const response = await getStats(rowsPerPage, page);
-      // console.log(response.data.data.mostSoldProducts);
+      // console.log(response.data.data);
 
       if (response.status === 200) {
         setTotalUsers(response.data.data.totalActiveUsers);
