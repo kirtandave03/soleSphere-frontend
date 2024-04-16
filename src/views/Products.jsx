@@ -277,138 +277,160 @@ function Products() {
                   />
                 </div>
                 <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
-                  <div className="w-full">
-                    <TableContainer component={Paper}>
-                      <Table aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Image
-                            </TableCell>
-                            <TableCell style={{ fontWeight: "600" }}>
-                              Product Name
-                            </TableCell>
-                            <TableCell style={{ fontWeight: "600" }}>
-                              Category
-                            </TableCell>
-                            <TableCell style={{ fontWeight: "600" }}>
-                              Brand
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Size
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Price
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Total Available Colors
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Average Rating
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Actions
-                            </TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rows &&
-                            rows.map((row) => (
-                              <TableRow key={row._id}>
-                                <TableCell>
-                                  <img
-                                    src={row.image}
-                                    alt="Product Image"
-                                    style={{
-                                      maxWidth: "100px",
-                                      maxHeight: "100px",
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  {capitalize(row.productName)}
-                                </TableCell>
-                                <TableCell>
-                                  {capitalize(row.category)}
-                                </TableCell>
-                                <TableCell>{capitalize(row.brand)}</TableCell>
-                                <TableCell style={{ textAlign: "center" }}>
-                                  {row.size}
-                                </TableCell>
-                                <TableCell style={{ textAlign: "center" }}>
-                                  {row.discounted_price}
-                                </TableCell>
-                                <TableCell style={{ textAlign: "center" }}>
-                                  {row.colors}
-                                </TableCell>
+                  {rows.length > 0 ? (
+                    <div className="w-full">
+                      <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Image
+                              </TableCell>
+                              <TableCell style={{ fontWeight: "600" }}>
+                                Product Name
+                              </TableCell>
+                              <TableCell style={{ fontWeight: "600" }}>
+                                Category
+                              </TableCell>
+                              <TableCell style={{ fontWeight: "600" }}>
+                                Brand
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Size
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Price
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Total Available Colors
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Average Rating
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Actions
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {rows &&
+                              rows.map((row) => (
+                                <TableRow key={row._id}>
+                                  <TableCell>
+                                    <img
+                                      src={row.image}
+                                      alt="Product Image"
+                                      style={{
+                                        maxWidth: "100px",
+                                        maxHeight: "100px",
+                                      }}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    {capitalize(row.productName)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {capitalize(row.category)}
+                                  </TableCell>
+                                  <TableCell>{capitalize(row.brand)}</TableCell>
+                                  <TableCell style={{ textAlign: "center" }}>
+                                    {row.size}
+                                  </TableCell>
+                                  <TableCell style={{ textAlign: "center" }}>
+                                    {row.discounted_price}
+                                  </TableCell>
+                                  <TableCell style={{ textAlign: "center" }}>
+                                    {row.colors}
+                                  </TableCell>
 
-                                <TableCell style={{ textAlign: "center" }}>
-                                  {row.avgRating !== null
-                                    ? row.avgRating.toFixed(2)
-                                    : "No Ratings"}
-                                </TableCell>
+                                  <TableCell style={{ textAlign: "center" }}>
+                                    {row.avgRating !== null
+                                      ? row.avgRating.toFixed(2)
+                                      : "No Ratings"}
+                                  </TableCell>
 
-                                <TableCell
-                                  style={{
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  <div
+                                  <TableCell
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
+                                      textAlign: "center",
                                     }}
                                   >
-                                    <IconButton
-                                      aria-label="edit"
-                                      onClick={() => onEdit(row._id)}
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                      }}
                                     >
-                                      <FaRegEdit />
-                                    </IconButton>
-                                    <IconButton
-                                      aria-label="delete"
-                                      onClick={() =>
-                                        onDelete(row.productName, row)
-                                      }
-                                      className={`${
-                                        deleteClicked
-                                          ? "pointer-events-none"
-                                          : ""
-                                      }`}
-                                    >
-                                      <RiDeleteBinLine />
-                                    </IconButton>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 25]}
-                      component="div"
-                      count={totalProducts || 0}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      onPageChange={(event, newPage) =>
-                        handleChangePage(event, newPage)
-                      }
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                  </div>
+                                      <IconButton
+                                        aria-label="edit"
+                                        onClick={() => onEdit(row._id)}
+                                      >
+                                        <FaRegEdit />
+                                      </IconButton>
+                                      <IconButton
+                                        aria-label="delete"
+                                        onClick={() =>
+                                          onDelete(row.productName, row)
+                                        }
+                                        className={`${
+                                          deleteClicked
+                                            ? "pointer-events-none"
+                                            : ""
+                                        }`}
+                                      >
+                                        <RiDeleteBinLine />
+                                      </IconButton>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={totalProducts || 0}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={(event, newPage) =>
+                          handleChangePage(event, newPage)
+                        }
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                    </div>
+                  ) : (
+                    <h2>Nothing to show</h2>
+                  )}
                 </div>
               </div>
               <div className="p-4 w-full">
@@ -437,122 +459,146 @@ function Products() {
                   />
                 </div>
                 <div className="mx-2 mb-4 overflow-y-hidden border border-gray-300 overflow-x-auto rounded">
-                  <div className="w-full">
-                    <TableContainer component={Paper}>
-                      <Table aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Image
-                            </TableCell>
-                            <TableCell style={{ fontWeight: "600" }}>
-                              Product Name
-                            </TableCell>
-                            <TableCell style={{ fontWeight: "600" }}>
-                              Category
-                            </TableCell>
-                            <TableCell style={{ fontWeight: "600" }}>
-                              Brand
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Size
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Price
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Total Available Colors
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Average Rating
-                            </TableCell>
-                            <TableCell
-                              style={{ fontWeight: "600", textAlign: "center" }}
-                            >
-                              Actions
-                            </TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {deletedRows.map((deletedRow) => (
-                            <TableRow key={deletedRow._id}>
-                              <TableCell>
-                                <img
-                                  src={deletedRow.variants[0].image_urls[0]}
-                                  alt="Product Image"
-                                  style={{
-                                    maxWidth: "100px",
-                                    maxHeight: "100px",
-                                  }}
-                                />
+                  {deletedRows.length > 0 ? (
+                    <div className="w-full">
+                      <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Image
                               </TableCell>
-                              <TableCell>
-                                {capitalize(deletedRow.productName)}
+                              <TableCell style={{ fontWeight: "600" }}>
+                                Product Name
                               </TableCell>
-                              <TableCell>
-                                {capitalize(deletedRow.category.category)}
+                              <TableCell style={{ fontWeight: "600" }}>
+                                Category
                               </TableCell>
-                              <TableCell>
-                                {capitalize(deletedRow.brand.brand)}
+                              <TableCell style={{ fontWeight: "600" }}>
+                                Brand
                               </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                {deletedRow.variants[0].sizes[0].size}
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Size
                               </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                {
-                                  deletedRow.variants[0].sizes[0]
-                                    .discounted_price
-                                }
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Price
                               </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                {deletedRow.variants.length}
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Total Available Colors
                               </TableCell>
-
-                              <TableCell style={{ textAlign: "center" }}>
-                                {deletedRow.averageRating !== null
-                                  ? deletedRow.averageRating.toFixed(2)
-                                  : "No Ratings"}
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Average Rating
                               </TableCell>
-                              <TableCell style={{ textAlign: "center" }}>
-                                <IconButton
-                                  aria-label="delete"
-                                  onClick={() =>
-                                    onRestore(deletedRow._id, deletedRow)
-                                  }
-                                  className={`${
-                                    restoreClicked ? "pointer-events-none" : ""
-                                  }`}
-                                >
-                                  <TbRestore />
-                                </IconButton>
+                              <TableCell
+                                style={{
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Actions
                               </TableCell>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 25]}
-                      component="div"
-                      count={totalDeletedProducts || deletedRows.length}
-                      rowsPerPage={rowsPerPageForDeleted}
-                      page={pageForDeleted}
-                      onPageChange={(event, newPage) =>
-                        handleChangePageForDeleted(event, newPage)
-                      }
-                      onRowsPerPageChange={handleChangeRowsPerPageForDeleted}
-                    />
-                  </div>
+                          </TableHead>
+                          <TableBody>
+                            {deletedRows.map((deletedRow) => (
+                              <TableRow key={deletedRow._id}>
+                                <TableCell>
+                                  <img
+                                    src={deletedRow.variants[0].image_urls[0]}
+                                    alt="Product Image"
+                                    style={{
+                                      maxWidth: "100px",
+                                      maxHeight: "100px",
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  {capitalize(deletedRow.productName)}
+                                </TableCell>
+                                <TableCell>
+                                  {capitalize(deletedRow.category.category)}
+                                </TableCell>
+                                <TableCell>
+                                  {capitalize(deletedRow.brand.brand)}
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {deletedRow.variants[0].sizes[0].size}
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {
+                                    deletedRow.variants[0].sizes[0]
+                                      .discounted_price
+                                  }
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {deletedRow.variants.length}
+                                </TableCell>
+
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {deletedRow.averageRating !== null
+                                    ? deletedRow.averageRating.toFixed(2)
+                                    : "No Ratings"}
+                                </TableCell>
+                                <TableCell style={{ textAlign: "center" }}>
+                                  <IconButton
+                                    aria-label="delete"
+                                    onClick={() =>
+                                      onRestore(deletedRow._id, deletedRow)
+                                    }
+                                    className={`${
+                                      restoreClicked
+                                        ? "pointer-events-none"
+                                        : ""
+                                    }`}
+                                  >
+                                    <TbRestore />
+                                  </IconButton>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={totalDeletedProducts || deletedRows.length}
+                        rowsPerPage={rowsPerPageForDeleted}
+                        page={pageForDeleted}
+                        onPageChange={(event, newPage) =>
+                          handleChangePageForDeleted(event, newPage)
+                        }
+                        onRowsPerPageChange={handleChangeRowsPerPageForDeleted}
+                      />
+                    </div>
+                  ) : (
+                    <h2>Nothing to show</h2>
+                  )}
                 </div>
               </div>
             </div>

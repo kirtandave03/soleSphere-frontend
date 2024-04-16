@@ -79,7 +79,8 @@ function Dashboard() {
     } catch (error) {
       setLoading(false);
       if (error?.response) {
-        alert("Something went wrong while fetching stats");
+        // alert("Something went wrong while fetching stats");
+        navigate("login");
       }
     }
   };
