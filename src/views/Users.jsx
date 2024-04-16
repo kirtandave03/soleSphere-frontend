@@ -300,10 +300,10 @@ const Users = () => {
                                   {index + 1 + page * rowsPerPage}
                                 </TableCell>
                                 <TableCell
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                  }}
+                                // style={{
+                                //   display: "flex",
+                                //   justifyContent: "center",
+                                // }}
                                 >
                                   <img
                                     className="rounded-full border border-black "
@@ -316,26 +316,22 @@ const Users = () => {
                                     }}
                                   />
                                 </TableCell>
-                                <TableCell style={{ textAlign: "center" }}>
+                                <TableCell>
                                   {capitalize(user.username)}
                                 </TableCell>
 
-                                <TableCell style={{ textAlign: "center" }}>
-                                  {user.email}
-                                </TableCell>
-                                <TableCell style={{ textAlign: "center" }}>
+                                <TableCell>{user.email}</TableCell>
+                                <TableCell>
                                   {user.phone ? user.phone : "NA"}
                                 </TableCell>
-                                <TableCell style={{ textAlign: "center" }}>
-                                  {`${
-                                    user.address[0]
-                                      ? user.address[0].town + ","
+                                <TableCell>
+                                  {user.address[0]
+                                    ? user.address[0].town
+                                      ? `${user.address[0].town}, ${user.address[0].state}`
                                       : "NA"
-                                  } ${
-                                    user.address[0] ? user.address[0].state : ""
-                                  }`}
+                                    : "NA"}
                                 </TableCell>
-                                <TableCell style={{ textAlign: "center" }}>
+                                <TableCell>
                                   <IconButton
                                     aria-label="delete"
                                     onClick={() => handleDelete(user._id, user)}
@@ -367,7 +363,7 @@ const Users = () => {
                   <div className="flex justify-center items-center">
                     <div>
                       <h1 className="font-bold  text-2xl">Deleted Users</h1>
-                      <div className="rounded-t-none rounded-b-sm p-2 flex items-center">
+                      <div className="rounded-t-none rounded-b-sm mt-2 flex items-center">
                         <TextField
                           id="search"
                           label="Search by email, phone or username"
@@ -545,7 +541,7 @@ const Users = () => {
                           />
                         </div>
                       ) : (
-                        <h2 className="font-bold m-6">Nothing to Show</h2>
+                        <h2 className="font-bold mt-3">Nothing to Show</h2>
                       )}
                     </div>
                   </div>
