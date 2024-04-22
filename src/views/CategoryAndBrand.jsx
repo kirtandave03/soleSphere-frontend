@@ -591,7 +591,7 @@ function AddCategoriesAndBrands() {
                                   },
                                 })}
                               />
-                              <div className="font-light text-sm text-center">
+                              <div className="w-96 -ml-7 font-light text-sm text-center">
                                 (At least 3 characters & at most 50 characters
                                 are allowed)*
                               </div>
@@ -672,7 +672,7 @@ function AddCategoriesAndBrands() {
                                   },
                                 })}
                               />
-                              <div className="font-light text-sm text-center">
+                              <div className="w-96 -ml-7 font-light text-sm text-center">
                                 (At least 3 characters & at most 50 character
                                 are allowed)*
                               </div>
@@ -840,7 +840,7 @@ function AddCategoriesAndBrands() {
                                   },
                                 })}
                               />
-                              <div className="font-light text-sm text-center">
+                              <div className="w-96 -ml-7 font-light text-sm text-center">
                                 (At least 3 characters & at most 50 character
                                 are allowed)*
                               </div>
@@ -941,7 +941,7 @@ function AddCategoriesAndBrands() {
                                   {errorsBrand.newBrandIcon2.message}
                                 </div>
                               )}
-                              <div className="font-light text-sm text-center">
+                              <div className="w-96 -ml-7 font-light text-sm text-center">
                                 (At least 3 characters & at most 50 character
                                 are allowed)*
                               </div>
