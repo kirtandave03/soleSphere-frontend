@@ -515,7 +515,7 @@ function AddCategoriesAndBrands() {
                 <Navbar />
               </div>
               <div className="ml-[12vw] flex-grow flex flex-col justify-center">
-                <div className="p-3">
+                <div className="p-2">
                   <h1 className="font-bold mb-2 text-lg text-center">
                     Categories and Brands
                   </h1>
@@ -652,7 +652,8 @@ function AddCategoriesAndBrands() {
                                 {...registerCategory("newCategory2", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message:
+                                      "Updated Category name is required ",
                                   },
                                   minLength: {
                                     value: 3,
@@ -748,7 +749,7 @@ function AddCategoriesAndBrands() {
                     </div>
                   </div>
                 </div>
-                <div className="p-3">
+                <div className="p-2">
                   <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
                     <div className="flex justify-between p-2">
                       <div className="div2 w-1/2 mr-auto ml-auto">
@@ -801,7 +802,7 @@ function AddCategoriesAndBrands() {
                                 {...registerBrand("newBrand1", {
                                   required: {
                                     value: true,
-                                    message: "Brand field is required ",
+                                    message: "All fields are required ",
                                   },
                                   minLength: {
                                     value: 3,
@@ -820,11 +821,11 @@ function AddCategoriesAndBrands() {
                                   },
                                 })}
                               />
-                              {errorsBrand.newBrand1 && (
+                              {/* {errorsBrand.newBrand1 && (
                                 <div className="text-red-600 text-sm text-center">
                                   {errorsBrand.newBrand1.message}
                                 </div>
-                              )}
+                              )} */}
                               <input
                                 type="file"
                                 name="brandLogo"
@@ -836,7 +837,7 @@ function AddCategoriesAndBrands() {
                                 {...registerBrand("newBrandIcon1", {
                                   required: {
                                     value: true,
-                                    message: "This field is required",
+                                    message: "All fields are required",
                                   },
                                 })}
                               />
@@ -844,7 +845,8 @@ function AddCategoriesAndBrands() {
                                 (At least 3 characters & at most 50 character
                                 are allowed)*
                               </div>
-                              {errorsBrand.newBrandIcon1 && (
+                              {(errorsBrand.newBrandIcon1 ||
+                                errorsBrand.newBrand1) && (
                                 <div className="text-red-600 text-sm text-center">
                                   {errorsBrand.newBrandIcon1.message}
                                 </div>
@@ -902,7 +904,7 @@ function AddCategoriesAndBrands() {
                                 {...registerBrand("newBrand2", {
                                   required: {
                                     value: true,
-                                    message: "This field is required ",
+                                    message: "Updated brand name is required ",
                                   },
                                   minLength: {
                                     value: 3,
