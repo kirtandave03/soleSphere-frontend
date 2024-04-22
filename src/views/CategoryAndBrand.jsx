@@ -515,14 +515,14 @@ function AddCategoriesAndBrands() {
                 <Navbar />
               </div>
               <div className="ml-[12vw] flex-grow flex flex-col justify-center">
-                <div className="p-4">
-                  <h1 className="font-bold mb-4 text-lg text-center">
+                <div className="p-3">
+                  <h1 className="font-bold mb-2 text-lg text-center">
                     Categories and Brands
                   </h1>
                   <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
-                    <div className="flex justify-between p-4">
+                    <div className="flex justify-between p-2">
                       <div className="div1 w-1/2 mr-auto ml-auto">
-                        <h2 className="text-lg mb-2 text-center font-semibold">
+                        <h2 className="text-lg text-center font-semibold">
                           Category Fields
                         </h2>
                         <div className="tabs flex justify-center gap-3">
@@ -685,7 +685,7 @@ function AddCategoriesAndBrands() {
                                 disabled={isSubmittingCategory}
                                 onClick={handleSubmitCategory(onUpdCatSubmit)}
                                 type="button"
-                                className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg disabled:opacity-50"
+                                className="-mt-1 button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg disabled:opacity-50"
                               >
                                 Update Category
                               </button>
@@ -748,11 +748,11 @@ function AddCategoriesAndBrands() {
                     </div>
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-3">
                   <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
-                    <div className="flex justify-between p-4">
+                    <div className="flex justify-between p-2">
                       <div className="div2 w-1/2 mr-auto ml-auto">
-                        <h2 className="text-lg mb-2 text-center font-semibold">
+                        <h2 className="text-lg text-center font-semibold">
                           Brand Fields
                         </h2>
                         <div className="mb-4 tabs flex justify-center gap-3">
@@ -949,7 +949,7 @@ function AddCategoriesAndBrands() {
                                 type="button"
                                 disabled={isSubmittingBrand}
                                 onClick={handleSubmitBrand(onUpdBrandSubmit)}
-                                className="button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg disabled:opacity-50"
+                                className="-mt-1 button bg-[#4880ff] hover:bg-[#417aff] hover:shadow-md text-white py-2 px-4 rounded-lg disabled:opacity-50"
                               >
                                 Update Brand
                               </button>
