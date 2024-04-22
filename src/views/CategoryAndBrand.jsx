@@ -516,9 +516,9 @@ function AddCategoriesAndBrands() {
               </div>
               <div className="ml-[12vw] flex-grow flex flex-col justify-center">
                 <div className="p-2">
-                  <h1 className="font-bold mb-2 text-lg text-center">
+                  {/* <h1 className="font-bold mb-2 text-lg text-center">
                     Categories and Brands
-                  </h1>
+                  </h1> */}
                   <div className="mx-auto bg-white rounded-lg shadow w-full max-w-2xl">
                     <div className="flex justify-between p-2">
                       <div className="div1 w-1/2 mr-auto ml-auto">
