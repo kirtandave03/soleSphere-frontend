@@ -89,7 +89,7 @@ const AddVariants = () => {
     }
 
     setIsUploading(true);
-    setLoading(true);
+    // setLoading(true);
     const formData = new FormData();
 
     for (let i = 0; i < selectedFiles.length; i++) {
@@ -178,7 +178,7 @@ const AddVariants = () => {
 
   const handleDynamicFieldValidation = (value, index, fieldName) => {
     const isRequired = true; // Change to false if not required
-    const isValid = /^[0-9]\d*\.?\d+$/.test(value); // Floating-point number pattern
+    const isValid = /^\d*\.?\d+$/.test(value); // Floating-point number pattern
 
     if (isRequired && !value.trim()) {
       setError(`variants[${index}].${fieldName}`, {
@@ -538,7 +538,7 @@ const AddVariants = () => {
                                 message: "This field is required",
                               },
                               pattern: {
-                                value: /^[0-9]\d*\.?\d+$/,
+                                value: /^\d*\.?\d+$/,
                                 message: "Please enter a positive number",
                               },
                               validate: {
@@ -568,7 +568,7 @@ const AddVariants = () => {
                                   message: "This field is required",
                                 },
                                 pattern: {
-                                  value: /^[0-9]\d*\.?\d+$/,
+                                  value: /^\d*\.?\d+$/,
                                   message: "Please enter a positive number",
                                 },
                                 validate: {

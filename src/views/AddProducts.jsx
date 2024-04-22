@@ -70,7 +70,7 @@ const AddProducts = () => {
     }
 
     setIsUploading(true);
-    setLoading(true);
+    // setLoading(true);
 
     const formData = new FormData();
 
@@ -88,7 +88,7 @@ const AddProducts = () => {
         setisDisabled(false);
       }
 
-      setIsUploading(false);
+      // setIsUploading(false);
       // console.log(response)
     } catch (error) {
       setLoading(false);
@@ -160,6 +160,7 @@ const AddProducts = () => {
         setLoading(false);
         setisDisabled(true);
         setIsUploaded(false);
+        setIsUploading(false);
         setInputFields([{ id: 0 }]);
         reset();
       }
@@ -382,7 +383,7 @@ const AddProducts = () => {
                               className="font-medium"
                             >
                               Product Name &nbsp;
-                              <span>
+                              <span className="font-light">
                                 ({productName ? productName.length : 0}/30)
                               </span>
                             </label>
@@ -700,12 +701,18 @@ const AddProducts = () => {
                           </div>
 
                           <div className="longDescription  p-2 rounded-md flex flex-col">
-                            <label
-                              htmlFor="longDescription"
-                              className="font-medium"
-                            >
-                              Long Description
-                            </label>
+                            <div className="flex my-2">
+                              <label
+                                htmlFor="longDescription"
+                                className="font-medium"
+                              >
+                                Long Description &nbsp;
+                              </label>
+                              <span className="font-light">
+                                ({longDescription ? longDescription.length : 0}
+                                /600)
+                              </span>
+                            </div>
                             <TextareaAutosize
                               aria-label="Description"
                               placeholder="Enter Long description here..."
@@ -743,10 +750,7 @@ const AddProducts = () => {
                                 {errors.longDescription.message}
                               </div>
                             )}
-                            <span>
-                              ({longDescription ? longDescription.length : 0}
-                              /600)
-                            </span>
+
                             <div className="font-light text-base">
                               (At least 75 characters)*
                             </div>
