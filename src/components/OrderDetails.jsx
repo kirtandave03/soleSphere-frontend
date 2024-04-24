@@ -71,22 +71,32 @@ function OrderDetails({ order, setDetails }) {
       <hr className="my-2" />
       <div>
         <h4 className="font-semibold">Items</h4>
-        <div className="px-3 flex justify-between font-medium">
-          <div>Image</div>
-          <div className="ml-4">Product</div>
-          <div className="ml-6">Quantity</div>
-          <div className="mr-5">Price</div>
-        </div>
-        {order.products.map((product, index) => (
-          <div key={index} className="px-3 flex justify-between">
-            <div className="flex gap-7">
-              <img
-                src={product.image_url}
-                alt=""
-                className="w-20 h-16 object-cover"
-              />
-              <div className="ml-5 h-20 flex-col justify-between">
-                <div>{capitalize(product.productName)}</div>
+        <div className="px-3">
+          <div className="flex justify-between font-medium">
+            <div className="w-1/5 text-left">Image</div>{" "}
+            {/* Adjusted width and text alignment */}
+            <div className="w-2/5 text-left ml-4">Product</div>{" "}
+            {/* Adjusted width and text alignment */}
+            <div className="w-1/5 text-right ml-8">Quantity</div>{" "}
+            {/* Adjusted width and text alignment */}
+            <div className="w-1/5 text-center mr-5">Price</div>{" "}
+            {/* Adjusted width and text alignment */}
+          </div>
+          {order.products.map((product, index) => (
+            <div key={index} className="flex justify-between items-center">
+              <div className="flex items-center w-1/5 justify-center">
+                {" "}
+                {/* Adjusted width and alignment */}
+                <img
+                  src={product.image_url}
+                  alt=""
+                  className="w-20 h-16 object-cover"
+                />
+              </div>
+              <div className="ml-4 w-2/5 text-center">
+                <div className="text-left whitespace-nowrap overflow-hidden overflow-ellipsis">
+                  {capitalize(product.productName)}
+                </div>
                 <div className="flex gap-2 items-center">
                   <div
                     style={{
@@ -103,13 +113,17 @@ function OrderDetails({ order, setDetails }) {
                   </div>
                 </div>
               </div>
+              <div className="w-1/5 text-center ml-6">{product.quantity}</div>{" "}
+              {/* Adjusted width and alignment */}
+              <div className="w-1/5 text-center mr-5">
+                ₹{product.discounted_price}
+              </div>{" "}
+              {/* Adjusted width and alignment */}
             </div>
-
-            <div>{product.quantity}</div>
-            <div>₹{product.discounted_price}</div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+
       <hr className="my-2" />
       <div>
         <h4 className="font-semibold">Payment</h4>
