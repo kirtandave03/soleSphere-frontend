@@ -379,10 +379,10 @@ const AddProducts = () => {
                             Add New Product
                           </h1>
 
-                          <div className="flex flex-col my-2">
+                          <div className="flex flex-col my-4">
                             <label
                               htmlFor="productName"
-                              className="font-medium mt-4"
+                              className="font-medium"
                             >
                               Product Name &nbsp;
                               <span className="font-light">
@@ -399,7 +399,6 @@ const AddProducts = () => {
                               // }
                               size="small"
                               style={{
-                                marginTop: "8px",
                                 width: "30vw",
                               }}
                               label="Product Name"
@@ -436,7 +435,7 @@ const AddProducts = () => {
                             {/* <span className="my-1">
                               ({productName ? productName.length : 0}/30)
                             </span> */}
-                            <div className="font-light text-base mt-1">
+                            <div className="font-light text-base">
                               (At least 3 characters)*
                             </div>
 
@@ -655,10 +654,10 @@ const AddProducts = () => {
                       </div>
                     </div>
 
-                    <div className="right ml-[55px] mt-[70px]">
+                    <div className="right ml-[55px] mt-[50px]">
                       <div className="flex flex-col">
                         <div className="flex flex-col">
-                          <div className="material rounded-md flex flex-col p-2">
+                          <div className="material rounded-md flex flex-col px-2">
                             <label htmlFor="material" className="font-medium">
                               Material
                             </label>
@@ -676,7 +675,6 @@ const AddProducts = () => {
                               size="small"
                               style={{
                                 width: "30vw",
-                                marginTop: "7px",
                               }}
                             >
                               <MenuItem value="">Select Material</MenuItem>
@@ -791,7 +789,7 @@ const AddProducts = () => {
                             </div>
                           </div>
 
-                          <div className="color flex flex-col mt-2">
+                          <div className="color flex flex-col mt-4">
                             {/* <h3 className="font-semibold">Color</h3> */}
                             <div className="px-3 py-1 rounded-md flex flex-col ">
                               {/* <label htmlFor="color" className="font-light ">
@@ -833,7 +831,7 @@ const AddProducts = () => {
                                 id="images"
                                 multiple
                                 accept="image/*"
-                                className="border border-black rounded-md w-full"
+                                className="border border-black my-1 rounded-md w-full"
                                 {...register("images", {
                                   required: {
                                     value: true,
