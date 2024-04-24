@@ -375,12 +375,14 @@ const AddProducts = () => {
                     <div className="left ">
                       <div>
                         <div className="p-5 rounded-md">
-                          <h1 className="font-bold text-xl">Add New Product</h1>
-                          <h3 className="font-semibold">Description</h3>
+                          <h1 className="font-bold text-2xl">
+                            Add New Product
+                          </h1>
+
                           <div className="flex flex-col my-2">
                             <label
                               htmlFor="productName"
-                              className="font-medium"
+                              className="font-medium mt-4"
                             >
                               Product Name &nbsp;
                               <span className="font-light">
@@ -438,7 +440,7 @@ const AddProducts = () => {
                               (At least 3 characters)*
                             </div>
 
-                            <div className="my-2">
+                            <div className="mt-2">
                               <div>
                                 <label
                                   className="font-medium"
@@ -700,8 +702,8 @@ const AddProducts = () => {
                             )}
                           </div>
 
-                          <div className="longDescription  p-2 rounded-md flex flex-col">
-                            <div className="flex my-2">
+                          <div className="longDescription  px-2 rounded-md flex flex-col">
+                            <div className="flex mt-2">
                               <label
                                 htmlFor="longDescription"
                                 className="font-medium"
@@ -758,7 +760,7 @@ const AddProducts = () => {
 
                           <div className="gender flex flex-col">
                             {/* <h3 className="font-semibold">Gender</h3> */}
-                            <div className="  p-3 rounded-md flex flex-col">
+                            <div className="px-3 rounded-md flex flex-col my-2">
                               <label htmlFor="gender" className="font-medium ">
                                 Gender
                               </label>
@@ -789,9 +791,9 @@ const AddProducts = () => {
                             </div>
                           </div>
 
-                          <div className="color flex flex-col ">
+                          <div className="color flex flex-col mt-2">
                             {/* <h3 className="font-semibold">Color</h3> */}
-                            <div className="p-3 rounded-md flex flex-col">
+                            <div className="px-3 py-1 rounded-md flex flex-col ">
                               {/* <label htmlFor="color" className="font-light ">
                                 Color
                               </label> */}
