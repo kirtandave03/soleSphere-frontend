@@ -1,8 +1,22 @@
 import React from "react";
 import convertFlutterToHexFormat from "../utils/convertFlutterToHexFormat";
 import capitalize from "../utils/capitalize";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  TablePagination,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
 
 function OrderDetails({ order, setDetails }) {
+  console.log(order);
   return (
     <div className="w-2/5 absolute right-0 top-0 flex-col justify-between bg-white p-4 shadow-lg transition-all duration-500">
       <div>
@@ -71,45 +85,82 @@ function OrderDetails({ order, setDetails }) {
       <hr className="my-2" />
       <div>
         <h4 className="font-semibold">Items</h4>
-        <div className="px-3 flex justify-between font-medium">
-          <div>Image</div>
-          <div className="ml-4">Product</div>
-          <div className="ml-6">Quantity</div>
-          <div className="mr-5">Price</div>
-        </div>
-        {order.products.map((product, index) => (
-          <div key={index} className="px-3 flex justify-between">
-            <div className="flex gap-7">
-              <img
-                src={product.image_url}
-                alt=""
-                className="w-20 h-16 object-cover"
-              />
-              <div className="ml-5 h-20 flex-col justify-between">
-                <div>{capitalize(product.productName)}</div>
-                <div className="flex gap-2 items-center">
-                  <div
-                    style={{
-                      backgroundColor: `${convertFlutterToHexFormat(
-                        product.color
-                      )}`,
-                      width: "1.25rem",
-                      height: "1.25rem",
-                      borderRadius: "50%",
-                    }}
-                  ></div>
-                  <div>
-                    {product.product_id.sizeType} {product.size}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>{product.quantity}</div>
-            <div>₹{product.discounted_price}</div>
-          </div>
-        ))}
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: "600", textAlign: "left" }}>
+                  Image
+                </TableCell>
+                <TableCell style={{ fontWeight: "600", textAlign: "left" }}>
+                  Product
+                </TableCell>
+                <TableCell style={{ fontWeight: "600", textAlign: "center" }}>
+                  Quantity
+                </TableCell>
+                <TableCell style={{ fontWeight: "600", textAlign: "left" }}>
+                  Price
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {order.products &&
+                order.products.map((product, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <img
+                        src={product.image_url}
+                        alt="undefined"
+                        className="w-20 h-16 object-cover"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-center">
+                        <div className="text-left">
+                          {product.productName === undefined
+                            ? "undefined"
+                            : capitalize(product.productName)}
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <div
+                            style={{
+                              backgroundColor: `${convertFlutterToHexFormat(
+                                product.color
+                              )}`,
+                              width: "1.25rem",
+                              height: "1.25rem",
+                              borderRadius: "50%",
+                            }}
+                          ></div>
+                          <div>
+                            {product.product_id.sizeType === undefined
+                              ? "undefined"
+                              : product.product_id.sizeType}{" "}
+                            {product.size === undefined
+                              ? "undefined"
+                              : product.size}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell style={{ textAlign: "center" }}>
+                      {product.quantity === undefined
+                        ? "undefined"
+                        : product.quantity}
+                    </TableCell>
+                    <TableCell>
+                      ₹
+                      {product.discounted_price === undefined
+                        ? "undefined"
+                        : product.discounted_price}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
+
       <hr className="my-2" />
       <div>
         <h4 className="font-semibold">Payment</h4>

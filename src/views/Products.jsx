@@ -357,12 +357,20 @@ function Products() {
                                     />
                                   </TableCell>
                                   <TableCell>
-                                    {capitalize(row.productName)}
+                                    {row.productName == undefined
+                                      ? "undefined"
+                                      : capitalize(row.productName)}
                                   </TableCell>
                                   <TableCell>
-                                    {capitalize(row.category)}
+                                    {row.category == undefined
+                                      ? "undefined"
+                                      : capitalize(row.category)}
                                   </TableCell>
-                                  <TableCell>{capitalize(row.brand)}</TableCell>
+                                  <TableCell>
+                                    {row.brand == undefined
+                                      ? "undefined"
+                                      : capitalize(row.brand)}
+                                  </TableCell>
                                   <TableCell style={{ textAlign: "center" }}>
                                     {row.size}
                                   </TableCell>
@@ -538,13 +546,19 @@ function Products() {
                                   />
                                 </TableCell>
                                 <TableCell>
-                                  {capitalize(deletedRow.productName)}
+                                  {deletedRow.productName == undefined
+                                    ? "undefined"
+                                    : capitalize(deletedRow.productName)}
                                 </TableCell>
                                 <TableCell>
-                                  {capitalize(deletedRow.category.category)}
+                                  {deletedRow.category.category == undefined
+                                    ? "undefined"
+                                    : capitalize(deletedRow.category.category)}
                                 </TableCell>
                                 <TableCell>
-                                  {capitalize(deletedRow.brand.brand)}
+                                  {deletedRow.brand.brand == undefined
+                                    ? "undefined"
+                                    : capitalize(deletedRow.brand.brand)}
                                 </TableCell>
                                 <TableCell style={{ textAlign: "center" }}>
                                   {deletedRow.variants[0].sizes[0].size}

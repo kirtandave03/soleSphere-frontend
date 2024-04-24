@@ -607,12 +607,12 @@ function EditProductPage() {
                                           {...register(`size${index}`, {
                                             required: {
                                               value: true,
-                                              message: "This field is required",
+                                              message: "Size is required",
                                             },
                                             pattern: {
-                                              value: /^[1-9]\d*$/,
+                                              value: /^[0-9]\d*$/,
                                               message:
-                                                "Please enter a positive number without decimal points",
+                                                "Please enter a positive number without decimal points and characters",
                                             },
                                             validate: {
                                               min: (value) =>
@@ -639,12 +639,13 @@ function EditProductPage() {
                                           {...register(`actualPrice${index}`, {
                                             required: {
                                               value: true,
-                                              message: "This field is required",
+                                              message:
+                                                "Actual Price is required",
                                             },
                                             pattern: {
                                               value: /^\d*\.?\d+$/,
                                               message:
-                                                "Please enter a positive number",
+                                                "Please enter a positive number without any characters",
                                             },
                                             validate: {
                                               min: (value) =>
@@ -676,12 +677,12 @@ function EditProductPage() {
                                               required: {
                                                 value: true,
                                                 message:
-                                                  "This field is required",
+                                                  "Discounted Price is required",
                                               },
                                               pattern: {
                                                 value: /^\d*\.?\d+$/,
                                                 message:
-                                                  "Please enter a positive number",
+                                                  "Please enter a positive number without any characters",
                                               },
                                               validate: {
                                                 min: (value) =>
@@ -709,12 +710,12 @@ function EditProductPage() {
                                           {...register(`stock${index}`, {
                                             required: {
                                               value: true,
-                                              message: "This field is required",
+                                              message: "Stock is required",
                                             },
                                             pattern: {
                                               value: /^[0-9]\d*$/,
                                               message:
-                                                "Please enter a positive number without decimal points",
+                                                "Please enter a positive number without decimal points and characters",
                                             },
                                           })}
                                         />
