@@ -383,6 +383,7 @@ const AddVariants = () => {
                           </label> */}
 
                           <TextField
+                            size="small"
                             label="Search By Product Name"
                             className="mx-2 border w-full border-black rounded-lg"
                             type="text"
@@ -430,6 +431,7 @@ const AddVariants = () => {
                             Choose Color
                           </label> */}
                           <TextField
+                            size="small"
                             label="Select Color"
                             className="w-full border border-black rounded-lg m-4"
                             type="color"
@@ -502,10 +504,6 @@ const AddVariants = () => {
                           <TextField
                             label="Size"
                             {...register(`variants[${index}].size`, {
-                              required: {
-                                value: true,
-                                message: "This field is required",
-                              },
                               pattern: {
                                 value: /^[0-9]\d*$/,
                                 message: "Validation violated ",
@@ -524,19 +522,15 @@ const AddVariants = () => {
                               handleDynamicFieldValidation(
                                 e.target.value,
                                 index,
-                                `size`
+                                "size"
                               )
                             }
-                            className="border border-black w-1/5 my-2 p-2 rounded-lg"
-                            // placeholder="Size"
+                            size="small"
+                            style={{ width: "253px" }}
                           />
                           <TextField
                             label="Actual Price"
                             {...register(`variants[${index}].actual_price`, {
-                              required: {
-                                value: true,
-                                message: "This field is required",
-                              },
                               pattern: {
                                 value: /^\d*\.?\d+$/,
                                 message: "Please enter a positive number",
@@ -555,18 +549,14 @@ const AddVariants = () => {
                                 `actual_price`
                               )
                             }
-                            className="border  border-black w-1/5 my-2 p-2 rounded-lg"
-                            // placeholder="Actual Price"
+                            size="small"
+                            style={{ width: "253px" }}
                           />
                           <TextField
                             label="Discounted Price"
                             {...register(
                               `variants[${index}].discounted_price`,
                               {
-                                required: {
-                                  value: true,
-                                  message: "This field is required",
-                                },
                                 pattern: {
                                   value: /^\d*\.?\d+$/,
                                   message: "Please enter a positive number",
@@ -586,16 +576,12 @@ const AddVariants = () => {
                               )
                             }
                             type="text"
-                            className="border  border-black w-1/5 my-2 p-2 rounded-lg"
-                            // placeholder="Discounted Price"
+                            size="small"
+                            style={{ width: "253px" }}
                           />
                           <TextField
                             label="Stock"
                             {...register(`variants[${index}].stock`, {
-                              required: {
-                                value: true,
-                                message: "This field is required",
-                              },
                               pattern: {
                                 value: /^[0-9]\d*$/,
                                 message:
@@ -610,16 +596,18 @@ const AddVariants = () => {
                                 `stock`
                               )
                             }
-                            className="border  border-black w-1/5 p-2 my-2 rounded-lg"
-                            // placeholder="Stock"
+                            size="small"
+                            style={{ width: "255px" }}
                           />
-                          {errors.variants &&
-                            errors.variants[index] &&
-                            errors.variants[index].size && (
-                              <div className="text-red-600 text-sm mt-4">
-                                {errors.variants[index].size.message}
-                              </div>
-                            )}
+                          <div>
+                            {errors.variants &&
+                              errors.variants[index] &&
+                              errors.variants[index].size && (
+                                <div className="text-red-600 text-sm mt-4">
+                                  {errors.variants[index].size.message}
+                                </div>
+                              )}
+                          </div>
                         </div>
                       ))}
                     </div>
