@@ -70,7 +70,12 @@ const Navbar = () => {
         <nav
           className={`flex flex-col justify-between ${isOpen ? "" : "hidden"}`}
         >
-          <div className="px-3 py-4 font-bold text-2xl text-left text-white">
+          <div
+            className="px-3 py-4 font-bold text-2xl text-left text-white cursor-pointer"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
             SoleSphere
           </div>
           <div className="flex flex-col">
