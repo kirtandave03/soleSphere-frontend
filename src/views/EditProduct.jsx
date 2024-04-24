@@ -607,10 +607,10 @@ function EditProductPage() {
                                           {...register(`size${index}`, {
                                             required: {
                                               value: true,
-                                              message: "This field is required",
+                                              message: "Size is required",
                                             },
                                             pattern: {
-                                              value: /^[0-9]\d*$/,
+                                              value: /^[1-9]\d*$/,
                                               message:
                                                 "Please enter a positive number without decimal points and characters",
                                             },
@@ -713,7 +713,7 @@ function EditProductPage() {
                                               message: "Stock is required",
                                             },
                                             pattern: {
-                                              value: /^[0-9]\d*$/,
+                                              value: /^[1-9]\d*$/,
                                               message:
                                                 "Please enter a positive number without decimal points",
                                             },
