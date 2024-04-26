@@ -116,6 +116,8 @@ function Products() {
         // console.log(toAddProduct);
 
         setDeletedRows([...deletedRows, toAddProduct]);
+        setTotalProducts(totalProducts - 1);
+        setTotalDeletedProducts(totalDeletedProducts + 1);
         setDeleteClicked(false);
       }
     } catch (error) {
@@ -151,6 +153,8 @@ function Products() {
           _id: product._id,
         };
         setRows([...rows, toAddProduct]);
+        setTotalProducts(totalProducts + 1);
+        setTotalDeletedProducts(totalDeletedProducts - 1);
         setRestoreClicked(false);
       }
     } catch (error) {
